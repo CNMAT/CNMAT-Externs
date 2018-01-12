@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="peqbank~" module="CNMAT-Externals">
+
+    <digest>
+	Parametric EQ bank
+    </digest>
+
+    <description>
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+	peqbank~ is a complete standard parametric EQ bank. You can change the number of parametric EQs and their parameters in real-time.
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+	<objarg name="anything" optional="0" type="variable">
+	    <description>
+		The arguments for peqbank~ are variable, and can be delivered out of order.  There are three messages that can be issued.  Note that the identifier must be present:
+		<ul>
+		    <li><m>maxelem</m>, [int, max number of filters]</li>
+		    <li><m>peq</m>, [list, the parametric filter definition]</li>
+		    <li><m>shelf</m>, [list, a shelf definition]</li>
+		</ul><br/>
+		Exemplary argument list:  [maxelem 3 shelf 2. 0. 3. 100. 5000. peq 1000. 1. 0. 15. 6. peq 3000. 0.5 0. 10. 2.]
+	    </description>
+	</objarg>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="bank">
+	    <arglist>
+		<arg name="variable" type="list" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		[bank] Allows you to send the following messages - and their arguments - in one list: <br/>
+		<ul>
+		    <li><m>maxelem</m>, [int, max number of filters]</li>
+		    <li><m>peq</m>, [list, the parametric filter definition]</li>
+		    <li><m>shelf</m>, [list, a shelf definition]</li>
+		</ul><br/>
+		These arguments are variable, and can be delivered out of order.
+		Exemplary bank message: <em>[bank maxelem 4 shelf 4. 0. 3. 500. 6000. peq 2000. 1. 0. 8. 5. peq 3000. 0.5 -2. 10. 0. peq 4000. 1.2 -2. -18. -6.]</em><br/>
+		This message is the normal way of sending information to the object, and mirrors the argument list. <br/>
+		* Send maxelem once per list.<br/>
+	    </description>
+	</method>
+	<method name="biquads">
+	    <arglist>
+		<arg name="a0" type="float" optional="0" id="0" />
+		<arg name="a1" type="float" optional="0" id="1" />
+		<arg name="a2" type="float" optional="0" id="2" />
+		<arg name="b1" type="float" optional="0" id="3" />
+		<arg name="b2" type="float" optional="0" id="4" />
+	    </arglist>
+	    <description>
+		Send in a list of raw biquad coefficients, 5 at a time.  The argument list here can be duplicated in the [biquads] message.<br/>
+		Example:<br/>
+		[biquads 1.28815 -1.941646 0.663237 -1.374159 0.381897 1.191726 -1.869046 0.749479 -1.849196 0.921355]
+	    </description>
+	</method>
+	<method name="clear">
+	    <description>
+		Refresh the signal inputs (if you've blown up your filter).
+	    </description>
+	</method>
+	<method name="fast">
+	    <description>
+		Send the fast message to save CPU. By default, the output is smoothed.
+	    </description>
+	</method>
+	<method name="highpass">
+	    <description>
+	    </description>
+	</method>
+	<method name="list">
+	    <description>
+		A list is interpreted as a <m>bank</m> message and the relevant args are processed.
+	    </description>
+	</method>
+	<method name="lowpass">
+	    <description>
+	    </description>
+	</method>
+	<method name="maxelem">
+	    <arglist>
+		<arg name="num filters" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Set the maximum number of filters for the object.  This allocates a specific amount of memory to allow the user to control efficiency.
+	    </description>
+	</method>	
+	<method name="peq">
+	    <arglist>
+		<arg name="F0: the peak gain/cut frequency in Hz" type="float" optional="0" id="0" />
+		<arg name="Bw: the bandwidth specified in octaves" type="float" optional="0" id="1" />
+		<arg name="G0: the initial gain at DC in dB" type="float" optional="0" id="2" />
+		<arg name="G: the peak gain/cut in dB" type="float" optional="0" id="3" />
+		<arg name="GB: the gain at bandwidth edges in dB" type="float" optional="0" id="4" />
+	    </arglist>
+
+	    <description>
+		The parametric filter definition. <br/>
+		The parametric filter is built so that it matches its counterpart analog filter even when approaching the nyquist frequency. <br/>
+		It is Q constant on a logarithmic scale. To specify multiple peq filters, send all the parameters for each filter in one list. <br/>
+		"peq" will redefine the whole set of filter parameters: you need to send them all. You can control 5 float parameters:<br/><br/>
+		Note that you can define multiple filters at once by either repeating the sequence of arguments to the peq message, or by defining separate peq messages in sequence (without a comma)<br/><br/>
+		Example:<br/><br/>
+		[peq 2000. 1. 0. 8. 6. peq 3000. 0.5 -2. 12. 6. peq 4000. 1. 2. -18. -6.]<br/>
+		Example without separate messages:<br/>
+		[peq 2000. 1. 0. 8. 6. 3000. 0.5 -2. 12. 6. 4000. 1. 2. -18. -6.]<br/>
+	    </description>
+	</method>
+	<method name="reset">
+	    <description>
+		initializes your filter bank and maxelem to 10.
+	    </description>
+	</method>
+	<method name="shelf">
+	    <arglist>
+		<arg name="low shelf gain in dB" type="float" optional="0" id="0" />
+		<arg name="middle shelf gain in dB" type="float" optional="0" id="1" />
+		<arg name="high shelf gain in dB" type="float" optional="0" id="2" />
+		<arg name="low shelf gain cutoff frequency in Hz" type="float" optional="0" id="3" />
+		<arg name="high shelf gain cutoff frequency in Hz" type="float" optional="0" id="4" />
+	    </arglist>
+	    <description>
+		[shelf] is a classic 3-shelf filter. Its 5 float parameters are required to enable it.  [shelf] has no effect on other filters.
+	    </description>
+	</method>	
+	<method name="signal">
+	    <description>
+		The audio signal to filter.
+	    </description>
+	</method>
+	<method name="smooth">
+	    <description>
+		Enable smoothing (interpolation).  This will calculate less efficiently, but will not result in audible clicks when updating filter definitions and parameters.
+	    </description>
+	</method>
+	<method name="tellmeeverything">
+	    <description>
+		Print information about version, authors, copyright, compilation date, and peqbank~ setup to the Max window.
+	    </description>
+	</method>
+	<method name="version">
+	    <description>
+		Print version information to the Max window.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+    </attributelist>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="firbank~" />
+	<seealso name="biquad~" />
+	<seealso name="cascade~" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Send a message to the peqbank~ object.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [signal]">
+	    <description>
+		Filtered signal output.
+	    </description>
+	</entry>
+	<entry name ="Outlet 2 [list]">
+	    <description>
+		The right outlet outputs a complete biquad coefficient list.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		filterbank, parametric, EQ 
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>
