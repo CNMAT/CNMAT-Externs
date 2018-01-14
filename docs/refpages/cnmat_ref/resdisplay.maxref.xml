@@ -65,7 +65,7 @@
 	</method>
 	<method name="sinusoids">
 	    <description>
-		Input a list of frequency, gain duples.  SEe the <o>sinusoids~</o> object for more information.
+		Input a list of frequency, gain duples.  See the <o>sinusoids~</o> object for more information.
 	    </description>
 	</method>
     </methodlist>
