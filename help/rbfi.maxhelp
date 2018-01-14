@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 100.0, 100.0, 953.0, 835.0 ],
+		"rect" : [ 112.0, 79.0, 942.0, 835.0 ],
 		"bgcolor" : [ 0.717647, 0.784314, 0.784314, 1.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
@@ -42,6 +42,72 @@
 		"boxes" : [ 			{
 				"box" : 				{
 					"fontname" : "Arial",
+					"fontsize" : 14.0,
+					"id" : "obj-1",
+					"maxclass" : "newobj",
+					"numinlets" : 0,
+					"numoutlets" : 0,
+					"patcher" : 					{
+						"fileversion" : 1,
+						"appversion" : 						{
+							"major" : 7,
+							"minor" : 3,
+							"revision" : 4,
+							"architecture" : "x64",
+							"modernui" : 1
+						}
+,
+						"rect" : [ 0.0, 26.0, 942.0, 809.0 ],
+						"bglocked" : 0,
+						"openinpresentation" : 0,
+						"default_fontsize" : 12.0,
+						"default_fontface" : 0,
+						"default_fontname" : "Arial",
+						"gridonopen" : 1,
+						"gridsize" : [ 5.0, 5.0 ],
+						"gridsnaponopen" : 1,
+						"objectsnaponopen" : 1,
+						"statusbarvisible" : 2,
+						"toolbarvisible" : 1,
+						"lefttoolbarpinned" : 0,
+						"toptoolbarpinned" : 0,
+						"righttoolbarpinned" : 0,
+						"bottomtoolbarpinned" : 0,
+						"toolbars_unpinned_last_save" : 0,
+						"tallnewobj" : 0,
+						"boxanimatetime" : 200,
+						"enablehscroll" : 1,
+						"enablevscroll" : 1,
+						"devicewidth" : 0.0,
+						"description" : "",
+						"digest" : "",
+						"tags" : "",
+						"style" : "",
+						"subpatcher_template" : "",
+						"showontab" : 1,
+						"boxes" : [  ],
+						"lines" : [  ]
+					}
+,
+					"patching_rect" : [ 620.0, 456.0, 30.0, 24.0 ],
+					"presentation_rect" : [ 620.0, 456.0, 0.0, 0.0 ],
+					"saved_object_attributes" : 					{
+						"description" : "",
+						"digest" : "",
+						"globalpatchername" : "",
+						"style" : "",
+						"tags" : ""
+					}
+,
+					"style" : "",
+					"text" : "p ?",
+					"varname" : "pattr[1]"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"fontname" : "Arial",
 					"fontsize" : 15.0,
 					"id" : "obj-4",
 					"maxclass" : "newobj",
@@ -57,7 +123,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 0.0, 26.0, 953.0, 809.0 ],
+						"rect" : [ 0.0, 26.0, 942.0, 809.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 10.0,
@@ -1418,7 +1484,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 260.0, 159.0, 133.0, 23.0 ],
+					"patching_rect" : [ 134.0, 186.0, 133.0, 25.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -1451,7 +1517,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 0.0, 26.0, 953.0, 809.0 ],
+						"rect" : [ 0.0, 26.0, 942.0, 809.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 10.0,
@@ -1877,7 +1943,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 921.0, 159.0, 96.0, 23.0 ],
+					"patching_rect" : [ 503.0, 389.0, 96.0, 25.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -1910,7 +1976,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 100.0, 126.0, 953.0, 809.0 ],
+						"rect" : [ 0.0, 26.0, 942.0, 809.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -2081,7 +2147,7 @@
 ,
 									"style" : "",
 									"text" : "autopattr @autoname 0",
-									"varname" : "u216001969"
+									"varname" : "u650002449"
 								}
 
 							}
@@ -2928,7 +2994,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 1017.0, 159.0, 51.0, 22.0 ],
+					"patching_rect" : [ 563.0, 427.0, 51.0, 24.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -2961,7 +3027,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 0.0, 26.0, 953.0, 809.0 ],
+						"rect" : [ 0.0, 26.0, 942.0, 809.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 10.0,
@@ -3717,7 +3783,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 784.0, 159.0, 137.0, 23.0 ],
+					"patching_rect" : [ 409.0, 341.0, 137.0, 25.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -3750,7 +3816,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 0.0, 26.0, 953.0, 809.0 ],
+						"rect" : [ 112.0, 105.0, 942.0, 809.0 ],
 						"bgcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
@@ -6039,7 +6105,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 36.0, 159.0, 59.0, 23.0 ],
+					"patching_rect" : [ 27.0, 112.0, 59.0, 25.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -6274,7 +6340,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 506.0, 159.0, 135.0, 23.0 ],
+					"patching_rect" : [ 261.0, 261.0, 135.0, 25.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -6307,7 +6373,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 0.0, 26.0, 953.0, 809.0 ],
+						"rect" : [ 0.0, 26.0, 942.0, 809.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 10.0,
@@ -6769,7 +6835,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 641.0, 159.0, 143.0, 23.0 ],
+					"patching_rect" : [ 335.0, 302.0, 143.0, 25.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -6802,7 +6868,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 0.0, 26.0, 953.0, 809.0 ],
+						"rect" : [ 0.0, 26.0, 942.0, 809.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 10.0,
@@ -7140,7 +7206,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 393.0, 159.0, 113.0, 23.0 ],
+					"patching_rect" : [ 196.0, 223.0, 113.0, 25.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -7173,7 +7239,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 0.0, 26.0, 953.0, 809.0 ],
+						"rect" : [ 0.0, 26.0, 942.0, 809.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 10.0,
@@ -7823,7 +7889,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 95.0, 159.0, 165.0, 23.0 ],
+					"patching_rect" : [ 62.0, 149.0, 165.0, 25.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
