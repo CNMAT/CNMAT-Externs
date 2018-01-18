@@ -69,8 +69,6 @@
     </attributelist>
 
     <!--SEEALSO-->
-    <seealsolist>
-    </seealsolist>
 
     <misc name = "Input">
 	<entry name ="Inlet 1 [index, eval]">
@@ -93,10 +91,6 @@
     </misc>
 
     <misc name = "Discussion">
-	<entry name ="More details">
-	    <description>
-	    </description>
-	</entry>
 	<entry name ="Keywords">
 	    <description>
 		spherical harmonics, dipoles, monopoles, quadrapole
