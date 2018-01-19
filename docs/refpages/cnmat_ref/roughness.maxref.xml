@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="roughness" module="CNMAT-Externals">
+
+    <digest>
+    </digest>
+
+    <description>
+	Estimates the amount of perceptual dissonance in a sonority.  Based on Richard Parncutt's source code.
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+	See <a href="http://www.cnmat.berkeley.edu/publications/real-time-analysis-sensory-dissonance">this paper</a> for more details on roughness and perceptual dissonance.
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="SDIFtime">
+	    <arglist>
+		<arg name="arg1name" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+
+	    </description>
+	</method>
+	<method name="anything">
+	    <description>
+		The anything message allows you to specify the two formulae available for calculating roughness.<br/>
+		Options are:<br/>
+		<ul>
+		    <li>parncutt</li>
+		    <li>kk</li>
+		</ul>
+	    </description>
+	</method>
+	<method name="list">
+	    <description>
+		Send a list of 
+	    </description>
+	</method>
+	<method name="float">
+	    <description>
+			float does x
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+	<attribute name="min" get="1" set="1" type="float" size="1">
+	    <description>
+		Minimum bound for accumulation
+	    </description>
+	</attribute>
+	<attribute name="bgcolor" get="1" set="1" type="float" size="4">
+	    <attributelist>
+	    <description>
+	    	Love the bg color.  Format is RGBA.
+	    </description>
+	</attribute>
+    </attributelist>
+
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="some object name" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+			The first inlet of bdist accepts a number of types of messages.  Refer to the list above.
+	    </description>
+	</entry>
+	<entry name ="Inlet 2 [float]">
+	    <description>
+			Set the 'a' parameter for the current distribution, recalculate, and display the result.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [list or float]">
+	    <description>
+			Outlet description
+	    </description>
+	</entry>
+	<entry name ="Outlet 2 [variable]">
+	    <description>
+			If the object receives a [dump] message, lists of size N will come out here.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+	    	Some extra text about the subject; stories and folklore
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		bdist, CNMAT, transfer function
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>
