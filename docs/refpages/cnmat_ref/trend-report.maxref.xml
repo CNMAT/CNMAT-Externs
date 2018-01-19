@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="trend-report" module="CNMAT-Externals">
+
+    <digest>
+	Keep track of trends in a stream of numbers and report about each one after it finishes.
+    </digest>
+
+    <description>
+	A trend is a series of input values that keep increasing or keep decreasing.  This object outputs after the end of a trend, i.e., after it sees the first decreasing value after a series of increasing values, or vice-versa. In other words, it will output nothing if the input keeps going in the same direction it has been going.
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+	<objarg name="tolerance" optional="1" type="float">
+	    <description>
+		If one input breaks the current trend, but by less than the tolerance, it's considered that the trend is still going (unless the next input also breaks the trend).
+	    </description>
+	</objarg>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="float">
+	    <description>
+		Successive floats are assessed for their trend over the sample points.
+	    </description>
+	</method>
+	<method name="int">
+	    <description>
+		Successive ints are assessed for their trend over the sample points.
+	    </description>
+	</method>
+	<method name="version">
+	    <description>
+		Print version information to the Max window.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+    </attributelist>
+
+    <!--SEEALSO-->
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [float, int]">
+	    <description>
+		Input numbers, either as <m>float</m> or <m>int</m>, for assessment of trend over time.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [list]">
+	    <description>
+		The list that is output describes the trend in the following way:<br/>
+		<ol>
+		    <li>[float/int]: Initial Value (input at beginning of the trend)</li>
+		    <li>[symbol]: Direction of trend</li>
+		    <li>[int]: Number of inputs in trend</li>
+		    <li>[float/int]: Final Value (input at end of the trend)</li>
+		</ol>
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="Keywords">
+	    <description>
+		trend, analysis, control rate, report
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>
