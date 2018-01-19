@@ -87,7 +87,6 @@
 					}
 ,
 					"patching_rect" : [ 87.0, 35.0, 27.0, 22.0 ],
-					"presentation_rect" : [ 97.0, 33.0, 0.0, 0.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -465,8 +464,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 184.333344, 455.0, 69.0, 22.0 ],
-									"style" : "default",
-									"text" : "decreasing"
+									"style" : "default"
 								}
 
 							}
