@@ -17,7 +17,7 @@ void version(void *x)
 		post_compiler();
 	}else{
 		if(!(gensym("CNMAT_did_post_copyright")->s_thing)){
-			post("CNMAT Externals v%s, compiled %s", CNMAT_EXT_VERSION, CNMAT_EXT_COMPILE_DATE);
+			post("CNMAT Externals %s, compiled %s", CNMAT_EXT_VERSION, CNMAT_EXT_COMPILE_DATE);
 			gensym("CNMAT_did_post_copyright")->s_thing = (void *)1;
 		}
 		post("%s by %s.", NAME, AUTHORS);
