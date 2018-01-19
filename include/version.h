@@ -11,7 +11,7 @@ void version(void *x)
 {
 	if(x){
 		// called in response to the version message
-		post("CNMAT Externals v%s, compiled %s", CNMAT_EXT_VERSION, CNMAT_EXT_COMPILE_DATE);
+		post("CNMAT Externals %s, compiled %s", CNMAT_EXT_VERSION, CNMAT_EXT_COMPILE_DATE);
 		post("%s by %s.", NAME, AUTHORS);
 		post("Copyright (c) " COPYRIGHT_YEARS " Regents of the University of California.  All rights reserved.");
 		post_compiler();
