@@ -54,50 +54,66 @@
 		    <li>parncutt</li>
 		    <li>kk</li>
 		</ul>
+		Please see below regarding details on the preferred <m>set-cbw-type</m> message.
 	    </description>
 	</method>
 	<method name="list">
 	    <description>
-		Send a list of 
+		Send a list of frequencies and amplitudes in for the object to analyze.
 	    </description>
 	</method>
-	<method name="float">
+	<method name="process_SDIF">
 	    <description>
-			float does x
+		Process an entire SDIF file for roughness.
+	    </description>
+	</method>
+	<method name="scIndex">
+	    <description>
+	    </description>
+	</method>
+	<method name="set">
+	    <description>
+		Set the SDIF buffer that this object refers to.
+	    </description>
+	</method>
+	<method name="set-cbw-type">
+	    <arglist>
+		<arg name="type" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Set the type of calculation used when assessing roughness.  Options are:
+		<ul>
+		    <li>1: Parncutt: Using Hutchinson and Knopoff's critical bandwidth formula:</li>
+		    <li>2: Moore and Glasberg</li>
+		</ul>
+	    </description>
+	</method>
+	<method name="tellmeeverything">
+	    <description>
+		Print information about the author, copyright, current formula, and expression used to the Max window.
+	    </description>
+	</method>
+	<method name="version">
+	    <description>
+		Print version information to the Max window.
 	    </description>
 	</method>
     </methodlist>
 
     <!--ATTRIBUTES-->
     <attributelist>
-	<attribute name="min" get="1" set="1" type="float" size="1">
-	    <description>
-		Minimum bound for accumulation
-	    </description>
-	</attribute>
-	<attribute name="bgcolor" get="1" set="1" type="float" size="4">
-	    <attributelist>
-	    <description>
-	    	Love the bg color.  Format is RGBA.
-	    </description>
-	</attribute>
     </attributelist>
-
 
     <!--SEEALSO-->
     <seealsolist>
-	<seealso name="some object name" />
+	<seealso name="loudness" />
+	<seealso name="SDIF-buffer" />
     </seealsolist>
 
     <misc name = "Input">
 	<entry name ="Inlet 1 [anything]">
 	    <description>
-			The first inlet of bdist accepts a number of types of messages.  Refer to the list above.
-	    </description>
-	</entry>
-	<entry name ="Inlet 2 [float]">
-	    <description>
-			Set the 'a' parameter for the current distribution, recalculate, and display the result.
+		Send a message to the roughness object.
 	    </description>
 	</entry>
     </misc>
@@ -105,25 +121,15 @@
     <misc name = "Output">
 	<entry name ="Outlet 1 [list or float]">
 	    <description>
-			Outlet description
-	    </description>
-	</entry>
-	<entry name ="Outlet 2 [variable]">
-	    <description>
-			If the object receives a [dump] message, lists of size N will come out here.
+		A float is output between 0. and 1. as a measure of roughness given at the input by a <m>list</m> message.
 	    </description>
 	</entry>
     </misc>
 
     <misc name = "Discussion">
-	<entry name ="More details">
-	    <description>
-	    	Some extra text about the subject; stories and folklore
-	    </description>
-	</entry>
 	<entry name ="Keywords">
 	    <description>
-		bdist, CNMAT, transfer function
+		roughness, analysis, partials, frequency, amplitude
 	    </description>
 	</entry>
     </misc>
