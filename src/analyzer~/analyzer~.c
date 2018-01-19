@@ -1715,7 +1715,7 @@ t_max_err analyzer_handle_attr_type2(t_analyzer *x,
 	default:
 		object_error((t_object *)x, "'%s' must be either an int or a float (which will be truncated to an int).\n", paramname);
 	}
-	if(val >= 0 && val < maxval){
+	if(val >= 0 && val <= maxval){
 		*field = val;
 	}else{
 		object_error((t_object *)x, "'%s' (%d) must be between [0, %d).  Setting to %d\n", paramname, val, maxval, defval);
