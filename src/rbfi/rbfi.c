@@ -466,6 +466,8 @@ void rbfi_anything(t_rbfi *x, t_symbol *msg, short argc, t_atom *argv){
 		rbfi_getRect(x, &r);
 		p->weight = rbfi_computeWeightFromDistances(p->inner_radius * r.width, p->outer_radius * r.width);
 		p->exponent = rbfi_computeExponentFromDistances(p->inner_radius  * r.width, p->outer_radius * r.width);
+		hashtab_chuckkey(x->ht, name);
+		hashtab_store(x->ht, p->label, (t_object *)p);
 	}else{
 		object_error((t_object *)x, "no point with name %s", name->s_name);
 		critical_exit(x->lock);
