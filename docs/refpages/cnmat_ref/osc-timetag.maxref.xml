@@ -73,19 +73,23 @@
     <methodlist>
 	<method name="FullPacket">
 	    <arglist>
-		<arg name="" type="int" optional="0" id="0" />
-		<arg name="" type="int" optional="0" id="1" />
+		<arg name="length of packet (in bytes)" optional="0" type="int"/>
+		<arg name="pointer value (address in memory)" optional="0" type="int"/>
 	    </arglist>
 	    <description>
+		Send an OSC bundle to the osc-timetag object.  It is not expected that the user will generate this.
 	    </description>
+	</method>
 	</method>
 
 	<method name="OSCTimeTag">
 	    <arglist>
-		<arg name="" type="int" optional="0" id="0" />
-		<arg name="" type="int" optional="0" id="1" />
+		<arg name="first 32-bit int" type="int" optional="0" id="0" />
+		<arg name="second 32-bit int" type="int" optional="0" id="1" />
 	    </arglist>
 	    <description>
+		OSC-timetag / NTP:  This is the default format for timetags to be received.  There are two 32-bit ints that comprise a larger 64-bit int to specify the time.  <br/>
+		NTP is a 64-bit fixed point encoding used for network time synchronization and by OSC bundles.
 	    </description>
 	</method>
 	<method name="now">

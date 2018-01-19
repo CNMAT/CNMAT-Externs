@@ -58,10 +58,11 @@
     <methodlist>
 	<method name="FullPacket">
 	    <arglist>
-		<arg name="An int, or a list of pairs" type="int or list" optional="0" id="0" />
+		<arg name="length of packet (in bytes)" optional="0" type="int"/>
+		<arg name="pointer value (address in memory)" optional="0" type="int"/>
 	    </arglist>
 	    <description>
-		Issue a list of pairs specifying the distribution topology to draw from when choosing values for output.  The number of pairs corresponds to the number of values issued, and each value represents a separate value being chosen.
+		Send an OSC bundle to the osc-schedule object.  It is not expected that the user will generate the arguments for this message, but rather that it will be formatted by the <o>opensoundcontrol</o> object, which allows for definitions of timetags.
 	    </description>
 	</method>
 
