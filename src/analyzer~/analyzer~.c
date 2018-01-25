@@ -70,8 +70,8 @@
 #include <string.h>
 #include <math.h>
 #include <stdint.h>
-#include "fftw3.h"
-//#include "fft.h"
+//#include "fftw3.h"
+#include "fft.h"
 
 #define OSC 1
 #ifdef OSC
@@ -283,9 +283,9 @@ typedef struct _analyzer {
 	// Buffers
 	t_atom *Buf1;			// buffer 1 : Use buffers of integers to copy faster
 	t_atom *Buf2;			// buffer 2
-	double *BufFFT_in;		// FFT buffer
-	double *BufFFT_out;		// FFT buffer
-	double *BufPower;		// Power spectrum buffer
+	float *BufFFT_vec;		// FFT buffer
+	float *BufFFT_mem;		// FFT buffer
+	float *BufPower;		// Power spectrum buffer
 //	double *WindFFT;		// Window of FFTSize
 	//double *memFFT;		// fft.c memory space
 	t_peakout *peakBuf;		// Spectral peaks for output
@@ -318,7 +318,7 @@ typedef struct _analyzer {
 	double *lastInputVector;	// Remembered from last analyzer_perform() for debug into
 	long lastInputVectorSize;	// ditto
 
-	fftw_plan fft_plan;
+	// fftw_plan fft_plan;
 
 	t_osc_timetag timetag; // the time reported by gettimeofday---used to create timestamps for outgoing OSC packets
 	uint64_t svctr; // the signal vector number---used to create timestamps for outgoing OSC packets
@@ -627,8 +627,8 @@ void analyzer_tellmeeverything(t_analyzer *x) {
 	TELLi(BufWritePos);
 	TELLp(Buf1);
 	TELLp(Buf2);
-	TELLp(BufFFT_in);
-	TELLp(BufFFT_out);
+	TELLp(BufFFT_vec);
+	TELLp(BufFFT_mem);
 	TELLp(lastInputVector);
 	TELLi(lastInputVectorSize);
 	
@@ -679,7 +679,7 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
 	long i, index=0, cpt;
 	double bark = 0.0, loud = 0.0, bright = 0.0, sumSpectrum = 0.0, SFM = 0.0;
 	critical_enter(x->lock);
-	fftw_plan fft_plan = x->fft_plan;
+//	fftw_plan fft_plan = x->fft_plan;
 	double fs = x->x_Fs;
 	double FFTSize = x->FFTSize;
 	int window_index = x->window;
@@ -695,20 +695,22 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
 	// this function is only ever called by the scheduler (via schedule_delay() in the perform
 	// routine), so we don't need to enter a critical section to mess with the data stored
 	// in our struct
-	memset(x->BufFFT_in, '\0', FFTSize * sizeof(double)); // takes care of zero padding
+	memset(x->BufFFT_vec, '\0', FFTSize * sizeof(float)); // takes care of zero padding
 	if(window_index == Recta){
 		for(int i = 0; i < argc; i++){
-			x->BufFFT_in[i] = atom_getfloat(argv + i);
+			x->BufFFT_vec[i] = atom_getfloat(argv + i);
 		}
 	}else{
 		for(int i = 0; i < argc; i++){
-			//x->BufFFT_in[i] = atom_getfloat(argv + i) * x->windows[window][i];
-			x->BufFFT_in[i] = atom_getfloat(argv + i) * window[i];
+			//x->BufFFT_vec[i] = atom_getfloat(argv + i) * x->windows[window][i];
+			x->BufFFT_vec[i] = atom_getfloat(argv + i) * window[i];
 		}
 	}
-	fftw_execute(fft_plan);
+	//fftw_execute(fft_plan);
 
-	double *BufFFT = x->BufFFT_out;
+    fftRealfast(x->FFTSize, x->BufFFT_vec, x->BufFFT_mem);
+
+	float *BufFFT = x->BufFFT_vec;
 	// Squared Absolute
 	for (i=0; i<x->FFTSize; i+=2) {
 		x->BufPower[i/2] = (BufFFT[i] * BufFFT[i]) + (BufFFT[i+1] * BufFFT[i+1]);
@@ -1065,9 +1067,9 @@ void pitch_getit(t_analyzer *x)
 	t_peak *pk1; // peaks found
 	t_peakout *pk2; // peaks to output
 	t_histopeak *hp1;
-	double power_spec = 0.0, total_power = 0.0, total_loudness = 0.0, total_db = 0.0;
-	double *fp1, *fp2;
-	double *spec = x->BufFFT_out, *powSpec = x->BufPower, threshold, mult;
+	float power_spec = 0.0, total_power = 0.0, total_loudness = 0.0, total_db = 0.0;
+	float *fp1, *fp2;
+	float *spec = x->BufFFT_vec, *powSpec = x->BufPower, threshold, mult;
 	long n = x->FFTSize/2;
 	long npitch, newphase, oldphase, npeak = 0;
 	long logn = pitch_ilog2(n);
@@ -1647,7 +1649,7 @@ void analyzer_fftsize_do_set(t_analyzer *x, long n)
     {
         critical_enter(x->lock);
         
-        x->fft_plan = fftw_plan_dft_r2c_1d(n, x->BufFFT_in, (fftw_complex*)x->BufFFT_out, FFTW_MEASURE);
+        // x->fft_plan = fftw_plan_dft_r2c_1d(n, x->BufFFT_in, (fftw_complex*)x->BufFFT_out, FFTW_MEASURE);
         x->FFTSize = n;
         
         analyzer_setBarkBins(x);
@@ -1805,8 +1807,8 @@ void analyzer_free(t_analyzer *x)
     
     if (x->Buf1 != NULL) sysmem_freeptr((char *)x->Buf1);
     if (x->Buf2 != NULL) sysmem_freeptr((char *)x->Buf2);
-    if (x->BufFFT_in != NULL) fftw_free((char *)x->BufFFT_in);
-    if (x->BufFFT_out != NULL) fftw_free((char *) x->BufFFT_out);
+    if (x->BufFFT_vec != NULL) sysmem_freeptr((char *)x->BufFFT_vec);
+    if (x->BufFFT_mem != NULL) sysmem_freeptr((char *) x->BufFFT_mem);
     if (x->BufPower != NULL) sysmem_freeptr((char *)x->BufPower);
     if (x->peakBuf != NULL) sysmem_freeptr((char *)x->peakBuf);
     if (x->histBuf != NULL) sysmem_freeptr((char *)x->histBuf);
@@ -1822,7 +1824,7 @@ void analyzer_free(t_analyzer *x)
         }
     }
     
-    fftw_destroy_plan(x->fft_plan);
+//    fftw_destroy_plan(x->fft_plan);
     
     critical_free(x->lock);
 }
@@ -1890,12 +1892,12 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
     x->Buf1 = (t_atom*)sysmem_newptr( (MAXBUFSIZE + 1) * sizeof(t_atom));
     x->Buf2 = (t_atom*)sysmem_newptr( (MAXBUFSIZE + 1) * sizeof(t_atom));
     
-    x->BufFFT_in = (double *)fftw_malloc(sizeof(double) * MAXBUFSIZE);
-    x->BufFFT_out = (double *)fftw_malloc(sizeof(double) * MAXBUFSIZE * 2);
-    memset(x->BufFFT_in, '\0', MAXBUFSIZE * sizeof(double));
-    memset(x->BufFFT_out, '\0', MAXBUFSIZE * 2 * sizeof(double));
+    x->BufFFT_vec = (float *)sysmem_newptr(sizeof(float) * MAXBUFSIZE);
+    x->BufFFT_mem = (float *)sysmem_newptr(sizeof(float) * MAXBUFSIZE * 2);
+    memset(x->BufFFT_vec, '\0', MAXBUFSIZE * sizeof(float));
+    memset(x->BufFFT_mem, '\0', MAXBUFSIZE * 2 * sizeof(float));
     
-    x->BufPower = (double*) sysmem_newptr((MAXBUFSIZE / 2) * sizeof(double));
+    x->BufPower = (float*) sysmem_newptr((MAXBUFSIZE / 2) * sizeof(float));
     
     x->peakBuf = (t_peakout*) sysmem_newptr(MAXNPEAK * sizeof(t_peakout)); // from Fiddle~
     x->histBuf = (double*) sysmem_newptr((MAXBUFSIZE + BINGUARD) * sizeof(double)); // for Fiddle~
@@ -2101,6 +2103,8 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
     
     x->x_debug = 0;
     
+    object_warn((t_object *)x, "testing non-fftw version");
+    
     return x;
 }
 
@@ -2205,5 +2209,6 @@ int main(void)
     class_dspinit(analyzer_class);
     
     class_register(CLASS_BOX, analyzer_class);
+    
     return 0;
 }
