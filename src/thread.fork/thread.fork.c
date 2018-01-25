@@ -1,5 +1,5 @@
 /*
- 
+
 Copyright (c) 2009
 The Regents of the University of California (Regents).
 All Rights Reserved.
@@ -28,7 +28,7 @@ University of California, Berkeley.
      ENHANCEMENTS, OR MODIFICATIONS.
 
  thread.fork.c
- 
+
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: thread.fork
 DESCRIPTION: Pass data from main thread to a secondary thread
@@ -67,12 +67,12 @@ VERSION 0.1: First public release
 typedef struct _thread_fork
 {
     Object o_ob;    // required header
-    
+
     t_object* in_p[1];  // either a normal inlet or a crazy proxy thing
     long in_i_unsafe;   // which inlet message arrived on, but isn't threadsafe
-  
+
     t_object* out_p[1]; // outlet
-  
+
     pthread_t t;
     pthread_mutex_t lock;
     int main_has_lock;
@@ -81,11 +81,11 @@ typedef struct _thread_fork
 
     float f;
     int i;
-    
+
     t_symbol* s;
     int argc;
     t_atom* argv;
-    
+
 } thread_fork;
 
 /* global that holds the class definition */
@@ -109,17 +109,17 @@ int main(void)
 {
     // post version
     version_post_copyright();
-    
+
     thread_fork_class = class_new("thread.fork", (method)thread_fork_new, (method)thread_fork_free, (short)sizeof(thread_fork), 0L, A_GIMME, 0);
-    
+
     class_addmethod(thread_fork_class, (method)thread_fork_anything, "anything", A_GIMME, 0);
     class_addmethod(thread_fork_class, (method)thread_fork_bang, "bang", 0);
     class_addmethod(thread_fork_class, (method)thread_fork_float, "float", A_FLOAT, 0);
     class_addmethod(thread_fork_class, (method)thread_fork_int, "int", A_LONG, 0);
-    
+
     // tooltip helper
     class_addmethod(thread_fork_class, (method)thread_fork_assist, "assist", A_CANT, 0);
-    
+
     class_register(CLASS_BOX, thread_fork_class);
     return 0;
 }
@@ -127,7 +127,7 @@ int main(void)
 void *thread_fork_new(t_symbol* s, short argc, t_atom *argv)
 {
     thread_fork *x;
-    
+
     x = object_alloc(thread_fork_class);
     if(!x){
 	    return NULL;
@@ -137,14 +137,14 @@ void *thread_fork_new(t_symbol* s, short argc, t_atom *argv)
     pthread_create(&(x->t), NULL, thread_fork_run, x);
     pthread_mutex_init(&(x->lock), NULL);
     pthread_mutex_lock(&(x->lock));
-    
+
     return (x);
 }
 
 void thread_fork_free(thread_fork* x) {
-    
+
     pthread_cancel(x->t);
-    
+
 }
 
 // tooltip assist
@@ -171,7 +171,7 @@ void thread_fork_anything(thread_fork *x, t_symbol* s, int argc, t_atom* argv) {
     x->s = s;
     x->argc = argc;
     x->argv = argv;
-    
+
     pthread_mutex_unlock(&(x->lock));
     sched_yield();
     pthread_mutex_lock(&(x->lock));
@@ -179,39 +179,39 @@ void thread_fork_anything(thread_fork *x, t_symbol* s, int argc, t_atom* argv) {
 }
 
 void thread_fork_bang(thread_fork* x) {
-    
+
     x->type = TYPE_BANG;
-    
+
     pthread_mutex_unlock(&(x->lock));
     sched_yield();
     pthread_mutex_lock(&(x->lock));
-    
+
 }
 
 void thread_fork_int(thread_fork* x, int i) {
-    
+
     x->type = TYPE_INT;
     x->i = i;
-    
+
     pthread_mutex_unlock(&(x->lock));
     sched_yield();
     pthread_mutex_lock(&(x->lock));
-    
+
 }
 
 void thread_fork_float(thread_fork *x, double f) {
-    
+
     x->type = TYPE_FLOAT;
     x->f = f;
 
     pthread_mutex_unlock(&(x->lock));
     sched_yield();
     pthread_mutex_lock(&(x->lock));
-    
+
 }
 
 void thread_fork_outlet_anything(thread_fork *x) {
-    
+
     t_symbol s;
     t_atom argv[x->argc];
     int argc;
@@ -219,7 +219,7 @@ void thread_fork_outlet_anything(thread_fork *x) {
     argc = x->argc;
     memcpy(&s, x->s, sizeof(t_symbol));
     memcpy(argv, x->argv, sizeof(t_atom)*x->argc);
-    
+
     pthread_mutex_unlock(&(x->lock));
 
     outlet_anything(x->out_p[0], &s, argc, argv);
@@ -229,7 +229,7 @@ void *thread_fork_run(thread_fork *x) {
 
     int i;
     float f;
-    
+
     while(1) {
 
         sched_yield();
@@ -250,8 +250,7 @@ void *thread_fork_run(thread_fork *x) {
             outlet_int(x->out_p[0], i);
         }
     }
-    
-    return NULL;
-    
-}
 
+    return NULL;
+
+}
