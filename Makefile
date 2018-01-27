@@ -21,7 +21,7 @@ MAX_JAVA_JAR = /Applications/Max.app/Contents/Resources/C74/packages/max-mxj/jav
 win: CC = i686-w64-mingw32-gcc
 win: LD = $(CC)
 win: CFLAGS += -DWIN_VERSION -DWIN_EXT_VERSION -U__STRICT_ANSI__ -U__ANSI_SOURCE -std=c99 -O3 -DNO_TRANSLATION_SUPPORT -msse3 -m32
-win: LDFLAGS = -shared -static-libgcc
+win: LDFLAGS = -shared -static-libgcc -Wl,-Bstatic -lpthread 
 win: INCLUDES = -I/usr/i686-w64-mingw32/sys-root/mingw/include -I$(MAX_INCLUDES) -Iinclude -I$(MSP_INCLUDES) -Ilib -Ilib/Jehan-lib -I$(JIT_INCLUDES) -I../CNMAT-OSC/OSC-Kit -I../CNMAT-OSC/libOSC -I../fftw -I../fftw/api -I../CNMAT-SDIF/lib -Isrc/SDIF-Buffer -Iutility-library/search-path -I../libo -I../libomax
 win: LIBS = -L$(MAX_INCLUDES) -lMaxAPI -L$(MSP_INCLUDES) -lMaxAudio -L$(JIT_INCLUDES) -ljitlib -lm -L/usr/i686-w64-mingw32/sys-root/mingw/lib
 win: ODOT_LIBS = -L../libo/libs/i686 -l:libo.a -L../libomax/libs/i686 -l:libomax.a
@@ -31,7 +31,7 @@ win: MAX_JAVA_JAR = "C:\Program Files (x86)\Cycling '74\Max 7\resources\packages
 win64: CC = x86_64-w64-mingw32-gcc
 win64: LD = $(CC)
 win64: CFLAGS += -DWIN_VERSION -DWIN_EXT_VERSION -U__STRICT_ANSI__ -U__ANSI_SOURCE -std=c99 -O3 -DNO_TRANSLATION_SUPPORT -msse3
-win64: LDFLAGS = -shared -static-libgcc # -Wl,--verbose
+win64: LDFLAGS = -shared -static-libgcc -Wl,-Bstatic -lpthread # -Wl,--verbose
 win64: INCLUDES = -I/usr/x86_64-w64-mingw32/sys-root/mingw/include -I$(MAX_INCLUDES) -Iinclude -I$(MSP_INCLUDES) -Ilib -Ilib/Jehan-lib  -I$(JIT_INCLUDES) -I../CNMAT-OSC/OSC-Kit -I../CNMAT-OSC/libOSC -I../CNMAT-SDIF/lib -Isrc/SDIF-Buffer -Iutility-library/search-path -I../libo -I../libomax
 win64: LIBS = -L$(JIT_INCLUDES) -lx64/jitlib -L$(MAX_INCLUDES) -lx64/MaxAPI -L$(MSP_INCLUDES) -lx64/MaxAudio -lm -L/usr/x86_64-w64-mingw32/sys-root/mingw/lib
 win64: ODOT_LIBS = -L../libo/libs/x86_64 -l:libo.a -L../libomax/libs/x86_64 -l:libomax.a
