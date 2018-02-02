@@ -40,10 +40,10 @@
     <methodlist>
 	<method name="SDIFtime">
 	    <arglist>
-		<arg name="arg1name" type="int" optional="0" id="0" />
+		<arg name="time in seconds" type="float" optional="0" id="0" />
 	    </arglist>
 	    <description>
-
+		Set the timestamp, in seconds, at which to evaluate an SDIF file for roughness.
 	    </description>
 	</method>
 	<method name="anything">
@@ -64,11 +64,12 @@
 	</method>
 	<method name="process_SDIF">
 	    <description>
-		Process an entire SDIF file for roughness.
+		Process an SDIF frame for roughness information.  The <m>set</m> message specifies which SDIF file (in Max's memory) to refer to, and the relevant timestamp is issued via <m>SDIFtime</m>.
 	    </description>
 	</method>
 	<method name="scIndex">
 	    <description>
+		The exponent of the standard curve to use when evaluating roughness.
 	    </description>
 	</method>
 	<method name="set">
