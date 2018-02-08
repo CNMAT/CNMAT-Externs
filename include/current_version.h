@@ -1,2 +1,0 @@
-#define CNMAT_EXT_VERSION "v1.0.3b-23-g827a5cf5"
-#define CNMAT_EXT_COMPILE_DATE "Thu, Jan 25, 2018 10:02:56 PM"
