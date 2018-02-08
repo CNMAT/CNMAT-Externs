@@ -21,7 +21,7 @@
 
 
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  NAME: whichthread
+  NAME: thread.which
   DESCRIPTION: Report the current executing thread
   AUTHORS: John MacCallum
   COPYRIGHT_YEARS: 2012
@@ -30,7 +30,7 @@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 */
 
-#define NAME "whichthread"
+#define NAME "thread.which"
 #define DESCRIPTION "Report the current executing thread"
 #define AUTHORS "John MacCallum"
 #define COPYRIGHT_YEARS "2012,13"
@@ -46,23 +46,23 @@
 #define LEFT_OUTLET 0
 #define RIGHT_OUTLET 1
 
-typedef struct _whichthread{
+typedef struct _threadwhich{
 	t_object ob;
 	void *outlets[2];
-} t_whichthread;
+} t_threadwhich;
 
-void *whichthread_class;
+void *threadwhich_class;
 
-void whichthread_bang(t_whichthread *x);
-void whichthread_long(t_whichthread *x, long l);
-void whichthread_float(t_whichthread *x, double f);
-void whichthread_list(t_whichthread *x, t_symbol *msg, long argc, t_atom *argv);
-void whichthread_anything(t_whichthread *x, t_symbol *msg, long argc, t_atom *argv);
-void whichthread_free(t_whichthread *x);
-void whichthread_assist(t_whichthread *x, void *b, long m, long a, char *s);
-void *whichthread_new(t_symbol *msg, short argc, t_atom *argv);
+void threadwhich_bang(t_threadwhich *x);
+void threadwhich_long(t_threadwhich *x, long l);
+void threadwhich_float(t_threadwhich *x, double f);
+void threadwhich_list(t_threadwhich *x, t_symbol *msg, long argc, t_atom *argv);
+void threadwhich_anything(t_threadwhich *x, t_symbol *msg, long argc, t_atom *argv);
+void threadwhich_free(t_threadwhich *x);
+void threadwhich_assist(t_threadwhich *x, void *b, long m, long a, char *s);
+void *threadwhich_new(t_symbol *msg, short argc, t_atom *argv);
 
-void whichthread_outputThread(t_whichthread *x)
+void threadwhich_outputThread(t_threadwhich *x)
 {
 	if(systhread_ismainthread()){
 		outlet_anything(x->outlets[RIGHT_OUTLET], gensym("main"), 0, NULL);
@@ -73,32 +73,32 @@ void whichthread_outputThread(t_whichthread *x)
 	}
 }
 
-void whichthread_bang(t_whichthread *x){
-	whichthread_outputThread(x);
+void threadwhich_bang(t_threadwhich *x){
+	threadwhich_outputThread(x);
 	outlet_bang(x->outlets[LEFT_OUTLET]);
 }
 
-void whichthread_long(t_whichthread *x, long l){
-	whichthread_outputThread(x);
+void threadwhich_long(t_threadwhich *x, long l){
+	threadwhich_outputThread(x);
 	outlet_int(x->outlets[LEFT_OUTLET], l);
 }
 
-void whichthread_float(t_whichthread *x, double f){
-	whichthread_outputThread(x);
+void threadwhich_float(t_threadwhich *x, double f){
+	threadwhich_outputThread(x);
 	outlet_float(x->outlets[LEFT_OUTLET], f);
 }
 
-void whichthread_list(t_whichthread *x, t_symbol *msg, long argc, t_atom *argv){
-	whichthread_outputThread(x);
+void threadwhich_list(t_threadwhich *x, t_symbol *msg, long argc, t_atom *argv){
+	threadwhich_outputThread(x);
 	outlet_list(x->outlets[LEFT_OUTLET], NULL, argc, argv);
 }
 
-void whichthread_anything(t_whichthread *x, t_symbol *msg, long argc, t_atom *argv){
-	whichthread_outputThread(x);
+void threadwhich_anything(t_threadwhich *x, t_symbol *msg, long argc, t_atom *argv){
+	threadwhich_outputThread(x);
 	outlet_anything(x->outlets[LEFT_OUTLET], msg, argc, argv);
 }
 
-void whichthread_assist(t_whichthread *x, void *b, long m, long a, char *s){
+void threadwhich_assist(t_threadwhich *x, void *b, long m, long a, char *s){
 	if (m == ASSIST_OUTLET){
 		//sprintf(s,"OSC bundle");
 	}else {
@@ -106,12 +106,12 @@ void whichthread_assist(t_whichthread *x, void *b, long m, long a, char *s){
 	}
 }
 
-void whichthread_free(t_whichthread *x){
+void threadwhich_free(t_threadwhich *x){
 }
 
-void *whichthread_new(t_symbol *msg, short argc, t_atom *argv){	
-	t_whichthread *x;
-	if(x = (t_whichthread *)object_alloc(whichthread_class)){
+void *threadwhich_new(t_symbol *msg, short argc, t_atom *argv){
+	t_threadwhich *x;
+	if(x = (t_threadwhich *)object_alloc(threadwhich_class)){
 		x->outlets[RIGHT_OUTLET] = outlet_new(x, NULL);
 		x->outlets[LEFT_OUTLET] = outlet_new(x, NULL);
 	}
@@ -120,16 +120,16 @@ void *whichthread_new(t_symbol *msg, short argc, t_atom *argv){
 }
 
 int main(void){
-	t_class *c = class_new("whichthread", (method)whichthread_new, (method)whichthread_free, sizeof(t_whichthread), 0L, A_GIMME, 0);
-	class_addmethod(c, (method)whichthread_assist, "assist", A_CANT, 0);
-	class_addmethod(c, (method)whichthread_bang, "bang", 0);
-	class_addmethod(c, (method)whichthread_long, "int", 0);
-	class_addmethod(c, (method)whichthread_float, "float", 0);
-	class_addmethod(c, (method)whichthread_list, "list", A_GIMME, 0);
-	class_addmethod(c, (method)whichthread_anything, "anything", A_GIMME, 0);
+	t_class *c = class_new("thread.which", (method)threadwhich_new, (method)threadwhich_free, sizeof(t_threadwhich), 0L, A_GIMME, 0);
+	class_addmethod(c, (method)threadwhich_assist, "assist", A_CANT, 0);
+	class_addmethod(c, (method)threadwhich_bang, "bang", 0);
+	class_addmethod(c, (method)threadwhich_long, "int", 0);
+	class_addmethod(c, (method)threadwhich_float, "float", 0);
+	class_addmethod(c, (method)threadwhich_list, "list", A_GIMME, 0);
+	class_addmethod(c, (method)threadwhich_anything, "anything", A_GIMME, 0);
 
 	class_register(CLASS_BOX, c);
-	whichthread_class = c;
+	threadwhich_class = c;
 
 	common_symbols_init();
 
