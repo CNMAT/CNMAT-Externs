@@ -82,7 +82,7 @@
 		116F87671F9A5B5A0062EE91 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
 		116F87681F9A5B5A0062EE91 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
 		116F876A1F9A5B5A0062EE91 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A4E832F619E8650200C55B20 /* Info.plist */; };
-		116F876B1F9A5B5A0062EE91 /* cambio~.help.pat in Resources */ = {isa = PBXBuildFile; fileRef = A4E832F519E8650200C55B20 /* cambio~.help.pat */; };
+		116F876B1F9A5B5A0062EE91 /* (null) in Resources */ = {isa = PBXBuildFile; };
 		116F87711F9A5BE50062EE91 /* patcherbangs.c in Sources */ = {isa = PBXBuildFile; fileRef = 116F87701F9A5BE50062EE91 /* patcherbangs.c */; };
 		118DF69319D2165C00AD8C6C /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
 		118DF69619D2165C00AD8C6C /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
@@ -214,7 +214,7 @@
 		5219622016E6C6B600EA7DDF /* OSC-route.c in Sources */ = {isa = PBXBuildFile; fileRef = 5219618416E6C03E00EA7DDF /* OSC-route.c */; };
 		5219622116E6C6C200EA7DDF /* res-transform.c in Sources */ = {isa = PBXBuildFile; fileRef = 521961A016E6C07C00EA7DDF /* res-transform.c */; };
 		5219622216E6C6D000EA7DDF /* trampoline.c in Sources */ = {isa = PBXBuildFile; fileRef = 5219618C16E6C05800EA7DDF /* trampoline.c */; };
-		5219622316E6C6D600EA7DDF /* whichthread.c in Sources */ = {isa = PBXBuildFile; fileRef = 5219619016E6C06700EA7DDF /* whichthread.c */; };
+		5219622316E6C6D600EA7DDF /* thread.which.c in Sources */ = {isa = PBXBuildFile; fileRef = 5219619016E6C06700EA7DDF /* thread.which.c */; };
 		5219624B16E6C98000EA7DDF /* OSC-pattern-match.c in Sources */ = {isa = PBXBuildFile; fileRef = 5219623E16E6C96D00EA7DDF /* OSC-pattern-match.c */; };
 		5219625516E6D02000EA7DDF /* OSC-client.c in Sources */ = {isa = PBXBuildFile; fileRef = 5219624F16E6D01700EA7DDF /* OSC-client.c */; };
 		5219625616E6D09700EA7DDF /* OSC-timetag.c in Sources */ = {isa = PBXBuildFile; fileRef = 5219625116E6D01700EA7DDF /* OSC-timetag.c */; };
@@ -973,7 +973,7 @@
 		5219618B16E6C05800EA7DDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5219618C16E6C05800EA7DDF /* trampoline.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = trampoline.c; sourceTree = "<group>"; };
 		5219618F16E6C06700EA7DDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5219619016E6C06700EA7DDF /* whichthread.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = whichthread.c; sourceTree = "<group>"; };
+		5219619016E6C06700EA7DDF /* thread.which.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = thread.which.c; sourceTree = "<group>"; };
 		5219619316E6C07200EA7DDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5219619416E6C07200EA7DDF /* OpenSoundControl.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = OpenSoundControl.c; sourceTree = "<group>"; };
 		5219619716E6C07200EA7DDF /* OSC-receiving-example.pat */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OSC-receiving-example.pat"; sourceTree = "<group>"; };
@@ -988,7 +988,7 @@
 		521961C816E6C5EC00EA7DDF /* OSC-route.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "OSC-route.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		521961D916E6C5F900EA7DDF /* migrator.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = migrator.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		521961EA16E6C5FF00EA7DDF /* trampoline.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = trampoline.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
-		521961FB16E6C60500EA7DDF /* whichthread.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = whichthread.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		521961FB16E6C60500EA7DDF /* thread.which.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = thread.which.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		5219620C16E6C60D00EA7DDF /* OpenSoundControl.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenSoundControl.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		5219621D16E6C61400EA7DDF /* res-transform.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "res-transform.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5219623116E6C96D00EA7DDF /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
@@ -1280,7 +1280,7 @@
 		A4ADD8451FCFE05D00A59C42 /* trend-report.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "trend-report.maxhelp"; path = "help/trend-report.maxhelp"; sourceTree = SOURCE_ROOT; };
 		A4ADD8461FCFE06500A59C42 /* vsnapshot~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "vsnapshot~.maxhelp"; path = "help/vsnapshot~.maxhelp"; sourceTree = SOURCE_ROOT; };
 		A4ADD8471FCFE06C00A59C42 /* waveguide~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "waveguide~.maxhelp"; path = "help/waveguide~.maxhelp"; sourceTree = SOURCE_ROOT; };
-		A4ADD8481FCFE07400A59C42 /* whichthread.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = whichthread.maxhelp; path = help/whichthread.maxhelp; sourceTree = SOURCE_ROOT; };
+		A4ADD8481FCFE07400A59C42 /* thread.which.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = thread.which.maxhelp; path = help/thread.which.maxhelp; sourceTree = SOURCE_ROOT; };
 		A4ADD8491FCFE07C00A59C42 /* xydisplay.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = xydisplay.maxhelp; path = help/xydisplay.maxhelp; sourceTree = SOURCE_ROOT; };
 		A4DB19B31A1EFC470074BE10 /* libgsl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgsl.a; path = ../gsl/libgsl.a; sourceTree = "<group>"; };
 		A4E832F419E8650200C55B20 /* cambio~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "cambio~.c"; sourceTree = "<group>"; };
@@ -2060,15 +2060,15 @@
 			path = src/trampoline;
 			sourceTree = "<group>";
 		};
-		5219618E16E6C06700EA7DDF /* whichthread */ = {
+		5219618E16E6C06700EA7DDF /* thread.which */ = {
 			isa = PBXGroup;
 			children = (
 				5219618F16E6C06700EA7DDF /* Info.plist */,
-				5219619016E6C06700EA7DDF /* whichthread.c */,
-				A4ADD8481FCFE07400A59C42 /* whichthread.maxhelp */,
+				5219619016E6C06700EA7DDF /* thread.which.c */,
+				A4ADD8481FCFE07400A59C42 /* thread.which.maxhelp */,
 			);
-			name = whichthread;
-			path = src/whichthread;
+			name = thread.which;
+			path = src/thread.which;
 			sourceTree = "<group>";
 		};
 		5219619216E6C07200EA7DDF /* OpenSoundControl */ = {
@@ -2852,7 +2852,7 @@
 				52E449AD15F2879700C91B67 /* trend-report */,
 				52E449B115F287C400C91B67 /* vsnapshot~ */,
 				52E449B515F287C400C91B67 /* waveguide~ */,
-				5219618E16E6C06700EA7DDF /* whichthread */,
+				5219618E16E6C06700EA7DDF /* thread.which */,
 				52E449B915F287C400C91B67 /* xydisplay */,
 				52DE949415F142570097B3E8 /* lib */,
 				52F10AA415F07157008FC371 /* Frameworks */,
@@ -2915,7 +2915,7 @@
 				521961C816E6C5EC00EA7DDF /* OSC-route.mxo */,
 				521961D916E6C5F900EA7DDF /* migrator.mxo */,
 				521961EA16E6C5FF00EA7DDF /* trampoline.mxo */,
-				521961FB16E6C60500EA7DDF /* whichthread.mxo */,
+				521961FB16E6C60500EA7DDF /* thread.which.mxo */,
 				5219620C16E6C60D00EA7DDF /* OpenSoundControl.mxo */,
 				5219621D16E6C61400EA7DDF /* res-transform.mxo */,
 				529DD9D717A2472A00E1F789 /* basicresonators~.mxo */,
@@ -3126,9 +3126,9 @@
 			productReference = 521961EA16E6C5FF00EA7DDF /* trampoline.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
-		521961EB16E6C60500EA7DDF /* whichthread */ = {
+		521961EB16E6C60500EA7DDF /* thread.which */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 521961F816E6C60500EA7DDF /* Build configuration list for PBXNativeTarget "whichthread" */;
+			buildConfigurationList = 521961F816E6C60500EA7DDF /* Build configuration list for PBXNativeTarget "thread.which" */;
 			buildPhases = (
 				521961EC16E6C60500EA7DDF /* Sources */,
 				521961EF16E6C60500EA7DDF /* Frameworks */,
@@ -3138,9 +3138,9 @@
 			);
 			dependencies = (
 			);
-			name = whichthread;
+			name = thread.which;
 			productName = "2threshattack~";
-			productReference = 521961FB16E6C60500EA7DDF /* whichthread.mxo */;
+			productReference = 521961FB16E6C60500EA7DDF /* thread.which.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
 		521961FC16E6C60D00EA7DDF /* OpenSoundControl */ = {
@@ -4105,7 +4105,7 @@
 				521961B816E6C5EC00EA7DDF /* OSC-route */,
 				521961C916E6C5F900EA7DDF /* migrator */,
 				521961DA16E6C5FF00EA7DDF /* trampoline */,
-				521961EB16E6C60500EA7DDF /* whichthread */,
+				521961EB16E6C60500EA7DDF /* thread.which */,
 				521961FC16E6C60D00EA7DDF /* OpenSoundControl */,
 				5219620D16E6C61400EA7DDF /* res-transform */,
 				A4E832E419E8642800C55B20 /* cambio~ */,
@@ -4120,7 +4120,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				116F876A1F9A5B5A0062EE91 /* Info.plist in Resources */,
-				116F876B1F9A5B5A0062EE91 /* cambio~.help.pat in Resources */,
+				116F876B1F9A5B5A0062EE91 /* (null) in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4628,7 +4628,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				521961ED16E6C60500EA7DDF /* commonsyms.c in Sources */,
-				5219622316E6C6D600EA7DDF /* whichthread.c in Sources */,
+				5219622316E6C6D600EA7DDF /* thread.which.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5209,7 +5209,7 @@
 		};
 		5219622B16E6C70700EA7DDF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 521961EB16E6C60500EA7DDF /* whichthread */;
+			target = 521961EB16E6C60500EA7DDF /* thread.which */;
 			targetProxy = 5219622A16E6C70700EA7DDF /* PBXContainerItemProxy */;
 		};
 		5219622D16E6C70700EA7DDF /* PBXTargetDependency */ = {
@@ -5860,14 +5860,14 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "$(inherited)";
+				INFOPLIST_FILE = "$(SRCROOT)/src/thread.which/Info.plist";
 				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
-				PRODUCT_NAME = whichthread;
+				PRODUCT_NAME = thread.which;
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -5881,14 +5881,14 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "$(inherited)";
+				INFOPLIST_FILE = "$(SRCROOT)/src/thread.which/Info.plist";
 				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
-				PRODUCT_NAME = whichthread;
+				PRODUCT_NAME = thread.which;
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -8355,7 +8355,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		521961F816E6C60500EA7DDF /* Build configuration list for PBXNativeTarget "whichthread" */ = {
+		521961F816E6C60500EA7DDF /* Build configuration list for PBXNativeTarget "thread.which" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				521961F916E6C60500EA7DDF /* Debug */,
