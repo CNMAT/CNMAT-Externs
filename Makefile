@@ -61,7 +61,7 @@ all: MACOBJECTS $(JAVAOBJECTS)
 MACOBJECTS: $(CURRENT_VERSION_FILE)
 	xcodebuild -target CNMAT-Externs -project CNMAT-Externs.xcodeproj -configuration Release
 
-SIMPLEOBJECTNAMES = cambio~ bench bench~ thread.join thread.fork cnmatrix~ 2threshattack~ accumulate~ bpf decaying-sinusoids~ deinterleave gridpanel interleave lcm list-accum list-interpolate migrator oscillators~ peqbank~ poly.bus~ poly.send~ rbfi res-transform resdisplay resonators~ sinusoids~ slipOSC threefates trampoline trend-report vsnapshot~ whichthread xydisplay waveguide~  #granubuf~
+SIMPLEOBJECTNAMES = cambio~ bench bench~ thread.join thread.fork cnmatrix~ 2threshattack~ accumulate~ bpf decaying-sinusoids~ deinterleave gridpanel interleave lcm list-accum list-interpolate migrator oscillators~ peqbank~ poly.bus~ poly.send~ rbfi res-transform resdisplay resonators~ sinusoids~ slipOSC threefates trampoline trend-report vsnapshot~ thread.which xydisplay waveguide~  #granubuf~
 SIMPLEOBJECTS = $(foreach f, $(SIMPLEOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
 
 MULTIPLEFILEOBJECTNAMES = harmonics~ randdist
