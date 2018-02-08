@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 59.0, 91.0, 461.0, 397.0 ],
+		"rect" : [ 100.0, 100.0, 461.0, 397.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -116,7 +116,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 59.0, 117.0, 461.0, 371.0 ],
+						"rect" : [ 100.0, 126.0, 461.0, 371.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -164,9 +164,9 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 30.0, 68.0, 292.0, 47.0 ],
+									"patching_rect" : [ 30.0, 68.0, 300.0, 47.0 ],
 									"style" : "default",
-									"text" : "send data in to whichthread.  it will then report which thread the data lives in, and sends said data out its outlet.  does not forward [bang] messages."
+									"text" : "send data in to thread.which.  it will then report which thread the data lives in, and sends said data out its outlet.  does not forward [bang] messages."
 								}
 
 							}
@@ -178,9 +178,9 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 30.0, 28.0, 152.0, 33.0 ],
+									"patching_rect" : [ 25.0, 28.0, 159.0, 33.0 ],
 									"style" : "",
-									"text" : "whichthread"
+									"text" : "thread.which"
 								}
 
 							}
@@ -333,9 +333,9 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "" ],
-									"patching_rect" : [ 39.0, 282.0, 75.0, 22.0 ],
+									"patching_rect" : [ 39.0, 282.0, 79.0, 22.0 ],
 									"style" : "default",
-									"text" : "whichthread"
+									"text" : "thread.which"
 								}
 
 							}
@@ -430,7 +430,7 @@
  ],
 		"lines" : [  ],
 		"dependency_cache" : [ 			{
-				"name" : "whichthread.mxo",
+				"name" : "thread.which.mxo",
 				"type" : "iLaX"
 			}
  ],
