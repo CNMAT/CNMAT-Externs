@@ -69,6 +69,7 @@
     <!--SEEALSO-->
     <seealsolist>
 	<seealso name="thread.join" />
+	<seealso name="thread.which" />
     </seealsolist>
 
     <misc name = "Input">
