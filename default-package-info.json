@@ -6,7 +6,7 @@
 	"displayname" : "",
 	"extends" : "",
 	"extensible" : 0,
-	"homepatcher" : CNMAT_Externals_Overview.maxpat,
+	"homepatcher" : "CNMAT_Externals_Overview.maxpat",
 	"max_version_max" : "none",
 	"max_version_min" : "none",
 	"name" : "CNMAT Externals",
