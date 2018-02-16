@@ -1,10 +1,7 @@
 archive_name=CNMAT_Externals-Max-OSX-`git describe --tags --long`-`git branch | egrep '^\*' | awk '{print $2}'`.zip
 dirs=(help media misc docs java-classes extras)
 
-mkdir CNMAT-Externals 
-&& mkdir CNMAT-Externals/externals 
-&& mkdir CNMAT-Externals/java-classes
-&& mkdir CNMAT-Externals/extras
+mkdir CNMAT-Externals && mkdir CNMAT-Externals/externals && mkdir CNMAT-Externals/java-classes && mkdir CNMAT-Externals/extras
 
 cp -r build/Release/*.mxo CNMAT-Externals/externals
 cp -r build/Release/*.class CNMAT-Externals/java-classes
