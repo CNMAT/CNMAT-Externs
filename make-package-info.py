@@ -17,6 +17,7 @@ with open('default-package-info.json', 'r') as f:
     pinfo['filelist']['misc'] = filesinfolder("misc")
     pinfo['filelist']['docs'] = filesinfolder("docs")
     pinfo['filelist']['docs'] += filesinfolder("docs/refpages/cnmat_ref")
+    pinfo['filelist']['extras'] += filesinfolder("extras/CNMAT-Externs")
 
     version = subprocess.check_output("git describe --tags --long", shell=True).strip()
     branch = subprocess.check_output("git branch | egrep '^\*' | awk '{print $2}'", shell=True).strip()
