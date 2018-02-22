@@ -12,7 +12,7 @@ Avenue, Suite 510, Berkeley, CA 94720-1620, (510) 643-7201, for commercial
 licensing opportunities.
 
 Written by Matt Wright, The Center for New Music and Audio Technologies,
-University of California, Berkeley. Maintenance by Ben "Jacobs".
+University of California, Berkeley. Maintenance by Ben Jacobs.
 
      IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
      SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST
