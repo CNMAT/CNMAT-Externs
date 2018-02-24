@@ -19,7 +19,6 @@
  HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  
- 
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  NAME: gridpanel
  DESCRIPTION: A 2-D grid that tracks mouse location.
@@ -34,12 +33,12 @@
 #define AUTHORS "Jeff Lubow"
 #define COPYRIGHT_YEARS "2011-13"
 
-
 #include "ext.h"
 #include "ext_obex.h"
 #include "ext_obex_util.h"
 #include "jpatcher_api.h"   
 #include "jgraphics.h"
+#include "version.h"
 
 typedef struct _gpan {
     t_jbox ob; 
@@ -345,9 +344,13 @@ void *gpan_new(t_symbol *msg, short argc, t_atom *argv) {
 
 int main(void){
     t_class *c = class_new("gridpanel", (method)gpan_new, (method)gpan_free, sizeof(t_gpan), (method)NULL, A_GIMME, 0L);
-    c->c_flags |= CLASS_FLAG_NEWDICTIONARY; 
-    jbox_initclass(c, JBOX_FIXWIDTH | JBOX_COLOR); 
     
+    version_post_copyright();
+    
+    c->c_flags |= CLASS_FLAG_NEWDICTIONARY; 
+    jbox_initclass(c, JBOX_FIXWIDTH | JBOX_COLOR);
+    class_addmethod(gpan_class, (method)version, "version", 0);
+
     class_addmethod(c, (method)gpan_paint, "paint", A_CANT, 0); 
     class_addmethod(c, (method)gpan_bang, "bang", 0);
     class_addmethod(c, (method)gpan_int, "int", A_LONG, 0);
