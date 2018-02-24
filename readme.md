@@ -239,7 +239,7 @@ Finally, you are ready to build the CNMAT-Externals for Windows 64 and 32 bit!
 
 To build for Windows 64bit, enter the `CNMAT-Externs` directory and do:
 ```
-make clean
+make win-clean
 make win64
 ```
 
