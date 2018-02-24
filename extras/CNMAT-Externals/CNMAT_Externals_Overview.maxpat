@@ -95,7 +95,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 30.0, 337.0, 122.0, 22.0 ],
-									"presentation_rect" : [ 31.0, 336.0, 0.0, 0.0 ],
 									"style" : "",
 									"text" : "cnmatrix~"
 								}
@@ -1758,7 +1757,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 0.0, 26.0, 1112.0, 492.0 ],
+						"rect" : [ 77.0, 135.0, 1112.0, 492.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1796,7 +1795,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 180.0, 120.0, 122.0, 22.0 ],
-									"presentation_rect" : [ 182.0, 120.0, 0.0, 0.0 ],
 									"style" : "",
 									"text" : "cambio~"
 								}
@@ -3222,6 +3220,14 @@
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
 									"hidden" : 1,
+									"source" : [ "obj-61", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-1", 0 ],
+									"hidden" : 1,
 									"source" : [ "obj-62", 0 ]
 								}
 
@@ -4439,7 +4445,7 @@
 									"bgcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
 									"bgcolor2" : [ 1.0, 1.0, 1.0, 1.0 ],
 									"bgfillcolor_angle" : 270.0,
-									"bgfillcolor_autogradient" : 0,
+									"bgfillcolor_autogradient" : 0.0,
 									"bgfillcolor_color" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
 									"bgfillcolor_color1" : [ 1.0, 1.0, 1.0, 1.0 ],
 									"bgfillcolor_color2" : [ 1.0, 1.0, 1.0, 1.0 ],
@@ -4465,7 +4471,7 @@
 									"bgcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
 									"bgcolor2" : [ 1.0, 1.0, 1.0, 1.0 ],
 									"bgfillcolor_angle" : 270.0,
-									"bgfillcolor_autogradient" : 0,
+									"bgfillcolor_autogradient" : 0.0,
 									"bgfillcolor_color" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
 									"bgfillcolor_color1" : [ 1.0, 1.0, 1.0, 1.0 ],
 									"bgfillcolor_color2" : [ 1.0, 1.0, 1.0, 1.0 ],
@@ -4491,7 +4497,7 @@
 									"bgcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
 									"bgcolor2" : [ 1.0, 1.0, 1.0, 1.0 ],
 									"bgfillcolor_angle" : 270.0,
-									"bgfillcolor_autogradient" : 0,
+									"bgfillcolor_autogradient" : 0.0,
 									"bgfillcolor_color" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
 									"bgfillcolor_color1" : [ 1.0, 1.0, 1.0, 1.0 ],
 									"bgfillcolor_color2" : [ 1.0, 1.0, 1.0, 1.0 ],
@@ -5041,7 +5047,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 77.0, 135.0, 1112.0, 492.0 ],
+						"rect" : [ 0.0, 26.0, 1112.0, 492.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
