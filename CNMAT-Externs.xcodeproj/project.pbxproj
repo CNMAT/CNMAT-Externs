@@ -551,7 +551,6 @@
 		52FF18FC163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
 		52FF18FD163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
 		52FF18FE163B5C5B00F94922 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
-		A4542BB51FC681A400330E3F /* basicresonators~.maxhelp in Resources */ = {isa = PBXBuildFile; fileRef = A4542BB41FC681A400330E3F /* basicresonators~.maxhelp */; };
 		A4E832E619E8642800C55B20 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
 		A4E832E919E8642800C55B20 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
 		A4E832EA19E8642800C55B20 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
@@ -1226,11 +1225,9 @@
 		52FF186B163B5C3800F94922 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = ../../../../../System/Library/Frameworks/Accelerate.framework; sourceTree = "<group>"; };
 		52FF189D163B5C4B00F94922 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = ../../../../../System/Library/Frameworks/Carbon.framework; sourceTree = "<group>"; };
 		52FF18CE163B5C5B00F94922 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = ../../../../../System/Library/Frameworks/CoreServices.framework; sourceTree = "<group>"; };
-		A4542BB41FC681A400330E3F /* basicresonators~.maxhelp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "basicresonators~.maxhelp"; path = "help/basicresonators~.maxhelp"; sourceTree = SOURCE_ROOT; };
 		A4542BC61FC6837300330E3F /* 2threshattack~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "2threshattack~.maxhelp"; path = "help/2threshattack~.maxhelp"; sourceTree = SOURCE_ROOT; };
 		A4542BC71FC6838000330E3F /* accumulate~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "accumulate~.maxhelp"; path = "help/accumulate~.maxhelp"; sourceTree = SOURCE_ROOT; };
 		A4542BC81FC6838E00330E3F /* analyzer~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "analyzer~.maxhelp"; path = "help/analyzer~.maxhelp"; sourceTree = SOURCE_ROOT; };
-		A4542BC91FC6839900330E3F /* basicresonators~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "basicresonators~.maxhelp"; path = "help/basicresonators~.maxhelp"; sourceTree = SOURCE_ROOT; };
 		A4542BCA1FC683A400330E3F /* bdist.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = bdist.maxhelp; path = help/bdist.maxhelp; sourceTree = SOURCE_ROOT; };
 		A4542BCB1FC683AC00330E3F /* bench.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = bench.maxhelp; path = help/bench.maxhelp; sourceTree = SOURCE_ROOT; };
 		A4542BCC1FC683B600330E3F /* bench~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "bench~.maxhelp"; path = "help/bench~.maxhelp"; sourceTree = SOURCE_ROOT; };
@@ -2169,8 +2166,6 @@
 			isa = PBXGroup;
 			children = (
 				529DD9C417A2466C00E1F789 /* basicresonators~.c */,
-				A4542BC91FC6839900330E3F /* basicresonators~.maxhelp */,
-				A4542BB41FC681A400330E3F /* basicresonators~.maxhelp */,
 			);
 			name = "basicresonators~";
 			path = "src/basicresonators~";
@@ -4525,7 +4520,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A4542BB51FC681A400330E3F /* basicresonators~.maxhelp in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
