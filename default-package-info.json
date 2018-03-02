@@ -34,7 +34,4 @@
 		"media" : [ "Cbass.res.sdif", "lick5.sdif", "moanin.add.sdif" ],
 		"misc" : [ "firbank~.16band-512pt.wav", "rbfihelp.json" ]
 	}
-,
-	"c74install" : 1,
-	"installdate" : 3536015897
 }
