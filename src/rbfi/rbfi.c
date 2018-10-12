@@ -1507,6 +1507,8 @@ void rbfi_clear(t_rbfi *x){
 	x->monotonic_point_counter = 0; // not really monotonic i guess...
 	hashtab_clear(x->ht);
 	critical_exit(x->lock);
+    jbox_invalidate_layer((t_object *)x, NULL, l_color);
+    jbox_redraw(&(x->ob));
 }
 
 void rbfi_free(t_rbfi *x){
