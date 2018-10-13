@@ -76,7 +76,7 @@ FFTWOBJECTS = $(foreach f, $(FFTWOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
 OSCOBJECTNAMES = OSC-route OSC-schedule OSC-timetag OpenSoundControl printit
 OSCOBJECTS = $(foreach f, $(OSCOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
 
-JEHANOBJECTNAMES = analyzer~ #brightness~ loudness~ pitch~
+JEHANOBJECTNAMES = analyzer~ pitch~ #brightness~ loudness~ 
 JEHANOBJECTS = $(foreach f, $(JEHANOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
 JEHANDEPSNAMES = fft fftnobitrev
 JEHANDEPS = $(foreach f, $(JEHANDEPSNAMES), $(BUILDDIR)/$(f).o)
