@@ -96,8 +96,8 @@ select and install the following:
 
 On the following page, make sure `select required packages` is enabled.
 
-### 2. Note about running Cygwin and privileges
-You will need to run Cygwin as an administrator when you run the commands outlined below, otherwise portions of the build process can fail.  If you've created a Cygwin terminal icon on the desktop, you can right-click on it and choose "Run as Administrator" or check the relevant box after going into the `Compatibility` tab of the properties window for this icon.
+### 2. on running Cygwin, privileges, and whitespace
+You will need to run Cygwin as an administrator when you run the commands outlined below, otherwise portions of the build process can fail.  If you've created a Cygwin terminal icon on the desktop, you can right-click on it and choose "Run as Administrator" or check the relevant box after going into the `Compatibility` tab of the properties window for this icon.  As of this writing some of the following commands will fail if there is white-space in the user's account name. For example, a user account path such as '/cygdrive/c/cygwin64/home/John\ Doe' will be truncated to '/cygdrive/c/cygwin64/home/John', causing a fatal error in some of the builds.  If this happens, you can rename your account name without spaces, e.g. '/cygdrive/c/cygwin64/home/John_Doe'.
 
 ### 2. GSL
 Download the GSL library from the GNU site: [link](ftp://ftp.gnu.org/gnu/gsl/) (currently using v2.4).
