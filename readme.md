@@ -37,6 +37,8 @@ This is the (default) double precision version. However, there are some files th
 
 4. Then `sudo make` to compile the `libfftw3f.a` in the `../fftw/.libs` directory.
 
+5. Finally, rename the folder to `fftw`
+
 ### 3. GSL
 
 Download GSL [here](http://gnu.mirror.constant.com/gsl/).  Find the package you're interested in (latest stable release), and extract the package into our folder.
@@ -46,6 +48,8 @@ Configuring GSL is the same situation as FFTW:  configure for both i386 and x86_
 1. `./configure CC="gcc -arch i386 -arch x86_64" CPP="gcc -E" CXXCPP="g++ -E"`
 
 2. `sudo make`
+
+3. Finally, rename the folder to `gsl`
 
 ### 4. libo / libomax
 
