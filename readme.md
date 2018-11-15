@@ -24,7 +24,7 @@ git clone https://github.com/Cycling74/max-sdk
 
 ### 2. FFTW
 
-Download fftw [here](http://fftw.org/download.html), and extract the package.
+Download FFTW [here](http://fftw.org/download.html), and extract the package into our folder.
 
 Then, cd into the fftw directory.  Since we are still supporting i386 processors, you need to configure `fftw` to build a universal version. To configure for i386 and x86_64:
 
@@ -39,11 +39,13 @@ This is the (default) double precision version. However, there are some files th
 
 ### 3. GSL
 
-Same situation with GSL as fftw:  configure for both i386 and x86_64:
+Download GSL [here](http://gnu.mirror.constant.com/gsl/).  Find the package you're interested in (latest stable release), and extract the package into our folder.
 
-`./configure CC="gcc -arch i386 -arch x86_64" CPP="gcc -E" CXXCPP="g++ -E"`
+Configuring GSL is the same situation as FFTW:  configure for both i386 and x86_64:
 
-`sudo make`
+1. `./configure CC="gcc -arch i386 -arch x86_64" CPP="gcc -E" CXXCPP="g++ -E"`
+
+2. `sudo make`
 
 ### 4. libo / libomax
 
