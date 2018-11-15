@@ -24,7 +24,9 @@ git clone https://github.com/Cycling74/max-sdk
 
 ### 2. FFTW
 
-Since we are still supporting i386 processors, you need to configure `fftw` to build a universal version. To configure for i386 and x86_64:
+Download fftw [here](http://fftw.org/download.html), and extract the package.
+
+Then, cd into the fftw directory.  Since we are still supporting i386 processors, you need to configure `fftw` to build a universal version. To configure for i386 and x86_64:
 
 1. `./configure CC="gcc -arch i386 -arch x86_64" CXX="g++ -arch i386 -arch x86_64" CPP="gcc -E" CXXCPP="g++ -E"`
 
