@@ -175,8 +175,8 @@
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
 				FRAMEWORK_SEARCH_PATHS = (
-					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/msp-includes\"",
 					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/max-includes\"",
+					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/msp-includes\"",
 				);
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_TRIGRAPHS = NO;
@@ -190,17 +190,17 @@
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				GENERATE_PKGINFO_FILE = YES;
 				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/msp-includes\"",
 					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/max-includes\"",
+					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/msp-includes\"",
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 				LIBRARY_SEARCH_PATHS = (
-					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/msp-includes\"",
 					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/max-includes\"",
+					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/msp-includes\"",
 				);
 				LIBRARY_STYLE = Bundle;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-lmx",
@@ -212,7 +212,7 @@
 				PRODUCT_NAME = "te_breakout~";
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../../../max-sdk/source/c74support/max-includes\" \"$(SRCROOT)/../../../../max-sdk/source/c74support/msp-includes\"";
+				USER_HEADER_SEARCH_PATHS = "";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -244,8 +244,8 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"\\\\\\\"$(SRCROOT)/../../../../max-sdk/source/c74support/max-includes\\\\\\\"",
-					"\\\\\\\"$(SRCROOT)/../../../../max-sdk/source/c74support/msp-includes\\\\\\\"",
+					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/max-includes\"",
+					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/msp-includes\"",
 				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREFIX_HEADER = "/Users/jml/Documents/programming/git_repositories/CNMAT-builds/max-sdk/source/c74support/max-includes/macho-prefix.pch";
