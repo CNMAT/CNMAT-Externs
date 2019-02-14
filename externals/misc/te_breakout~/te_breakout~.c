@@ -41,7 +41,8 @@ typedef struct _bkout{
 	t_symbol *name;
 	long function;
 	long numoutlets;
-	t_float **outlets;
+	//t_float **outlets;
+	double **outlets;
 	long blksize;
 } t_bkout;
 
@@ -54,6 +55,26 @@ void bkout_assist(t_bkout *x, void *b, long m, long a, char *s);
 t_max_err bkout_notify(t_bkout *x, t_symbol *s, t_symbol *msg, void *sender, void *data); 
 t_symbol *bkout_mangleName(t_symbol *name, int fnum, int i);
 void *bkout_new(t_symbol *msg, short argc, t_atom *argv);
+
+void bkout_perform64(t_bkout *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vectorsize, long flags, void *userparam)
+{
+	for(int i = 0; i < x->numoutlets; i++){
+		t_symbol *name;
+		double *in = NULL;
+		if(name = bkout_mangleName(x->name, i, x->function)){
+			in = (double *)(name->s_thing);
+		}
+		memset(outs[i], 0, vectorsize * sizeof(double));
+		if(in){
+			memcpy(outs[i], in, vectorsize * sizeof(double));
+		}
+	}
+}
+
+void bkout_dsp64(t_bkout *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+{
+	object_method(dsp64, gensym("dsp_add64"), x, bkout_perform64, 0, NULL);
+}
 
 void bkout_dsp(t_bkout *x, t_signal **sp, short *count){
 	//dsp_add(bkout_perform, 5, x, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec);
@@ -197,7 +218,8 @@ void *bkout_new(t_symbol *msg, short argc, t_atom *argv){
 			error("te_breakout~: you must supply a name");
 			return NULL;
 		}
-		x->outlets = (t_float **)sysmem_newptr(x->numoutlets * sizeof(t_float *));
+		//x->outlets = (t_float **)sysmem_newptr(x->numoutlets * sizeof(t_float *));
+		x->outlets = (double **)sysmem_newptr(x->numoutlets * sizeof(double *));
 		int i;
 		for(i = 0; i < x->numoutlets; i++){
 			outlet_new(x, "signal");
@@ -216,6 +238,7 @@ int main(void){
 	class_dspinit(c);
 
 	class_addmethod(c, (method)bkout_dsp, "dsp", A_CANT, 0);
+	class_addmethod(c, (method)bkout_dsp64, "dsp64", A_CANT, 0);
 	class_addmethod(c, (method)bkout_notify, "notify", A_CANT, 0);
 	class_addmethod(c, (method)bkout_assist, "assist", A_CANT, 0);
     

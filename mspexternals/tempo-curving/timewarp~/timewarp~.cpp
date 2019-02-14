@@ -273,7 +273,7 @@ typedef struct _te{
 	t_jrgba major_grid_line_color, minor_grid_line_color;
 	float major_grid_line_width, minor_grid_line_width;
 	t_symbol *name;
-	t_float **ptrs;
+	double **ptrs;
 	t_pt last_mouse;
 	int mousestate;
 	t_pt mousemove;
@@ -487,6 +487,7 @@ void te_doClearFunction(t_te *x, int f);
 void te_resetFunctionColors(t_te *x);
 void te_invalidateAllFunctions(t_te *x);
 void te_invalidateAll(t_te *x);
+void te_run(t_te *x);
 void te_dsp(t_te *x, t_signal **sp, short *count);
 void te_postplan(t_plan *p, int (*print)(const char *, ...));
 void te_postpoint(t_point *p, int(print)(const char *, ...));
@@ -1271,6 +1272,84 @@ void te_updatePositionCallback(t_te *x){
 	clock_fdelay(x->update_position_clock, x->position_update_rate_ms);   
 }
 
+void te_perform64(t_te *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vectorsize, long flags, void *userparam)
+{
+	//t_te *x = (t_te *)w[1];
+	if(!(x->w)){
+		x->w = (t_int *)calloc(9, sizeof(t_int));
+	}
+	x->w[1] = (t_int)x;
+	x->w[2] = (t_int)vectorsize;
+	x->w[3] = (t_int)ins[0];
+	x->w[4] = (t_int)outs[0];
+	x->w[5] = (t_int)outs[1];
+	x->w[6] = (t_int)outs[2];
+	x->w[7] = (t_int)outs[3];
+	x->w[8] = (t_int)outs[4];
+	//x->w = w;
+	te_run(x);
+
+	double *out_phase_wrapped = outs[0];//(t_float *)w[4];
+	double *out_phase = outs[1];//(t_float *)w[5];
+	double *out_bps = outs[2];//(t_float *)w[6];
+	double *out_pointnum = outs[3];//(t_float *)w[7];
+	double *out_beatnum = outs[4];//(t_float *)w[8];
+
+	int n = vectorsize;//(int)w[2];
+
+	memcpy(out_phase_wrapped, x->ptrs[x->currentFunction * 5], n * sizeof(double));
+	memcpy(out_phase, x->ptrs[x->currentFunction * 5 + 1], n * sizeof(double));
+	memcpy(out_bps, x->ptrs[x->currentFunction * 5 + 2], n * sizeof(double));
+	memcpy(out_pointnum, x->ptrs[x->currentFunction * 5 + 3], n * sizeof(double));
+	memcpy(out_beatnum, x->ptrs[x->currentFunction * 5 + 4], n * sizeof(double));
+
+	//return w + 9;
+}
+
+void te_dsp64(t_te *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+{
+	int j;
+	t_symbol *name1, *name2, *name3, *name4, *name5;
+	x->fs = samplerate;
+	if(count[0]){
+		for(j = 0; j < x->numFunctions; j++){
+			if(name1 = te_mangleName(x->name, 0, j)){
+				name1->s_thing = (t_object *)(x->ptrs[j * 5]);
+			}
+			if(name2 = te_mangleName(x->name, 1, j)){
+				name2->s_thing = (t_object *)(x->ptrs[(j * 5) + 1]);
+			}
+			if(name3 = te_mangleName(x->name, 2, j)){
+				name3->s_thing = (t_object *)(x->ptrs[(j * 5) + 2]);
+			}
+			if(name4 = te_mangleName(x->name, 3, j)){
+				name4->s_thing = (t_object *)(x->ptrs[(j * 5) + 3]);
+			}
+			if(name5 = te_mangleName(x->name, 4, j)){
+				name5->s_thing = (t_object *)(x->ptrs[(j * 5) + 4]);
+			}
+		}
+		for(j = x->numFunctions; j < MAX_NUM_FUNCTIONS; j++){
+			if(name1 = te_mangleName(x->name, 0, j)){
+				name1->s_thing = NULL;
+			}
+			if(name2 = te_mangleName(x->name, 1, j)){
+				name2->s_thing = NULL;
+			}
+			if(name3 = te_mangleName(x->name, 2, j)){
+				name3->s_thing = NULL;
+			}
+			if(name4 = te_mangleName(x->name, 3, j)){
+				name4->s_thing = NULL;
+			}
+			if(name5 = te_mangleName(x->name, 4, j)){
+				name5->s_thing = NULL;
+			}
+		}
+		object_method(dsp64, gensym("dsp_add64"), x, te_perform64, 0, NULL);
+	}
+}
+
 void te_dsp(t_te *x, t_signal **sp, short *count){
 	int j;
 	t_symbol *name1, *name2, *name3, *name4, *name5;
@@ -1326,7 +1405,8 @@ void te_workerproc(t_sysparallel_worker *worker){
 	t_te *x = *((t_te **)(worker->data));
 	t_int *w = x->w;
 	int n = (int)w[2];
-	t_float *in = (t_float *)w[3];
+	//t_float *in = (t_float *)w[3];
+	double *in = (double *)w[3];
 
 	int numfunctions = x->numFunctions;
 	int id = worker->id;
@@ -1336,11 +1416,16 @@ void te_workerproc(t_sysparallel_worker *worker){
 
 	x->last_x = in[0];
 	if(x->functions[id] == NULL || muted[id]){
-		memset(x->ptrs[(id * 5)], 0, n * sizeof(t_float));
-		memset(x->ptrs[(id * 5) + 1], 0, n * sizeof(t_float));
-		memset(x->ptrs[(id * 5) + 2], 0, n * sizeof(t_float));
-		memset(x->ptrs[(id * 5) + 3], 0, n * sizeof(t_float));
-		memset(x->ptrs[(id * 5) + 4], 0, n * sizeof(t_float));
+		// memset(x->ptrs[(id * 5)], 0, n * sizeof(t_float));
+		// memset(x->ptrs[(id * 5) + 1], 0, n * sizeof(t_float));
+		// memset(x->ptrs[(id * 5) + 2], 0, n * sizeof(t_float));
+		// memset(x->ptrs[(id * 5) + 3], 0, n * sizeof(t_float));
+		// memset(x->ptrs[(id * 5) + 4], 0, n * sizeof(t_float));
+		memset(x->ptrs[(id * 5)], 0, n * sizeof(double));
+		memset(x->ptrs[(id * 5) + 1], 0, n * sizeof(double));
+		memset(x->ptrs[(id * 5) + 2], 0, n * sizeof(double));
+		memset(x->ptrs[(id * 5) + 3], 0, n * sizeof(double));
+		memset(x->ptrs[(id * 5) + 4], 0, n * sizeof(double));
 	}
 	t_plan plan;
 	//te_critical_enter(x->lock, __LINE__);
@@ -5586,6 +5671,7 @@ int main(void){
  	jbox_initclass(c, JBOX_FIXWIDTH | JBOX_COLOR | JBOX_FONTATTR); 
 
 	class_addmethod(c, (method)te_dsp, "dsp", A_CANT, 0);
+	class_addmethod(c, (method)te_dsp64, "dsp64", A_CANT, 0);
 	class_addmethod(c, (method)te_dspstate, "dspstate", A_CANT, 0);
  	class_addmethod(c, (method)te_paint, "paint", A_CANT, 0); 
  	//class_addmethod(c, (method)version, "version", 0);
@@ -5874,11 +5960,13 @@ void *te_new(t_symbol *s, long argc, t_atom *argv){
  		x->currentFunction = 0; 
 		critical_new(&(x->lock));
 
-		x->ptrs = (t_float **)malloc((MAX_NUM_FUNCTIONS * 5) * sizeof(t_float *));
+		//x->ptrs = (t_float **)malloc((MAX_NUM_FUNCTIONS * 5) * sizeof(t_float *));
+		x->ptrs = (double **)malloc((MAX_NUM_FUNCTIONS * 5) * sizeof(double *));
 		int i;
 		t_jrgba black = (t_jrgba){0., 0., 0., 1.};
 		for(i = 0; i < MAX_NUM_FUNCTIONS * 5; i++){
-			x->ptrs[i] = (t_float *)malloc(2048 * sizeof(t_float));
+			//x->ptrs[i] = (t_float *)malloc(2048 * sizeof(t_float));
+			x->ptrs[i] = (double *)malloc(2048 * sizeof(double));
 		}
 
 		for(i = 0; i < MAX_NUM_FUNCTIONS; i++){

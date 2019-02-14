@@ -8,8 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		121EBEC70FDB194C00D5AF54 /* te_breakout~.c in Sources */ = {isa = PBXBuildFile; fileRef = 121EBEC60FDB194C00D5AF54 /* te_breakout~.c */; };
-		A43EB6DF1FEF5D6500A6C6ED /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A43EB6DE1FEF5D6500A6C6ED /* MaxAPI.framework */; };
-		A43EB6E11FEF5D6E00A6C6ED /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A43EB6E01FEF5D6E00A6C6ED /* MaxAudioAPI.framework */; };
+		526F478C221577A0000C1030 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 526F478B221577A0000C1030 /* MaxAudioAPI.framework */; };
 		A43EB6E31FEF5D7A00A6C6ED /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = A43EB6E21FEF5D7A00A6C6ED /* commonsyms.c */; };
 /* End PBXBuildFile section */
 
@@ -17,8 +16,7 @@
 		120615410BAD19EE00C1162A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		121EBEC60FDB194C00D5AF54 /* te_breakout~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "te_breakout~.c"; sourceTree = "<group>"; };
 		121EBED40FDB197D00D5AF54 /* te_breakout~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "te_breakout~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		A43EB6DE1FEF5D6500A6C6ED /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../../max-sdk/source/c74support/max-includes/MaxAPI.framework"; sourceTree = "<group>"; };
-		A43EB6E01FEF5D6E00A6C6ED /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../../../max-sdk/source/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = "<group>"; };
+		526F478B221577A0000C1030 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../../../max-sdk/source/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = "<group>"; };
 		A43EB6E21FEF5D7A00A6C6ED /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../../../../max-sdk/source/c74support/max-includes/common/commonsyms.c"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -27,8 +25,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A43EB6DF1FEF5D6500A6C6ED /* MaxAPI.framework in Frameworks */,
-				A43EB6E11FEF5D6E00A6C6ED /* MaxAudioAPI.framework in Frameworks */,
+				526F478C221577A0000C1030 /* MaxAudioAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -49,8 +46,7 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				A43EB6E01FEF5D6E00A6C6ED /* MaxAudioAPI.framework */,
-				A43EB6DE1FEF5D6500A6C6ED /* MaxAPI.framework */,
+				526F478B221577A0000C1030 /* MaxAudioAPI.framework */,
 			);
 			name = "External Frameworks and Libraries";
 			sourceTree = "<group>";
@@ -173,18 +169,20 @@
 		0FF6670C096B494E00E9E0B4 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				C74SUPPORT = "$(SRCROOT)/../../../../max-sdk/source/c74support";
+				C74_SYM_LINKER_FLAGS = "@$(C74SUPPORT)/max-includes/c74_linker_flags.txt";
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
 				FRAMEWORK_SEARCH_PATHS = (
-					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/max-includes\"",
 					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/max-includes\"",
 				);
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "/Users/jml/Documents/programming/git_repositories/CNMAT-builds/max-sdk/source/c74support/max-includes/macho-prefix.pch";
+				GCC_PREFIX_HEADER = "$(C74SUPPORT)/max-includes/macho-prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
@@ -192,16 +190,22 @@
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				GENERATE_PKGINFO_FILE = YES;
 				HEADER_SEARCH_PATHS = (
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
+					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/max-includes\"",
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/max-includes\"",
+				);
 				LIBRARY_STYLE = Bundle;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "-lmx";
+				OTHER_LDFLAGS = (
+					"-lmx",
+					"$(C74_SYM_LINKER_FLAGS)",
+				);
 				OTHER_REZFLAGS = "";
 				PRELINK_LIBS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.cnmat.berkeley.te_breakout~";
@@ -240,8 +244,8 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"\\\"$(SRCROOT)/../../../../max-sdk/source/c74support/max-includes\\\"",
-					"\\\"$(SRCROOT)/../../../../max-sdk/source/c74support/msp-includes\\\"",
+					"\\\\\\\"$(SRCROOT)/../../../../max-sdk/source/c74support/max-includes\\\\\\\"",
+					"\\\\\\\"$(SRCROOT)/../../../../max-sdk/source/c74support/msp-includes\\\\\\\"",
 				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREFIX_HEADER = "/Users/jml/Documents/programming/git_repositories/CNMAT-builds/max-sdk/source/c74support/max-includes/macho-prefix.pch";
