@@ -219,10 +219,10 @@ void bpf_hideFunction(t_bpf *x, t_symbol *msg, short argc, t_atom *argv);
 void bpf_functionList(t_bpf *x, t_symbol *msg, int argc, t_atom *argv); 
 void bpf_setFunction(t_bpf *x, long f); 
 void bpf_setFunctionName(t_bpf *x, t_symbol *name);
-void bpf_setFunctionPointColor(t_bpf *x, t_symbol *msg, int argc, t_atom *argv);
-void bpf_setFunctionLineColor(t_bpf *x, t_symbol *msg, int argc, t_atom *argv);
-void bpf_setFunctionColor(t_bpf *x, t_symbol *msg, int argc, t_atom *argv);
-void bpf_doSetColor(t_bpf *x, int argc, t_atom *argv, t_jrgba *c);
+//void bpf_setFunctionPointColor(t_bpf *x, t_symbol *msg, int argc, t_atom *argv);
+//void bpf_setFunctionLineColor(t_bpf *x, t_symbol *msg, int argc, t_atom *argv);
+//void bpf_setFunctionColor(t_bpf *x, t_symbol *msg, int argc, t_atom *argv);
+//void bpf_doSetColor(t_bpf *x, int argc, t_atom *argv, t_jrgba *c);
 //void bpf_getNormCoords(t_rect r, t_pt screen_coords, t_pt *norm_coords); 
 //void bpf_getScreenCoords(t_rect r, t_pt norm_coords, t_pt *screen_coords);
 //void bpf_renumber(t_bpf *x);
@@ -325,6 +325,7 @@ void bpf_paint(t_bpf *x, t_object *patcherview){
 	jgraphics_stroke(g);
 }
 
+//default paint method
 void bpf_paint_bpf(t_bpf *x, t_object *patcherview, t_rect r){
 	t_jgraphics *g = jbox_start_layer((t_object *)x, patcherview, l_points, r.width, r.height);
  	if(g){ 
@@ -350,7 +351,8 @@ void bpf_paint_bpf(t_bpf *x, t_object *patcherview, t_rect r){
 				}else{
 					if(i == x->currentFunction){
 						jgraphics_set_dash(g, NULL, 0, 0);
-						jgraphics_set_source_jrgba(g, &(x->funcattr[i]->point_color));
+                        jgraphics_set_source_jrgba(g, &(x->pointColor));
+						//jgraphics_set_source_jrgba(g, &(x->funcattr[i]->point_color));
 					}else{
 						jgraphics_set_dash(g, (double[2]){3., 3.}, 2, 0);
 						jgraphics_set_source_jrgba(g, &(x->bgFuncColor));
@@ -380,7 +382,8 @@ void bpf_paint_bpf(t_bpf *x, t_object *patcherview, t_rect r){
 					jgraphics_set_source_jrgba(g, &(x->selectionColor));
 				}else{
 					if(i == x->currentFunction){
-						jgraphics_set_source_jrgba(g, &(x->funcattr[i]->point_color));
+                        jgraphics_set_source_jrgba(g, &(x->pointColor));
+						//jgraphics_set_source_jrgba(g, &(x->funcattr[i]->point_color));
 					}else{
 						jgraphics_set_source_jrgba(g, &(x->bgFuncColor));
 					}
@@ -389,7 +392,8 @@ void bpf_paint_bpf(t_bpf *x, t_object *patcherview, t_rect r){
 				jgraphics_fill(g);
 				if(i == x->currentFunction){
 					jgraphics_set_dash(g, NULL, 0, 0);
-					jgraphics_set_source_jrgba(g, &(x->funcattr[i]->line_color));
+					//jgraphics_set_source_jrgba(g, &(x->funcattr[i]->line_color));
+                    jgraphics_set_source_jrgba(g, &(x->lineColor));
 				}else{
 					jgraphics_set_dash(g, (double[2]){3., 3.}, 2, 0);
 					jgraphics_set_source_jrgba(g, &(x->bgFuncColor));
@@ -1777,7 +1781,7 @@ void bpf_addFunction(t_bpf *x, t_symbol *msg, int argc, t_atom *argv){
 	}
 	x->funcattr[x->currentFunction]->point_color = x->pointColor;
 	x->funcattr[x->currentFunction]->line_color = x->lineColor;
-        jbox_invalidate_layer((t_object *)x, x->pv, l_points);
+    jbox_invalidate_layer((t_object *)x, x->pv, l_points);
 	jbox_redraw((t_jbox *)&(x->box));
 }
 
@@ -1843,6 +1847,7 @@ void bpf_setFunctionName(t_bpf *x, t_symbol *name){
 	jbox_redraw((t_jbox *)&(x->box));
 }
 
+/*
 void bpf_setFunctionPointColor(t_bpf *x, t_symbol *msg, int argc, t_atom *argv){
 	if(argc < 3 || argc > 5){
 		object_error((t_object *)x, "%s requires between 3 and 5 arguments:\n[function number (int)] <red> <green> <blue> [alpha]", __PRETTY_FUNCTION__);
@@ -1857,7 +1862,9 @@ void bpf_setFunctionPointColor(t_bpf *x, t_symbol *msg, int argc, t_atom *argv){
 	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
 	jbox_redraw((t_jbox *)&(x->box));
 }
-
+*/
+ 
+/*
 void bpf_setFunctionLineColor(t_bpf *x, t_symbol *msg, int argc, t_atom *argv){
 	if(argc < 3 || argc > 5){
 		object_error((t_object *)x, "%s requires between 3 and 5 arguments:\n[function number (int)] <red> <green> <blue> [alpha]", __PRETTY_FUNCTION__);
@@ -1872,12 +1879,16 @@ void bpf_setFunctionLineColor(t_bpf *x, t_symbol *msg, int argc, t_atom *argv){
 	jbox_invalidate_layer((t_object *)x, x->pv, l_points);
 	jbox_redraw((t_jbox *)&(x->box));
 }
+*/
 
+/*
 void bpf_setFunctionColor(t_bpf *x, t_symbol *msg, int argc, t_atom *argv){
 	bpf_setFunctionLineColor(x, msg, argc, argv);
 	bpf_setFunctionPointColor(x, msg, argc, argv);
 }
+*/
 
+/*
 void bpf_doSetColor(t_bpf *x, int argc, t_atom *argv, t_jrgba *c){
 	t_atom *ptr = argv;
 	t_jrgba color;
@@ -1891,6 +1902,7 @@ void bpf_doSetColor(t_bpf *x, int argc, t_atom *argv, t_jrgba *c){
 	//x->functionColors[function] = color;
 	*c = color;
 }
+*/
 
 /*
 void bpf_getNormCoords(t_rect r, t_pt screen_coords, t_pt *norm_coords){
@@ -2350,9 +2362,9 @@ int main(void){
 	class_addmethod(c, (method)bpf_deleteCurrentFunction, "deletecurrentfunction", 0);
 	class_addmethod(c, (method)bpf_dump, "dump", 0);
 	class_addmethod(c, (method)bpf_setFunctionName, "setfunctionname", A_SYM, 0);
-	class_addmethod(c, (method)bpf_setFunctionColor, "setfunctioncolor", A_GIMME, 0);
-	class_addmethod(c, (method)bpf_setFunctionLineColor, "setfunctionlinecolor", A_GIMME, 0);
-	class_addmethod(c, (method)bpf_setFunctionPointColor, "setfunctionpointcolor", A_GIMME, 0);
+	//class_addmethod(c, (method)bpf_setFunctionColor, "setfunctioncolor", A_GIMME, 0);
+	//class_addmethod(c, (method)bpf_setFunctionLineColor, "setfunctionlinecolor", A_GIMME, 0);
+	//class_addmethod(c, (method)bpf_setFunctionPointColor, "setfunctionpointcolor", A_GIMME, 0);
 	class_addmethod(c, (method)bpf_xminmax, "xminmax", A_FLOAT, A_FLOAT, 0);
 	class_addmethod(c, (method)bpf_yminmax, "yminmax", A_FLOAT, A_FLOAT, 0);
 	//class_addmethod(c, (method)bpf_renumber, "renumber", 0);
@@ -2556,10 +2568,14 @@ void *bpf_new(t_symbol *s, long argc, t_atom *argv){
  	t_dictionary *d = NULL; 
  	long boxflags; 
 
+    /*
 	// box setup 
 	if(!(d = object_dictionaryarg(argc, argv))){ 
 		return NULL; 
-	} 
+	}
+     */
+    
+    d = object_dictionaryarg(argc, argv);
 
 	boxflags = 0 
 		| JBOX_DRAWFIRSTIN  
@@ -2640,7 +2656,7 @@ void *bpf_new(t_symbol *s, long argc, t_atom *argv){
 		dsp_setupjbox((t_pxjbox *)x, 1);
 		x->box.z_misc = Z_PUT_FIRST;
  		jbox_ready((t_jbox *)x); 
-
+        
  		return x; 
  	} 
  	return NULL; 

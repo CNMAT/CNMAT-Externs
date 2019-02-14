@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
 
-<c74object name="thread.fork" module="CNMAT-Externals">
+<c74object name="thread.which" module="CNMAT-Externals">
 
     <digest>
-	Thread-level parallelism for event domain computation
+	Report information about which thread a given message lives in, and forward it.
     </digest>
 
     <description>
-	This object creates a thread that is separate to the main threads in Max.  Events received in its inlet are moved to the other thread for output.
     </description>
 
     <!--METADATA-->
@@ -20,8 +19,7 @@
 
     <!--DISCUSSION-->
     <discussion>
-	WARNING: this object will crash MaxMSP if used improperly or with objects that are not "overdrive safe".<br/>
-	Any event received by thread.join is passed back into the main thread.
+	The thread.which object allows the user to send data into its inlet, and outputs information about which thread the data lives in.  It then immediately sends these data out its outlet.  Note:  this object does not forward [bang] messages.
     </discussion>
 
     <!--INLETS-->
@@ -42,22 +40,27 @@
     <methodlist>
 	<method name="anything">
 	    <description>
-		Move any message into a new thread.
+		Report which thread any symbol lives in out the right outlet, and forward it out the left outlet.
 	    </description>
 	</method>
 	<method name="bang">
 	    <description>
-		Move a bnag into a new thread.
+		Report which thread a bang lives in out the right outlet, without forwarding it.
 	    </description>
 	</method>
 	<method name="float">
 	    <description>
-		Move a float into a new thread.
+		Report which thread a float lives in out the right outlet, and forward it out the left outlet.
 	    </description>
 	</method>
 	<method name="int">
 	    <description>
-		Move an int into a new thread.
+		Report which thread an int lives in out the right outlet, and forward it out the left outlet.
+	    </description>
+	</method>
+	<method name="list">
+	    <description>
+		Report which thread a list lives in out the right outlet, and forward it out the left outlet.
 	    </description>
 	</method>
     </methodlist>
@@ -68,22 +71,28 @@
 
     <!--SEEALSO-->
     <seealsolist>
+	<seealso name="thread.fork" />
 	<seealso name="thread.join" />
-	<seealso name="thread.which" />
+	<seealso name="bench" />
     </seealsolist>
 
     <misc name = "Input">
 	<entry name ="Inlet 1 [anything]">
 	    <description>
-		Send any message into a newly created thread.
+		Send a message to the thread.which object.
 	    </description>
 	</entry>
     </misc>
 
     <misc name = "Output">
-	<entry name ="Outlet 1 [anything]">
+	<entry name ="Outlet 1 [variable]">
 	    <description>
-		Pass any message within a newly created thread.
+		Forwarded data is output out this outlet.
+	    </description>
+	</entry>
+	<entry name ="Outlet 2 [symbol]">
+	    <description>
+		The thread type that a given message lives in is output out of this outlet.  Symbols will be either "main", "timer", or "other".
 	    </description>
 	</entry>
     </misc>
@@ -91,7 +100,7 @@
     <misc name = "Discussion">
 	<entry name ="Keywords">
 	    <description>
-		thread, fork, join
+		thread, reporting, debugging
 	    </description>
 	</entry>
     </misc>

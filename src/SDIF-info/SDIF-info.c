@@ -12,7 +12,7 @@ Avenue, Suite 510, Berkeley, CA 94720-1620, (510) 643-7201, for commercial
 licensing opportunities.
 
 Written by Matt Wright, The Center for New Music and Audio Technologies,
-University of California, Berkeley. Maintenance by Ben "Jacobs".
+University of California, Berkeley. Maintenance by Ben Jacobs.
 
      IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
      SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST
@@ -30,7 +30,7 @@ University of California, Berkeley. Maintenance by Ben "Jacobs".
 */
 #define NAME "SDIF-info"
 #define DESCRIPTION "report overall info about an SDIF-buffer"
-#define AUTHORS "Matt Wright and Ben \"Jacobs\""
+#define AUTHORS "Matt Wright and Ben Jacobs"
 #define COPYRIGHT_YEARS "2002-06,12,13"
 
 
@@ -39,7 +39,7 @@ University of California, Berkeley. Maintenance by Ben "Jacobs".
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: SDIF-info
 DESCRIPTION: report overall info about an SDIF-buffer
-AUTHORS: Matt Wright and Ben "Jacobs"
+AUTHORS: Matt Wright and Ben Jacobs
 COPYRIGHT_YEARS: 2002,03,04,05,06
 PUBLICATION: ICMC 99 paper | http://www.cnmat.berkeley.edu/ICMC99/papers/msp+sdif/icmc99-msp+sdif-short.pdf
 DRUPAL_NODE: /patch/4014

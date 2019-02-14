@@ -553,7 +553,23 @@ static void sinusoids_list(t_sinusoids *x, t_symbol *s, short argc, t_atom *argv
 
 static void sinusoids_assist(t_sinusoids *x, void *b, long m, long a, char *s)
 {
-	assist_string(3214,m,a,1,2,s);
+	//assist_string(3214,m,a,1,2,s);
+    if(m == ASSIST_INLET){
+        switch(a){
+            case 0:
+                sprintf(s, "(anything) messages to harmonics~");
+                break;
+            case 1:
+                sprintf(s, "(list) amplitudes");
+                break;
+        }
+    }else{
+        switch(a){
+            case 0:
+                sprintf(s, "(signal) harmonics~ output");
+                break;
+        }
+    }
 }
 
 static void frequency_float(t_sinusoids *x, double ff)

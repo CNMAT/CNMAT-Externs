@@ -31,7 +31,7 @@ The OpenSound Control WWW page is
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: OSC-route ("OpenSoundControl route")
 DESCRIPTION: Message dispatching through an <A HREF="http://www.cnmat.berkeley.edu/OSC">OpenSoundControl</A> address space.
-AUTHORS: Matt Wright, Michael Zbyszynski
+AUTHORS: Adrian Freed, Matt Wright, Michael Zbyszynski
 COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06,07,08
 DRUPAL_NODE: /patch/4029
 SVN_REVISION: $LastChangedRevision$

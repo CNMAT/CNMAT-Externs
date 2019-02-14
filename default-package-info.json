@@ -6,7 +6,7 @@
 	"displayname" : "",
 	"extends" : "",
 	"extensible" : 0,
-	"homepatcher" : null,
+	"homepatcher" : "CNMAT_Externals_Overview.maxpat",
 	"max_version_max" : "none",
 	"max_version_min" : "none",
 	"name" : "CNMAT Externals",
@@ -34,7 +34,4 @@
 		"media" : [ "Cbass.res.sdif", "lick5.sdif", "moanin.add.sdif" ],
 		"misc" : [ "firbank~.16band-512pt.wav", "rbfihelp.json" ]
 	}
-,
-	"c74install" : 1,
-	"installdate" : 3536015897
 }

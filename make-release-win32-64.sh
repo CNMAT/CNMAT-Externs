@@ -1,20 +1,32 @@
 archive_name=CNMAT_Externals-Max-Win32_64-`git describe --tags --long`-`git branch | egrep '^\*' | awk '{print $2}'`.zip
-dirs=(docs help media misc java-classes)
+dirs=(help media misc docs java-classes extras deprecated)
+deprecated=(list-accum.mxe list-accum.mxe64)
+dephelp=(list-accum.maxhelp)
 
-mkdir CNMAT-Externals && mkdir CNMAT-Externals/externals
-cp build/Release/*.mxe* CNMAT-Externals/externals
+mkdir CNMAT-Externals && mkdir CNMAT-Externals/externals && mkdir CNMAT-Externals/java-classes && mkdir CNMAT-Externals/extras
+mkdir CNMAT-Externals/deprecated
+
+cp -r build/Release/*.mxe* CNMAT-Externals/externals
+cp -r build/Release/*.class CNMAT-Externals/java-classes
 
 for f in ${dirs[*]}
 do
-	[ -e $f ] && cp -r $f CNMAT-Externals
+    [ -e $f ] && cp -r $f CNMAT-Externals
 done
 
-# force-copy an old version of resonators~
-# cp -f kludge/resonators~.mxe CNMAT-Externals/externals
-# this is no longer needed AFAICT, rama (sept 2017)
+for f in ${deprecated[*]}
+do
+    mv "CNMAT-Externals/externals/$f" CNMAT-Externals/deprecated/
+done
+for f in ${dephelp[*]}
+do
+    mv "CNMAT-Externals/help/$f" CNMAT-Externals/deprecated/
+done
+
 python make-package-info.py
 
 cp package-info.json CNMAT-Externals
 cp license.txt CNMAT-Externals
+cp icon.png CNMAT-Externals
 
 zip -r $archive_name CNMAT-Externals && rm -r CNMAT-Externals

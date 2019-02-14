@@ -80,7 +80,6 @@
 		Send an OSC bundle to the osc-timetag object.  It is not expected that the user will generate this.
 	    </description>
 	</method>
-	</method>
 
 	<method name="OSCTimeTag">
 	    <arglist>

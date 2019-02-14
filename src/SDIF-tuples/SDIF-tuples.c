@@ -12,7 +12,7 @@
   licensing opportunities.
 
   Written by Matt Wright, The Center for New Music and Audio Technologies,
-  University of California, Berkeley. Interpolation support by Ben "Jacobs".
+  University of California, Berkeley. Interpolation support by Ben Jacobs.
 
   IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
   SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST
@@ -30,7 +30,7 @@
 */
 #define NAME "SDIF-tuples"
 #define DESCRIPTION "Extract \"tuples\" of data (a list of values for each column) from an SDIF-buffer and concatenate them to form a Max list."
-#define AUTHORS "Matt Wright and Ben \"Jacobs\""
+#define AUTHORS "Matt Wright and Ben Jacobs"
 #define COPYRIGHT_YEARS "1999,2000-07,12,13"
 
 
@@ -38,7 +38,7 @@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   NAME: SDIF-tuples
   DESCRIPTION: Extract "tuples" of data (a list of values for each column) from an SDIF-buffer and concatenate them to form a Max list.
-  AUTHORS: Matt Wright and Ben "Jacobs" 
+  AUTHORS: Matt Wright and Ben Jacobs
   PUBLICATION: ICMC99 paper | http://www.cnmat.berkeley.edu/ICMC99/papers/msp+sdif/icmc99-msp+sdif-short.pdf
   COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06,07
   DRUPAL_NODE: /patch/4010

@@ -2,13 +2,14 @@
 	"patcher" : 	{
 		"fileversion" : 1,
 		"appversion" : 		{
-			"major" : 7,
-			"minor" : 3,
-			"revision" : 4,
-			"architecture" : "x86",
+			"major" : 8,
+			"minor" : 0,
+			"revision" : 0,
+			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
+		"classnamespace" : "box",
 		"rect" : [ 100.0, 100.0, 976.0, 542.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
@@ -47,13 +48,14 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 7,
-							"minor" : 3,
-							"revision" : 4,
-							"architecture" : "x86",
+							"major" : 8,
+							"minor" : 0,
+							"revision" : 0,
+							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
+						"classnamespace" : "box",
 						"rect" : [ 0.0, 26.0, 976.0, 516.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
@@ -91,11 +93,9 @@
 						"description" : "",
 						"digest" : "",
 						"globalpatchername" : "",
-						"style" : "",
 						"tags" : ""
 					}
 ,
-					"style" : "",
 					"text" : "p ?"
 				}
 
@@ -109,13 +109,14 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 7,
-							"minor" : 3,
-							"revision" : 4,
-							"architecture" : "x86",
+							"major" : 8,
+							"minor" : 0,
+							"revision" : 0,
+							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
+						"classnamespace" : "box",
 						"rect" : [ 100.0, 126.0, 976.0, 516.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
@@ -153,13 +154,14 @@
 									"patcher" : 									{
 										"fileversion" : 1,
 										"appversion" : 										{
-											"major" : 7,
-											"minor" : 3,
-											"revision" : 4,
-											"architecture" : "x86",
+											"major" : 8,
+											"minor" : 0,
+											"revision" : 0,
+											"architecture" : "x64",
 											"modernui" : 1
 										}
 ,
+										"classnamespace" : "box",
 										"rect" : [ 59.0, 104.0, 438.0, 167.0 ],
 										"bglocked" : 0,
 										"openinpresentation" : 0,
@@ -209,11 +211,9 @@
 										"description" : "",
 										"digest" : "",
 										"globalpatchername" : "",
-										"style" : "",
 										"tags" : ""
 									}
 ,
-									"style" : "",
 									"text" : "p note_on_omitting_args"
 								}
 
@@ -239,7 +239,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "int", "", "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 86.500061, 476.0, 100.0, 22.0 ],
+									"patching_rect" : [ 86.500061000000002, 476.0, 100.0, 22.0 ],
 									"prefix_mode" : 2,
 									"style" : "default"
 								}
@@ -395,7 +395,7 @@
 									"numoutlets" : 4,
 									"outlettype" : [ "", "int", "", "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 584.166687, 456.0, 114.0, 40.0 ],
+									"patching_rect" : [ 584.166687000000024, 456.0, 114.0, 40.0 ],
 									"style" : "default",
 									"text" : "1587. 0.4 19.557447 0."
 								}
@@ -410,7 +410,7 @@
 									"numoutlets" : 4,
 									"outlettype" : [ "", "int", "", "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 462.833374, 456.0, 115.0, 40.0 ],
+									"patching_rect" : [ 462.833373999999992, 456.0, 115.0, 40.0 ],
 									"style" : "default",
 									"text" : "41.5 0.00022 0.3881 0."
 								}
@@ -551,7 +551,8 @@
 									"id" : "obj-22",
 									"maxclass" : "newobj",
 									"numinlets" : 1,
-									"numoutlets" : 0,
+									"numoutlets" : 1,
+									"outlettype" : [ "bang" ],
 									"patching_rect" : [ 17.0, 372.0, 136.0, 22.0 ],
 									"style" : "default",
 									"text" : "SDIF-buffer otherbuf"
@@ -580,7 +581,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 17.0, 30.0, 152.0, 33.0 ],
-									"style" : "",
 									"text" : "SDIF-ranges"
 								}
 
@@ -617,10 +617,10 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 4,
-									"outlettype" : [ "", "", "", "FullPacket" ],
+									"outlettype" : [ "", "", "", "" ],
 									"patching_rect" : [ 341.5, 409.0, 383.0, 22.0 ],
 									"style" : "default",
-									"text" : "o.route /max-num-columns /column-mins /column-maxes"
+									"text" : "osc-route /max-num-columns /column-mins /column-maxes"
 								}
 
 							}
@@ -668,7 +668,8 @@
 									"id" : "obj-35",
 									"maxclass" : "newobj",
 									"numinlets" : 1,
-									"numoutlets" : 0,
+									"numoutlets" : 1,
+									"outlettype" : [ "bang" ],
 									"patching_rect" : [ 17.0, 306.0, 108.0, 22.0 ],
 									"style" : "default",
 									"text" : "SDIF-buffer mybuf"
@@ -865,11 +866,9 @@
 						"description" : "",
 						"digest" : "",
 						"globalpatchername" : "",
-						"style" : "",
 						"tags" : ""
 					}
 ,
-					"style" : "",
 					"text" : "p Basic"
 				}
 
@@ -881,7 +880,11 @@
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "o.route.mxo",
+				"name" : "SDIF-buffer.mxo",
+				"type" : "iLaX"
+			}
+, 			{
+				"name" : "OSC-route.mxo",
 				"type" : "iLaX"
 			}
  ],

@@ -13,7 +13,7 @@ licensing opportunities.
 
 Written by Matt Wright, The Center for New Music and Audio Technologies,
 University of California, Berkeley.  Based on sample code from David Zicarelli.
-Maintenance by Ben "Jacobs".
+Maintenance by Ben Jacobs.
 
      IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
      SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST
@@ -31,7 +31,7 @@ Maintenance by Ben "Jacobs".
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: SDIF-buffer
 DESCRIPTION: Store SDIF data in Max's memory and make it accessible to other objects
-AUTHORS: Matt Wright and Ben "Jacobs" (based on sample code from David Zicarelli)
+AUTHORS: Matt Wright and Ben Jacobs (based on sample code from David Zicarelli)
 COPYRIGHT_YEARS: 1999,2000,01,02,03,04,05,06
 PUBLICATION: ICMC99 paper | http://www.cnmat.berkeley.edu/ICMC99/papers/msp+sdif/icmc99-msp+sdif-short.pdf
 DRUPAL_NODE: /patch/4016
@@ -60,7 +60,7 @@ VERSION 1.1: For Max 5
 */
 #define NAME "SDIF-buffer"
 #define DESCRIPTION "Store SDIF data in Max's memory and make it accessible to other objects"
-#define AUTHORS "Matt Wright and Ben \"Jacobs\" (based on sample code from David Zicarelli)"
+#define AUTHORS "Matt Wright and Ben Jacobs (based on sample code from David Zicarelli)"
 #define COPYRIGHT_YEARS "1999,2000-06,12,13"
 
 

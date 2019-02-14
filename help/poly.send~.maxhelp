@@ -87,7 +87,6 @@
 					}
 ,
 					"patching_rect" : [ 78.0, 14.0, 27.0, 22.0 ],
-					"presentation_rect" : [ 89.0, 14.0, 0.0, 0.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -117,7 +116,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 59.0, 104.0, 640.0, 480.0 ],
+						"rect" : [ 100.0, 126.0, 595.0, 449.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -145,8 +144,20 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"showontab" : 1,
-						"visible" : 1,
 						"boxes" : [ 							{
+								"box" : 								{
+									"id" : "obj-15",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 107.0, 158.0, 30.0, 22.0 ],
+									"style" : "",
+									"text" : "in 1"
+								}
+
+							}
+, 							{
 								"box" : 								{
 									"arrows" : 1,
 									"id" : "obj-12",
@@ -408,13 +419,7 @@
 
 			}
  ],
-		"lines" : [  ],
-		"dependency_cache" : [ 			{
-				"name" : "poly.send~.mxo",
-				"type" : "iLaX"
-			}
- ],
-		"autosave" : 0
+		"lines" : [  ]
 	}
 
 }

@@ -5,7 +5,7 @@
 			"major" : 7,
 			"minor" : 3,
 			"revision" : 4,
-			"architecture" : "x86",
+			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
@@ -50,7 +50,7 @@
 							"major" : 7,
 							"minor" : 3,
 							"revision" : 4,
-							"architecture" : "x86",
+							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
@@ -112,7 +112,7 @@
 							"major" : 7,
 							"minor" : 3,
 							"revision" : 4,
-							"architecture" : "x86",
+							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
@@ -145,6 +145,59 @@
 						"subpatcher_template" : "",
 						"showontab" : 1,
 						"boxes" : [ 							{
+								"box" : 								{
+									"id" : "obj-65",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 79.666656, 323.5, 192.0, 22.0 ],
+									"presentation_rect" : [ 79.666656, 329.5, 0.0, 0.0 ],
+									"style" : "default",
+									"text" : "/orange/ewe/glad/i/support cards?"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-64",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 539.333313, 557.0, 58.0, 22.0 ],
+									"style" : "default",
+									"text" : "print wild"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-60",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 79.666656, 296.5, 187.0, 22.0 ],
+									"presentation_rect" : [ 267.5, 410.5, 0.0, 0.0 ],
+									"style" : "default",
+									"text" : "/orange/you/glad/i/support cards?"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-5",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 2,
+									"outlettype" : [ "", "" ],
+									"patching_rect" : [ 539.333313, 525.5, 147.0, 22.0 ],
+									"style" : "default",
+									"text" : "OSC-route /glad/i/support"
+								}
+
+							}
+, 							{
 								"box" : 								{
 									"id" : "obj-61",
 									"maxclass" : "message",
@@ -326,7 +379,7 @@
 											"major" : 7,
 											"minor" : 3,
 											"revision" : 4,
-											"architecture" : "x86",
+											"architecture" : "x64",
 											"modernui" : 1
 										}
 ,
@@ -695,7 +748,7 @@
 											"major" : 7,
 											"minor" : 3,
 											"revision" : 4,
-											"architecture" : "x86",
+											"architecture" : "x64",
 											"modernui" : 1
 										}
 ,
@@ -1107,7 +1160,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 485.0, 277.964417, 121.0, 20.0 ],
+									"patching_rect" : [ 486.0, 253.232208, 121.0, 20.0 ],
 									"style" : "default",
 									"text" : "\"*\" matches anything"
 								}
@@ -1268,7 +1321,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 302.5, 378.5, 154.0, 22.0 ],
+									"patching_rect" : [ 297.0, 369.5, 154.0, 22.0 ],
 									"style" : "default",
 									"text" : "/banana/bunch/[2-46] bang"
 								}
@@ -1280,7 +1333,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 516.5, 519.0, 102.0, 22.0 ],
+									"patching_rect" : [ 493.666656, 586.5, 102.0, 22.0 ],
 									"style" : "default",
 									"text" : "print orangejulius"
 								}
@@ -1292,7 +1345,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 448.0, 546.5, 99.0, 22.0 ],
+									"patching_rect" : [ 448.0, 618.0, 99.0, 22.0 ],
 									"style" : "default",
 									"text" : "print orangejuice"
 								}
@@ -1303,11 +1356,11 @@
 									"id" : "obj-38",
 									"maxclass" : "newobj",
 									"numinlets" : 1,
-									"numoutlets" : 3,
-									"outlettype" : [ "", "", "" ],
+									"numoutlets" : 4,
+									"outlettype" : [ "", "", "", "" ],
 									"patching_rect" : [ 448.0, 486.5, 156.0, 22.0 ],
 									"style" : "default",
-									"text" : "OSC-route /juice /julius"
+									"text" : "OSC-route /juice /julius /*"
 								}
 
 							}
@@ -1657,6 +1710,13 @@
 							}
 , 							{
 								"patchline" : 								{
+									"destination" : [ "obj-5", 0 ],
+									"source" : [ "obj-38", 2 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
 									"destination" : [ "obj-48", 0 ],
 									"source" : [ "obj-39", 0 ]
 								}
@@ -1763,7 +1823,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-38", 0 ],
-									"midpoints" : [ 205.833328, 468.5, 457.5, 468.5 ],
+									"midpoints" : [ 205.833333, 468.5, 457.5, 468.5 ],
 									"source" : [ "obj-48", 2 ]
 								}
 
@@ -1784,8 +1844,29 @@
 							}
 , 							{
 								"patchline" : 								{
+									"destination" : [ "obj-64", 0 ],
+									"source" : [ "obj-5", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
 									"destination" : [ "obj-8", 0 ],
 									"source" : [ "obj-6", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-48", 0 ],
+									"source" : [ "obj-60", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-48", 0 ],
+									"source" : [ "obj-65", 0 ]
 								}
 
 							}
