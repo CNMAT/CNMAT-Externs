@@ -39,6 +39,8 @@ This is the (default) double precision version. However, there are some files th
 
 5. Finally, rename the folder to `fftw`
 
+*Note: starting with Xcode 10, the standard Mac command-line tools no longer support 32bit (i386) processors, so you may need to remove  `-arch i386` from the configuration flags above if you want to build a 64bit only version with Xcode 10.*
+
 ### 3. GSL
 
 Download GSL [here](http://gnu.mirror.constant.com/gsl/).  Find the package you're interested in (latest stable release), and extract the package into our folder.
@@ -50,6 +52,11 @@ Configuring GSL is the same situation as FFTW:  configure for both i386 and x86_
 2. `sudo make`
 
 3. Finally, rename the folder to `gsl`
+
+*Note: starting with Xcode 10, the standard Mac command-line tools no longer support 32bit (i386) processors, so you may need to remove  `-arch i386` from the configuration flags above if you want to build a 64bit only version with Xcode 10.*
+
+*Note also: it is possible that the `libgsl.a` file is now compiled into the `/gsl/.libs` folder. Currently, you may need to copy this file into the main `/gsl` folder for the Makefile script to build correctly. The default project path settings may need to be updated in the near future.*
+
 
 ### 4. libo / libomax
 
