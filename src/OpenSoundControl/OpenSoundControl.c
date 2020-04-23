@@ -965,6 +965,7 @@ static void Smessage(OSC *x, char *address, void *v, long n) {
 	            /* Could see if the data fits in a 32-bit int and output it like that if so... */
 	            atom_setlong(&args[numArgs], 0);
 	            p += 8;
+                post("Received double, setting to zero.");
 	            break;
 
 	            case 'd':
