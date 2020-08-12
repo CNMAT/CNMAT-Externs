@@ -15,18 +15,15 @@
 			dependencies = (
 				52E957391B40786100D1D7E2 /* PBXTargetDependency */,
 				52E957371B406BE700D1D7E2 /* PBXTargetDependency */,
-				529D6EEF173338FD005FD64C /* PBXTargetDependency */,
 				5219622716E6C70700EA7DDF /* PBXTargetDependency */,
 				5219622916E6C70700EA7DDF /* PBXTargetDependency */,
 				5219622B16E6C70700EA7DDF /* PBXTargetDependency */,
 				5219622F16E6C70700EA7DDF /* PBXTargetDependency */,
 				521961B616E6C25B00EA7DDF /* PBXTargetDependency */,
-				52E44B9C15F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BA215F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BA415F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BA815F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BAA15F28BD300C91B67 /* PBXTargetDependency */,
-				52E44BAE15F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BB015F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BB215F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BB415F28BD300C91B67 /* PBXTargetDependency */,
@@ -45,15 +42,12 @@
 				52E4490815F1EA8000C91B67 /* PBXTargetDependency */,
 				52E4490A15F1EA8000C91B67 /* PBXTargetDependency */,
 				52E4490E15F1EA8000C91B67 /* PBXTargetDependency */,
-				52E4491015F1EA8000C91B67 /* PBXTargetDependency */,
 				52E4491215F1EA8000C91B67 /* PBXTargetDependency */,
 				52E4491415F1EA8000C91B67 /* PBXTargetDependency */,
 				52E4491615F1EA8000C91B67 /* PBXTargetDependency */,
 				52E447EF15F1897C00C91B67 /* PBXTargetDependency */,
-				52E447F315F1897C00C91B67 /* PBXTargetDependency */,
 				52E447F515F1897C00C91B67 /* PBXTargetDependency */,
 				52E447F915F1897C00C91B67 /* PBXTargetDependency */,
-				52F10B0115F13DA8008FC371 /* PBXTargetDependency */,
 				52F10AE115F072C6008FC371 /* PBXTargetDependency */,
 				52E44BB815F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BBA15F28BD300C91B67 /* PBXTargetDependency */,
@@ -68,6 +62,22 @@
 				52E44BA015F28BD300C91B67 /* PBXTargetDependency */,
 			);
 			name = "CNMAT-Externs";
+			productName = "CNMAT-Externs";
+		};
+		A4BA997324E45188006FD002 /* CNMAT-Externs intern */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = A4BA99DE24E45188006FD002 /* Build configuration list for PBXAggregateTarget "CNMAT-Externs intern" */;
+			buildPhases = (
+			);
+			dependencies = (
+				A4BA997824E45188006FD002 /* PBXTargetDependency */,
+				A4BA998424E45188006FD002 /* PBXTargetDependency */,
+				A4BA998E24E45188006FD002 /* PBXTargetDependency */,
+				A4BA99B424E45188006FD002 /* PBXTargetDependency */,
+				A4BA99BE24E45188006FD002 /* PBXTargetDependency */,
+				A4BA99C424E45188006FD002 /* PBXTargetDependency */,
+			);
+			name = "CNMAT-Externs intern";
 			productName = "CNMAT-Externs";
 		};
 /* End PBXAggregateTarget section */
@@ -611,26 +621,12 @@
 			remoteGlobalIDString = 5219620D16E6C61400EA7DDF;
 			remoteInfo = "res-transform";
 		};
-		529D6EEE173338FD005FD64C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 52E4479415F1890800C91B67;
-			remoteInfo = "analyzer~";
-		};
 		52E447EE15F1897C00C91B67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 52E4476715F1889300C91B67;
 			remoteInfo = "accumulate~";
-		};
-		52E447F215F1897C00C91B67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 52E447A215F1890E00C91B67;
-			remoteInfo = bdist;
 		};
 		52E447F415F1897C00C91B67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -674,13 +670,6 @@
 			remoteGlobalIDString = 52E4488F15F1E9B700C91B67;
 			remoteInfo = gridpanel;
 		};
-		52E4490F15F1EA8000C91B67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 52E4489E15F1E9BC00C91B67;
-			remoteInfo = "harmonics~";
-		};
 		52E4491115F1EA8000C91B67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
@@ -701,13 +690,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 52E448CB15F1E9C900C91B67;
 			remoteInfo = "list-interpolate";
-		};
-		52E44B9B15F28BD300C91B67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 52E4488015F1E9B200C91B67;
-			remoteInfo = "firbank~";
 		};
 		52E44B9D15F28BD300C91B67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -757,13 +739,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 52E44A2615F2881B00C91B67;
 			remoteInfo = printit;
-		};
-		52E44BAD15F28BD300C91B67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 52E44A3515F2882100C91B67;
-			remoteInfo = randdist;
 		};
 		52E44BAF15F28BD300C91B67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -926,7 +901,42 @@
 			remoteGlobalIDString = 52F10ACE15F071FA008FC371;
 			remoteInfo = "2threshattack~";
 		};
-		52F10B0015F13DA8008FC371 /* PBXContainerItemProxy */ = {
+		A4BA997924E45188006FD002 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52E4479415F1890800C91B67;
+			remoteInfo = "analyzer~";
+		};
+		A4BA998524E45188006FD002 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52E4488015F1E9B200C91B67;
+			remoteInfo = "firbank~";
+		};
+		A4BA998F24E45188006FD002 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52E44A3515F2882100C91B67;
+			remoteInfo = randdist;
+		};
+		A4BA99B524E45188006FD002 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52E4489E15F1E9BC00C91B67;
+			remoteInfo = "harmonics~";
+		};
+		A4BA99BF24E45188006FD002 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52E447A215F1890E00C91B67;
+			remoteInfo = bdist;
+		};
+		A4BA99C524E45188006FD002 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
 			proxyType = 1;
@@ -1279,7 +1289,6 @@
 		A4ADD8471FCFE06C00A59C42 /* waveguide~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "waveguide~.maxhelp"; path = "help/waveguide~.maxhelp"; sourceTree = SOURCE_ROOT; };
 		A4ADD8481FCFE07400A59C42 /* thread.which.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = thread.which.maxhelp; path = help/thread.which.maxhelp; sourceTree = SOURCE_ROOT; };
 		A4ADD8491FCFE07C00A59C42 /* xydisplay.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = xydisplay.maxhelp; path = help/xydisplay.maxhelp; sourceTree = SOURCE_ROOT; };
-		A4DB19B31A1EFC470074BE10 /* libgsl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgsl.a; path = ../gsl/libgsl.a; sourceTree = "<group>"; };
 		A4E832F419E8650200C55B20 /* cambio~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "cambio~.c"; sourceTree = "<group>"; };
 		A4E832F619E8650200C55B20 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -2926,7 +2935,6 @@
 		52F10AA415F07157008FC371 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A4DB19B31A1EFC470074BE10 /* libgsl.a */,
 				52ADE24B1733046200074C0C /* JitterAPI.framework */,
 				52ADE2361733042E00074C0C /* MaxAudioAPI.framework */,
 				52FF18CE163B5C5B00F94922 /* CoreServices.framework */,
@@ -4036,6 +4044,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 52F10A9715F07157008FC371;
@@ -4044,6 +4053,7 @@
 			projectRoot = "";
 			targets = (
 				52F10ADC15F072B2008FC371 /* CNMAT-Externs */,
+				A4BA997324E45188006FD002 /* CNMAT-Externs intern */,
 				52F10ACE15F071FA008FC371 /* 2threshattack~ */,
 				52E4476715F1889300C91B67 /* accumulate~ */,
 				52E4479415F1890800C91B67 /* analyzer~ */,
@@ -5216,20 +5226,10 @@
 			target = 5219620D16E6C61400EA7DDF /* res-transform */;
 			targetProxy = 5219622E16E6C70700EA7DDF /* PBXContainerItemProxy */;
 		};
-		529D6EEF173338FD005FD64C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 52E4479415F1890800C91B67 /* analyzer~ */;
-			targetProxy = 529D6EEE173338FD005FD64C /* PBXContainerItemProxy */;
-		};
 		52E447EF15F1897C00C91B67 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 52E4476715F1889300C91B67 /* accumulate~ */;
 			targetProxy = 52E447EE15F1897C00C91B67 /* PBXContainerItemProxy */;
-		};
-		52E447F315F1897C00C91B67 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 52E447A215F1890E00C91B67 /* bdist */;
-			targetProxy = 52E447F215F1897C00C91B67 /* PBXContainerItemProxy */;
 		};
 		52E447F515F1897C00C91B67 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5261,11 +5261,6 @@
 			target = 52E4488F15F1E9B700C91B67 /* gridpanel */;
 			targetProxy = 52E4490D15F1EA8000C91B67 /* PBXContainerItemProxy */;
 		};
-		52E4491015F1EA8000C91B67 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 52E4489E15F1E9BC00C91B67 /* harmonics~ */;
-			targetProxy = 52E4490F15F1EA8000C91B67 /* PBXContainerItemProxy */;
-		};
 		52E4491215F1EA8000C91B67 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 52E448AD15F1E9C100C91B67 /* interleave */;
@@ -5280,11 +5275,6 @@
 			isa = PBXTargetDependency;
 			target = 52E448CB15F1E9C900C91B67 /* list-interpolate */;
 			targetProxy = 52E4491515F1EA8000C91B67 /* PBXContainerItemProxy */;
-		};
-		52E44B9C15F28BD300C91B67 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 52E4488015F1E9B200C91B67 /* firbank~ */;
-			targetProxy = 52E44B9B15F28BD300C91B67 /* PBXContainerItemProxy */;
 		};
 		52E44B9E15F28BD300C91B67 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5320,11 +5310,6 @@
 			isa = PBXTargetDependency;
 			target = 52E44A2615F2881B00C91B67 /* printit */;
 			targetProxy = 52E44BAB15F28BD300C91B67 /* PBXContainerItemProxy */;
-		};
-		52E44BAE15F28BD300C91B67 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 52E44A3515F2882100C91B67 /* randdist */;
-			targetProxy = 52E44BAD15F28BD300C91B67 /* PBXContainerItemProxy */;
 		};
 		52E44BB015F28BD300C91B67 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5441,10 +5426,35 @@
 			target = 52F10ACE15F071FA008FC371 /* 2threshattack~ */;
 			targetProxy = 52F10AE015F072C6008FC371 /* PBXContainerItemProxy */;
 		};
-		52F10B0115F13DA8008FC371 /* PBXTargetDependency */ = {
+		A4BA997824E45188006FD002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52E4479415F1890800C91B67 /* analyzer~ */;
+			targetProxy = A4BA997924E45188006FD002 /* PBXContainerItemProxy */;
+		};
+		A4BA998424E45188006FD002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52E4488015F1E9B200C91B67 /* firbank~ */;
+			targetProxy = A4BA998524E45188006FD002 /* PBXContainerItemProxy */;
+		};
+		A4BA998E24E45188006FD002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52E44A3515F2882100C91B67 /* randdist */;
+			targetProxy = A4BA998F24E45188006FD002 /* PBXContainerItemProxy */;
+		};
+		A4BA99B424E45188006FD002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52E4489E15F1E9BC00C91B67 /* harmonics~ */;
+			targetProxy = A4BA99B524E45188006FD002 /* PBXContainerItemProxy */;
+		};
+		A4BA99BE24E45188006FD002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52E447A215F1890E00C91B67 /* bdist */;
+			targetProxy = A4BA99BF24E45188006FD002 /* PBXContainerItemProxy */;
+		};
+		A4BA99C424E45188006FD002 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 52F10AF215F13D86008FC371 /* bessel */;
-			targetProxy = 52F10B0015F13DA8008FC371 /* PBXContainerItemProxy */;
+			targetProxy = A4BA99C524E45188006FD002 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -5465,6 +5475,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SYMROOT = ./build;
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -5485,6 +5496,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SYMROOT = ./build;
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -5512,6 +5524,7 @@
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
 				PRODUCT_NAME = "partconv~";
 				SDKROOT = "";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -5539,6 +5552,7 @@
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
 				PRODUCT_NAME = "partconv~";
 				SDKROOT = "";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -5587,6 +5601,7 @@
 				);
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\"";
 				PRODUCT_NAME = "partconv~";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = "";
 			};
 			name = Debug;
@@ -5633,6 +5648,7 @@
 				);
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\"";
 				PRODUCT_NAME = "partconv~";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = "";
 			};
 			name = Release;
@@ -5653,6 +5669,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "polywave~";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -5673,6 +5690,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "polywave~";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -5694,6 +5712,7 @@
 				);
 				OTHER_CFLAGS = "$(inherited)";
 				PRODUCT_NAME = "list-accum";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -5715,6 +5734,7 @@
 				);
 				OTHER_CFLAGS = "$(inherited)";
 				PRODUCT_NAME = "list-accum";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -5736,6 +5756,7 @@
 				);
 				OTHER_CFLAGS = "$(inherited)";
 				PRODUCT_NAME = "OSC-route";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -5757,6 +5778,7 @@
 				);
 				OTHER_CFLAGS = "$(inherited)";
 				PRODUCT_NAME = "OSC-route";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -5778,6 +5800,7 @@
 				);
 				OTHER_CFLAGS = "$(inherited)";
 				PRODUCT_NAME = migrator;
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -5799,6 +5822,7 @@
 				);
 				OTHER_CFLAGS = "$(inherited)";
 				PRODUCT_NAME = migrator;
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -5820,6 +5844,7 @@
 				);
 				OTHER_CFLAGS = "$(inherited)";
 				PRODUCT_NAME = trampoline;
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -5841,6 +5866,7 @@
 				);
 				OTHER_CFLAGS = "$(inherited)";
 				PRODUCT_NAME = trampoline;
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -5862,6 +5888,7 @@
 				);
 				OTHER_CFLAGS = "$(inherited)";
 				PRODUCT_NAME = thread.which;
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -5883,6 +5910,7 @@
 				);
 				OTHER_CFLAGS = "$(inherited)";
 				PRODUCT_NAME = thread.which;
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -5904,6 +5932,7 @@
 				);
 				OTHER_CFLAGS = "$(inherited)";
 				PRODUCT_NAME = OpenSoundControl;
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -5925,6 +5954,7 @@
 				);
 				OTHER_CFLAGS = "$(inherited)";
 				PRODUCT_NAME = OpenSoundControl;
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -5946,6 +5976,7 @@
 				);
 				OTHER_CFLAGS = "$(inherited)";
 				PRODUCT_NAME = "res-transform";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -5967,6 +5998,7 @@
 				);
 				OTHER_CFLAGS = "$(inherited)";
 				PRODUCT_NAME = "res-transform";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -5998,6 +6030,7 @@
 				);
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "basicresonators~";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -6029,6 +6062,7 @@
 				);
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "basicresonators~";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -6050,6 +6084,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -6071,6 +6106,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -6078,7 +6114,7 @@
 		52E4479F15F1890800C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6098,6 +6134,7 @@
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = "";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -6105,7 +6142,7 @@
 		52E447A015F1890800C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6125,6 +6162,7 @@
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = "";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -6140,17 +6178,15 @@
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)/**";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"$(SOURCE_ROOT)/../gsl/.libs/libgsl.a",
-				);
-				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/libgsl.a\"";
+				OTHER_LDFLAGS = "$(inherited)";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -6166,17 +6202,15 @@
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GENERATE_MASTER_OBJECT_FILE = YES;
-				HEADER_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)/**";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"$(SOURCE_ROOT)/../gsl/.libs/libgsl.a",
-				);
-				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/libgsl.a\"";
+				OTHER_LDFLAGS = "$(inherited)";
+				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -6198,6 +6232,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -6219,6 +6254,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -6240,6 +6276,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -6261,6 +6298,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -6285,6 +6323,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -6309,6 +6348,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -6331,6 +6371,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -6353,6 +6394,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -6374,6 +6416,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -6395,6 +6438,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -6416,6 +6460,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -6437,6 +6482,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -6458,6 +6504,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -6479,6 +6526,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -6503,6 +6551,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -6527,6 +6576,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -6548,6 +6598,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -6569,6 +6620,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -6590,6 +6642,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -6611,6 +6664,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -6632,6 +6686,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -6653,6 +6708,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -6674,6 +6730,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -6695,6 +6752,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -6716,6 +6774,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -6737,6 +6796,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -6759,6 +6819,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -6781,6 +6842,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -6802,6 +6864,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -6823,6 +6886,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -6844,6 +6908,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -6865,6 +6930,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -6886,6 +6952,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -6907,6 +6974,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -6928,6 +6996,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -6949,6 +7018,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -6970,6 +7040,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -6991,6 +7062,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7012,6 +7084,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -7033,6 +7106,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7054,6 +7128,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -7075,6 +7150,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7096,6 +7172,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -7117,6 +7194,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7138,6 +7216,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -7159,6 +7238,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7180,6 +7260,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -7201,6 +7282,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7222,6 +7304,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -7243,6 +7326,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7264,6 +7348,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -7285,6 +7370,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7306,6 +7392,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -7327,6 +7414,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7348,6 +7436,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -7369,6 +7458,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7390,6 +7480,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -7411,6 +7502,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7432,6 +7524,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -7453,6 +7546,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7474,6 +7568,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -7495,6 +7590,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7517,6 +7613,7 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -7539,6 +7636,7 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7560,6 +7658,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -7581,6 +7680,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7602,6 +7702,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -7623,6 +7724,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7644,6 +7746,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -7665,6 +7768,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7686,6 +7790,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -7707,6 +7812,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7728,6 +7834,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -7749,6 +7856,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7770,6 +7878,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -7791,6 +7900,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7812,6 +7922,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -7833,6 +7944,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7854,6 +7966,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -7875,6 +7988,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7896,6 +8010,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -7917,6 +8032,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7938,6 +8054,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -7959,6 +8076,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -7980,6 +8098,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -8001,6 +8120,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -8008,8 +8128,8 @@
 		52F10AAE15F07157008FC371 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -8041,7 +8161,6 @@
 					"\"$(SRCROOT)/../max-sdk/source/c74support/max-includes\"",
 					"\"$(SRCROOT)/../max-sdk/source/c74support/msp-includes\"",
 					"\"$(SRCROOT)/../fftw/api\"",
-					"\"$(SRCROOT)/../gsl\"",
 					"\"$(SRCROOT)/../libomax\"",
 					"\"$(SRCROOT)/../libo\"",
 					"\"$(SRCROOT)/../CNMAT-SDIF/lib\"",
@@ -8062,7 +8181,10 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "@../max-sdk/source/c74support/max-includes/c74_linker_flags.txt";
+				PRELINK_LIBS = "";
 				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../gsl\"";
+				VALID_ARCHS = "i386 x86_64";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -8070,8 +8192,8 @@
 		52F10AAF15F07157008FC371 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -8099,7 +8221,6 @@
 					"\"$(SRCROOT)/../max-sdk/source/c74support/max-includes\"",
 					"\"$(SRCROOT)/../max-sdk/source/c74support/msp-includes\"",
 					"\"$(SRCROOT)/../fftw/api\"",
-					"\"$(SRCROOT)/../gsl\"",
 					"\"$(SRCROOT)/../libomax\"",
 					"\"$(SRCROOT)/../libo\"",
 					"\"$(SRCROOT)/../CNMAT-SDIF/lib\"",
@@ -8119,7 +8240,10 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "@../max-sdk/source/c74support/max-includes/c74_linker_flags.txt";
+				PRELINK_LIBS = "";
 				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../gsl\"";
+				VALID_ARCHS = "i386 x86_64";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -8142,6 +8266,7 @@
 				);
 				OTHER_CFLAGS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -8164,6 +8289,7 @@
 				);
 				OTHER_CFLAGS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -8171,18 +8297,20 @@
 		52F10ADE15F072B2008FC371 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = x86_64;
 			};
 			name = Debug;
 		};
 		52F10ADF15F072B2008FC371 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = x86_64;
 			};
 			name = Release;
 		};
@@ -8203,6 +8331,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -8224,14 +8353,37 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
+			};
+			name = Release;
+		};
+		A4BA99DF24E45188006FD002 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_VERSION = "";
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "CNMAT-Externs copy-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = x86_64;
+			};
+			name = Debug;
+		};
+		A4BA99E024E45188006FD002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_VERSION = "";
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = "CNMAT-Externs copy-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = x86_64;
 			};
 			name = Release;
 		};
 		A4E832F019E8642800C55B20 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -8247,6 +8399,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRODUCT_NAME = "cambio~";
 				SYMROOT = ./build;
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -8254,7 +8407,7 @@
 		A4E832F119E8642800C55B20 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -8270,6 +8423,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				PRODUCT_NAME = "cambio~";
 				SYMROOT = ./build;
+				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -8831,6 +8985,15 @@
 			buildConfigurations = (
 				52F10AFC15F13D86008FC371 /* Debug */,
 				52F10AFD15F13D86008FC371 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A4BA99DE24E45188006FD002 /* Build configuration list for PBXAggregateTarget "CNMAT-Externs intern" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A4BA99DF24E45188006FD002 /* Debug */,
+				A4BA99E024E45188006FD002 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
