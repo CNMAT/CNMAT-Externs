@@ -66,7 +66,7 @@ VERSION 0.1: First public release
 /* structure definition of your object */
 typedef struct _thread_fork
 {
-    Object o_ob;    // required header
+    t_object o_ob;    // required header
 
     t_object* in_p[1];  // either a normal inlet or a crazy proxy thing
     long in_i_unsafe;   // which inlet message arrived on, but isn't threadsafe

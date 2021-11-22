@@ -69,7 +69,7 @@ t_class *li_class;
 //Types
 typedef	struct	fobj
 {
-	Object			object;		/* An embedded MAX object.					*/
+	t_object			object;		/* An embedded MAX object.					*/
 	void			*dataoutlet;
 	void *bangoutlet;
 	

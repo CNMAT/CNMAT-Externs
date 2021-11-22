@@ -118,7 +118,7 @@ SDIFBuffer *AllTheBuffers;	/* A linked list of all the buffers */
 /* prototypes for my functions */
 void *my_getbytes(int numBytes);
 void my_freebytes(void *bytes, int size);
-void *SDIFbuffer_new(t_symbol *name, Symbol *filename);
+void *SDIFbuffer_new(t_symbol *name, t_symbol *filename);
 void SDIFbuffer_free(SDIFBuffer *x);
 void SDIFbuffer_clear(SDIFBuffer *x);
 void SDIFbuffer_doclear(SDIFBuffer *x);
@@ -240,7 +240,7 @@ int main(void) {
 	return 0;
 }
 
-void *SDIFbuffer_new(t_symbol *name, Symbol *filename) {
+void *SDIFbuffer_new(t_symbol *name, t_symbol *filename) {
 	SDIFBuffer *x;
 	SDIFBufferPrivate *privateStuff;
 
