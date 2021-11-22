@@ -13,6 +13,9 @@
 			buildPhases = (
 			);
 			dependencies = (
+				52E44BAA15F28BD300C91B67 /* PBXTargetDependency */,
+				95594935274B6BFB0059B956 /* PBXTargetDependency */,
+				95594933274B6B690059B956 /* PBXTargetDependency */,
 				52E957391B40786100D1D7E2 /* PBXTargetDependency */,
 				52E957371B406BE700D1D7E2 /* PBXTargetDependency */,
 				5219622716E6C70700EA7DDF /* PBXTargetDependency */,
@@ -23,7 +26,6 @@
 				52E44BA215F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BA415F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BA815F28BD300C91B67 /* PBXTargetDependency */,
-				52E44BAA15F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BB015F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BB215F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BB415F28BD300C91B67 /* PBXTargetDependency */,
@@ -891,6 +893,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 52F10ACE15F071FA008FC371;
 			remoteInfo = "2threshattack~";
+		};
+		95594932274B6B690059B956 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52E4489E15F1E9BC00C91B67;
+			remoteInfo = "harmonics~";
+		};
+		95594934274B6BFB0059B956 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52E4488015F1E9B200C91B67;
+			remoteInfo = "firbank~";
 		};
 		A4BA997924E45188006FD002 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -5410,6 +5426,16 @@
 			isa = PBXTargetDependency;
 			target = 52F10ACE15F071FA008FC371 /* 2threshattack~ */;
 			targetProxy = 52F10AE015F072C6008FC371 /* PBXContainerItemProxy */;
+		};
+		95594933274B6B690059B956 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52E4489E15F1E9BC00C91B67 /* harmonics~ */;
+			targetProxy = 95594932274B6B690059B956 /* PBXContainerItemProxy */;
+		};
+		95594935274B6BFB0059B956 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52E4488015F1E9B200C91B67 /* firbank~ */;
+			targetProxy = 95594934274B6BFB0059B956 /* PBXContainerItemProxy */;
 		};
 		A4BA997824E45188006FD002 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
