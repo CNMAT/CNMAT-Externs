@@ -13,6 +13,7 @@
 			buildPhases = (
 			);
 			dependencies = (
+				9578D97E275681C000913739 /* PBXTargetDependency */,
 				52E44BAA15F28BD300C91B67 /* PBXTargetDependency */,
 				95594935274B6BFB0059B956 /* PBXTargetDependency */,
 				95594933274B6B690059B956 /* PBXTargetDependency */,
@@ -899,6 +900,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 52E4488015F1E9B200C91B67;
 			remoteInfo = "firbank~";
+		};
+		9578D97D275681C000913739 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52E44A2615F2881B00C91B67;
+			remoteInfo = printit;
 		};
 		A4BA997924E45188006FD002 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -5423,6 +5431,11 @@
 			isa = PBXTargetDependency;
 			target = 52E4488015F1E9B200C91B67 /* firbank~ */;
 			targetProxy = 95594934274B6BFB0059B956 /* PBXContainerItemProxy */;
+		};
+		9578D97E275681C000913739 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52E44A2615F2881B00C91B67 /* printit */;
+			targetProxy = 9578D97D275681C000913739 /* PBXContainerItemProxy */;
 		};
 		A4BA997824E45188006FD002 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

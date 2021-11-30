@@ -16,5 +16,4 @@
 #undef COMPLAIN
 #define COMPLAIN error
 
-#undef PRINTF
-#define PRINTF post
+
