@@ -13,6 +13,7 @@
 			buildPhases = (
 			);
 			dependencies = (
+				9578D9802756947B00913739 /* PBXTargetDependency */,
 				9578D97E275681C000913739 /* PBXTargetDependency */,
 				52E44BAA15F28BD300C91B67 /* PBXTargetDependency */,
 				95594935274B6BFB0059B956 /* PBXTargetDependency */,
@@ -907,6 +908,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 52E44A2615F2881B00C91B67;
 			remoteInfo = printit;
+		};
+		9578D97F2756947B00913739 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52E447BE15F1891500C91B67;
+			remoteInfo = "bench~";
 		};
 		A4BA997924E45188006FD002 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -5437,6 +5445,11 @@
 			target = 52E44A2615F2881B00C91B67 /* printit */;
 			targetProxy = 9578D97D275681C000913739 /* PBXContainerItemProxy */;
 		};
+		9578D9802756947B00913739 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52E447BE15F1891500C91B67 /* bench~ */;
+			targetProxy = 9578D97F2756947B00913739 /* PBXContainerItemProxy */;
+		};
 		A4BA997824E45188006FD002 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 52E4479415F1890800C91B67 /* analyzer~ */;
@@ -8203,7 +8216,7 @@
 					"\"$(SRCROOT)/../gsl/.libs\"",
 				);
 				MACH_O_TYPE = mh_bundle;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "@../max-sdk-base/c74support/max-includes/c74_linker_flags.txt";
@@ -8285,7 +8298,7 @@
 					"\"$(SRCROOT)/../gsl/.libs\"",
 				);
 				MACH_O_TYPE = mh_bundle;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "@../max-sdk-base/c74support/max-includes/c74_linker_flags.txt";
 				PRELINK_LIBS = "";
