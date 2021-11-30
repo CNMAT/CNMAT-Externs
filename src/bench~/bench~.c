@@ -54,7 +54,7 @@ VERSION 1.0: First version
 #define BENCH_MODE_THRU 3
 
 typedef struct _bench{
-       	t_pxobject t_ob;
+    t_pxobject t_ob;
 	int t_objmode;
 	int t_mode;
 } t_bench;
@@ -109,7 +109,7 @@ void *bench_new(t_symbol *msg, short argc, t_atom *argv){
 		object_error((t_object *)x, "bench~: one argument is required, either in or out");
 		return NULL;
 	}else{
-		if(!argv[0].a_type == A_SYM){
+		if(!(argv[0].a_type == A_SYM)){
 			object_error((t_object *)x, "bench~: the first argument to bench must be a symbol (either \"in\" or \"out\")");
 			return NULL;
 		}else if(!strcmp(argv[0].a_w.w_sym->s_name, "in")){

@@ -10,7 +10,7 @@ SRCDIR = src
 JAVAOBJECTNAMES = midifile
 BUILDDIR = build/Release
 
-C74SUPPORT = ../max-sdk/source/c74support
+C74SUPPORT = ../max-sdk-base/c74support
 MAX_INCLUDES = $(C74SUPPORT)/max-includes
 MSP_INCLUDES = $(C74SUPPORT)/msp-includes
 JIT_INCLUDES = $(C74SUPPORT)/jit-includes

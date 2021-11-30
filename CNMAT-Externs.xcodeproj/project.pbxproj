@@ -880,13 +880,6 @@
 			remoteGlobalIDString = A4E832E419E8642800C55B20;
 			remoteInfo = "cambio~";
 		};
-		52E957381B40786100D1D7E2 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 52E447BE15F1891500C91B67;
-			remoteInfo = "bench~";
-		};
 		52F10AE015F072C6008FC371 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
@@ -5417,11 +5410,6 @@
 			target = A4E832E419E8642800C55B20 /* cambio~ */;
 			targetProxy = 52E957361B406BE700D1D7E2 /* PBXContainerItemProxy */;
 		};
-		52E957391B40786100D1D7E2 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 52E447BE15F1891500C91B67 /* bench~ */;
-			targetProxy = 52E957381B40786100D1D7E2 /* PBXContainerItemProxy */;
-		};
 		52F10AE115F072C6008FC371 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 52F10ACE15F071FA008FC371 /* 2threshattack~ */;
@@ -8210,7 +8198,7 @@
 				PRELINK_LIBS = "";
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../gsl\"";
-				VALID_ARCHS = "i386 x86_64";
+				VALID_ARCHS = "x86_64 arm64";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -8291,7 +8279,7 @@
 				PRELINK_LIBS = "";
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../gsl\"";
-				VALID_ARCHS = "i386 x86_64";
+				VALID_ARCHS = "x86_64 arm64";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -8355,7 +8343,7 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "@../max-sdk-base/c74support/max-includes/c74_linker_flags.txt";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				VALID_ARCHS = x86_64;
+				VALID_ARCHS = "x86_64 arm64";
 			};
 			name = Debug;
 		};
@@ -8372,7 +8360,7 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "@../max-sdk-base/c74support/max-includes/c74_linker_flags.txt";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				VALID_ARCHS = x86_64;
+				VALID_ARCHS = "x86_64 arm64";
 			};
 			name = Release;
 		};
@@ -8427,7 +8415,7 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "CNMAT-Externs copy-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				VALID_ARCHS = x86_64;
+				VALID_ARCHS = "x86_64 arm64";
 			};
 			name = Debug;
 		};
@@ -8438,7 +8426,7 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "CNMAT-Externs copy-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				VALID_ARCHS = x86_64;
+				VALID_ARCHS = "x86_64 arm64";
 			};
 			name = Release;
 		};
