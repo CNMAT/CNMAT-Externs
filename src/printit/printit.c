@@ -162,6 +162,7 @@ void printit_assist (printit *x, void *box, long msg, long arg, char *dstString)
 void printit_bang(printit *x)
 {
 	object_post((t_object *)x, "%s: received a bang.", x->my_name->s_name);
+    
 }
 
 void printit_float(printit *x, double d)

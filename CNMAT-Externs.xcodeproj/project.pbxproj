@@ -13,7 +13,6 @@
 			buildPhases = (
 			);
 			dependencies = (
-				9578D9802756947B00913739 /* PBXTargetDependency */,
 				9578D97E275681C000913739 /* PBXTargetDependency */,
 				52E44BAA15F28BD300C91B67 /* PBXTargetDependency */,
 				95594935274B6BFB0059B956 /* PBXTargetDependency */,
@@ -908,13 +907,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 52E44A2615F2881B00C91B67;
 			remoteInfo = printit;
-		};
-		9578D97F2756947B00913739 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 52E447BE15F1891500C91B67;
-			remoteInfo = "bench~";
 		};
 		A4BA997924E45188006FD002 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -5445,11 +5437,6 @@
 			target = 52E44A2615F2881B00C91B67 /* printit */;
 			targetProxy = 9578D97D275681C000913739 /* PBXContainerItemProxy */;
 		};
-		9578D9802756947B00913739 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 52E447BE15F1891500C91B67 /* bench~ */;
-			targetProxy = 9578D97F2756947B00913739 /* PBXContainerItemProxy */;
-		};
 		A4BA997824E45188006FD002 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 52E4479415F1890800C91B67 /* analyzer~ */;
@@ -7174,10 +7161,17 @@
 		52E44A3215F2881B00C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = "";
+				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				"GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS[arch=*]" = "";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				HEADER_SEARCH_PATHS = "$(inherited)";
@@ -7196,10 +7190,12 @@
 		52E44A3315F2881B00C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				HEADER_SEARCH_PATHS = "$(inherited)";
