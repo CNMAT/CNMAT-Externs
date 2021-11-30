@@ -8,9 +8,6 @@
 #include </usr/include/w32api/winsock2.h>
 #endif
 
-#undef COMPLAIN
-#undef PRINTF
-
 #define COMPLAIN error
 #define PRINTF post
 
