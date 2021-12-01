@@ -1,5 +1,5 @@
 #ifndef __CNMAT_VERSION_H__
-#define __CNMAT_VERSION_H__
+#define __CNMAT_VERSION_H__ placeholder
 
 #include "ext.h"
 

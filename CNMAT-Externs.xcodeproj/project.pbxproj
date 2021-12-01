@@ -13,11 +13,11 @@
 			buildPhases = (
 			);
 			dependencies = (
+				52E957371B406BE700D1D7E2 /* PBXTargetDependency */,
 				9578D97E275681C000913739 /* PBXTargetDependency */,
 				52E44BAA15F28BD300C91B67 /* PBXTargetDependency */,
 				95594935274B6BFB0059B956 /* PBXTargetDependency */,
 				95594933274B6B690059B956 /* PBXTargetDependency */,
-				52E957371B406BE700D1D7E2 /* PBXTargetDependency */,
 				5219622716E6C70700EA7DDF /* PBXTargetDependency */,
 				5219622916E6C70700EA7DDF /* PBXTargetDependency */,
 				5219622B16E6C70700EA7DDF /* PBXTargetDependency */,
@@ -8164,6 +8164,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = "";
 				DSTROOT = "$(PROJECT_DIR)/build";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -8251,6 +8252,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
+				CURRENT_PROJECT_VERSION = "";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DSTROOT = "$(PROJECT_DIR)/build";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -8460,13 +8462,14 @@
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "$(INHERITED)";
+				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cnmat.cambio~";
 				PRODUCT_NAME = "cambio~";
 				SYMROOT = ./build;
 				VALID_ARCHS = "$(inherited)";
@@ -8483,13 +8486,14 @@
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "$(INHERITED)";
+				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cnmat.cambio~";
 				PRODUCT_NAME = "cambio~";
 				SYMROOT = ./build;
 				VALID_ARCHS = "$(inherited)";
