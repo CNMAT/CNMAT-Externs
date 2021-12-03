@@ -13,6 +13,7 @@
 			buildPhases = (
 			);
 			dependencies = (
+				95420DA227597AF8000A64B1 /* PBXTargetDependency */,
 				52E957371B406BE700D1D7E2 /* PBXTargetDependency */,
 				9578D97E275681C000913739 /* PBXTargetDependency */,
 				52E44BAA15F28BD300C91B67 /* PBXTargetDependency */,
@@ -886,6 +887,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 52F10ACE15F071FA008FC371;
 			remoteInfo = "2threshattack~";
+		};
+		95420DA127597AF8000A64B1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52E447BE15F1891500C91B67;
+			remoteInfo = "bench~";
 		};
 		95594932274B6B690059B956 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -5422,6 +5430,11 @@
 			target = 52F10ACE15F071FA008FC371 /* 2threshattack~ */;
 			targetProxy = 52F10AE015F072C6008FC371 /* PBXContainerItemProxy */;
 		};
+		95420DA227597AF8000A64B1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52E447BE15F1891500C91B67 /* bench~ */;
+			targetProxy = 95420DA127597AF8000A64B1 /* PBXContainerItemProxy */;
+		};
 		95594933274B6B690059B956 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 52E4489E15F1E9BC00C91B67 /* harmonics~ */;
@@ -6312,7 +6325,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../../../Downloads/MaxSDK-6.1.0/c74support/msp-includes/x64\"",
+					"\"$(SRCROOT)/../../max-sdk-base/c74support/msp-includes/x64\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
@@ -6337,7 +6350,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../../../Downloads/MaxSDK-6.1.0/c74support/msp-includes/x64\"",
+					"\"$(SRCROOT)/../../max-sdk-base/c74support/msp-includes/x64\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
