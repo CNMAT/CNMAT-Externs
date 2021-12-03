@@ -128,8 +128,8 @@ typedef struct
 } oscbank;
 typedef oscbank t_sinusoids;
 
-static void ResetInterruptStats(t_sinusoids *x);
-static void ReportInterruptStats(t_sinusoids *x);
+//static void ResetInterruptStats(t_sinusoids *x);
+//static void ReportInterruptStats(t_sinusoids *x);
 //static t_int *sinusoids2_perform(t_int *w);
 static void clear(t_sinusoids *x);
 //static void sinusoids_dsp(t_sinusoids *x, t_signal **sp, short *connect);
@@ -140,20 +140,23 @@ static void *sinusoids_new(t_symbol *s, short argc, t_atom *argv);
 static void frequency_float(t_sinusoids *x, double ff);
 void harmonics_free(t_sinusoids *x);
 static void SineFunction(int n, double *stab, int stride, double from, double to);
-static void Makeoscsinetable();
+static void Makeoscsinetable(void);
 void tellmeeverything(t_sinusoids *x);
 
 
-
+/*
 static void ResetInterruptStats(t_sinusoids *x) {
 	x->numTimesPerformCalled = x->numTimesParamsChangedDuringPerform = 0;
 }
+*/
 
+/*
 static void ReportInterruptStats(t_sinusoids *x) {
 	object_post((t_object *)x, "%ld calls to perform(); parameters changed %ld times during perform().",
 		 x->numTimesPerformCalled, x->numTimesParamsChangedDuringPerform);
 	ResetInterruptStats(x);
 }
+*/
 
 /*
 static t_int *sinusoids2_perform(t_int *w)
@@ -355,14 +358,14 @@ void  sinusoids_perform64(t_sinusoids *x, t_object *dsp64, double **ins, long nu
     else
         for(i=0;i<nosc && i<x->nosc&&i<x->nyqmaxosc;++i)   // In case user changes nosc, we synthesize the smaller number of oscillators.
         {
-            register double a = o->amplitude;
+            //register double a = o->amplitude;
             register long pi = pi_fundamental * (i+1);   // This partial's freq is proportional to harmonic number
             register unsigned long pc = o->phase_current;
             register long pstep = ((x->next_phase_inc * (i+1)) - pi) *rate ;		// Also prop. to harmonic #
             //		register double astep = (o->next_amplitude - o->amplitude)*rate;
             register double carrier_amp, carrier_amp_inc;
             register double mod_amp, mod_amp_inc;
-            double carrier_amp_final, mod_amp_final;
+            //double carrier_amp_final, mod_amp_final;
             
             
             // Make sure we're not going to run out of noise:
