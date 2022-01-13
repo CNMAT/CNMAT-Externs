@@ -47,7 +47,6 @@
    defined according to whether the corresponding function/type/header
    is available on your system.  The necessary macros are most
    conveniently defined if you are using GNU autoconf, via the tests:
-   
    dnl ---------------------------------------------------------------------
    AC_C_INLINE
    AC_HEADER_TIME
@@ -264,9 +263,9 @@ static __inline__ ticks getticks(void)
 {
      return __getReg(_IA64_REG_AR_ITC);
 }
- 
+
 INLINE_ELAPSED(__inline__)
- 
+
 #define HAVE_TICK_COUNTER
 #endif
 
@@ -529,7 +528,7 @@ INLINE_ELAPSED(inline)
 #define HAVE_TICK_COUNTER
 #endif
 
-#if defined(__aarch64__) && defined(HAVE_ARMV8_CNTVCT_EL0) && !defined(HAVE_ARMV8_PMCCNTR_EL0)
+#if defined(__aarch64__) && (defined(__APPLE__) || defined(HAVE_ARMV8_CNTVCT_EL0)) && !defined(HAVE_ARMV8_PMCCNTR_EL0)
 typedef uint64_t ticks;
 static inline ticks getticks(void)
 {

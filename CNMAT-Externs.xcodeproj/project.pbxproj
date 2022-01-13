@@ -13,7 +13,7 @@
 			buildPhases = (
 			);
 			dependencies = (
-				95C304E9275A7F0000A5327A /* PBXTargetDependency */,
+				A88E1DFA278DF5B700DFC848 /* PBXTargetDependency */,
 				52E957371B406BE700D1D7E2 /* PBXTargetDependency */,
 				9578D97E275681C000913739 /* PBXTargetDependency */,
 				52E44BAA15F28BD300C91B67 /* PBXTargetDependency */,
@@ -49,7 +49,6 @@
 				52E4491415F1EA8000C91B67 /* PBXTargetDependency */,
 				52E4491615F1EA8000C91B67 /* PBXTargetDependency */,
 				52E447EF15F1897C00C91B67 /* PBXTargetDependency */,
-				52E447F515F1897C00C91B67 /* PBXTargetDependency */,
 				52E447F915F1897C00C91B67 /* PBXTargetDependency */,
 				52F10AE115F072C6008FC371 /* PBXTargetDependency */,
 				52E44BB815F28BD300C91B67 /* PBXTargetDependency */,
@@ -569,7 +568,6 @@
 		A4E832EC19E8642800C55B20 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
 		A4E832ED19E8642800C55B20 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
 		A4E832F719E8650200C55B20 /* cambio~.c in Sources */ = {isa = PBXBuildFile; fileRef = A4E832F419E8650200C55B20 /* cambio~.c */; };
-		A4E832F919E8650200C55B20 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A4E832F619E8650200C55B20 /* Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -628,13 +626,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 52E4476715F1889300C91B67;
 			remoteInfo = "accumulate~";
-		};
-		52E447F415F1897C00C91B67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 52E447B015F1891100C91B67;
-			remoteInfo = bench;
 		};
 		52E447F815F1897C00C91B67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -909,13 +900,6 @@
 			remoteGlobalIDString = 52E44A2615F2881B00C91B67;
 			remoteInfo = printit;
 		};
-		95C304E8275A7F0000A5327A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 52E447BE15F1891500C91B67;
-			remoteInfo = "bench~";
-		};
 		A4BA997924E45188006FD002 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
@@ -957,6 +941,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 52F10AF215F13D86008FC371;
 			remoteInfo = bessel;
+		};
+		A88E1DF9278DF5B700DFC848 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52E447BE15F1891500C91B67;
+			remoteInfo = "bench~";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -1306,6 +1297,7 @@
 		A4ADD8491FCFE07C00A59C42 /* xydisplay.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = xydisplay.maxhelp; path = help/xydisplay.maxhelp; sourceTree = SOURCE_ROOT; };
 		A4E832F419E8650200C55B20 /* cambio~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "cambio~.c"; sourceTree = "<group>"; };
 		A4E832F619E8650200C55B20 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A810DCC72787727C00090EB4 /* current_version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = current_version.h; path = include/current_version.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2813,6 +2805,7 @@
 		52F10A9715F07157008FC371 = {
 			isa = PBXGroup;
 			children = (
+				A810DCC72787727C00090EB4 /* current_version.h */,
 				52E44C7C15F4835400C91B67 /* commonsyms.c */,
 				52F10AC715F071DE008FC371 /* 2threshattack~ */,
 				52E4476215F1888200C91B67 /* accumulate~ */,
@@ -4051,7 +4044,7 @@
 		52F10A9915F07157008FC371 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1310;
+				LastUpgradeCheck = 1320;
 				ORGANIZATIONNAME = CNMAT;
 			};
 			buildConfigurationList = 52F10A9C15F07157008FC371 /* Build configuration list for PBXProject "CNMAT-Externs" */;
@@ -4558,7 +4551,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A4E832F919E8650200C55B20 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5245,11 +5237,6 @@
 			target = 52E4476715F1889300C91B67 /* accumulate~ */;
 			targetProxy = 52E447EE15F1897C00C91B67 /* PBXContainerItemProxy */;
 		};
-		52E447F515F1897C00C91B67 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 52E447B015F1891100C91B67 /* bench */;
-			targetProxy = 52E447F415F1897C00C91B67 /* PBXContainerItemProxy */;
-		};
 		52E447F915F1897C00C91B67 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 52E447CC15F1891800C91B67 /* bpf */;
@@ -5445,11 +5432,6 @@
 			target = 52E44A2615F2881B00C91B67 /* printit */;
 			targetProxy = 9578D97D275681C000913739 /* PBXContainerItemProxy */;
 		};
-		95C304E9275A7F0000A5327A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 52E447BE15F1891500C91B67 /* bench~ */;
-			targetProxy = 95C304E8275A7F0000A5327A /* PBXContainerItemProxy */;
-		};
 		A4BA997824E45188006FD002 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 52E4479415F1890800C91B67 /* analyzer~ */;
@@ -5479,6 +5461,11 @@
 			isa = PBXTargetDependency;
 			target = 52F10AF215F13D86008FC371 /* bessel */;
 			targetProxy = A4BA99C524E45188006FD002 /* PBXContainerItemProxy */;
+		};
+		A88E1DFA278DF5B700DFC848 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52E447BE15F1891500C91B67 /* bench~ */;
+			targetProxy = A88E1DF9278DF5B700DFC848 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -6278,7 +6265,6 @@
 		52E447C915F1891500C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = x86_64;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6301,7 +6287,6 @@
 		52E447CA15F1891500C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = x86_64;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

@@ -561,13 +561,15 @@ void rbfi_move(t_rbfi *x, t_symbol *msg, int argc, t_atom *argv)
 			return;
 		}
 		n = atom_getlong(argv);
-		xatom = 1, yatom = 2;
+        xatom = 1;
+        yatom = 2;
 	}else{
 		if(atom_gettype(argv) != A_FLOAT || atom_gettype(argv + 1) != A_FLOAT){
 			object_error((t_object *)x, "position coordinates must be floats");
 			return;
 		}
-		xatom = 0, yatom = 1;
+        xatom = 0;
+        yatom = 1;
 	}
 
 	if(x->enable_multiple_crosshairs == 0 && n != 0){
@@ -598,9 +600,9 @@ void rbfi_move(t_rbfi *x, t_symbol *msg, int argc, t_atom *argv)
 	while(p){
 		if(x->enable_multiple_crosshairs){
 			if(*(p->label->s_name) == '/'){
-				sprintf(label, "/%d%s", n, p->label->s_name);
+                sprintf(label, "/%ld%s", n, p->label->s_name);
 			}else{
-				sprintf(label, "/%d/%s", n, p->label->s_name);
+                sprintf(label, "/%ld/%s", n, p->label->s_name);
 			}
 			atom_setsym(out, gensym(label));
 		}else{

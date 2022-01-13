@@ -1078,7 +1078,7 @@ t_int *bpf_perform(t_int *w){
 				memset(x->ptrs[(i * 3) + 2], 0, n * sizeof(t_float));
 			}
 			t_symbol *name;
-			if(name = bpf_mangleName(x->name, 0, i)){
+            if((name = bpf_mangleName(x->name, 0, i))){
 				name->s_thing = (t_object *)(x->ptrs[(i * 3)]);
 			}
 			if(name = bpf_mangleName(x->name, 1, i)){

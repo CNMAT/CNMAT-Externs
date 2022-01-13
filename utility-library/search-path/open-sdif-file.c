@@ -155,7 +155,7 @@ FILE *OpenSDIFFile(char *filename) {
 		} 
 	}
     
-	if (r = SDIF_BeginRead(f)) {
+    if ((r = SDIF_BeginRead(f))) {
 		int ferrno;
 		error("SDIF-buffer: error reading header of SDIF file %s:", filename);
 		error("  %s", SDIF_GetErrorString(r));
