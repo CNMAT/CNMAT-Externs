@@ -44,8 +44,8 @@ VERSION 0.2: Fixed error handler that was calling abort() due to underflow error
 
 
 #include "math.h"
-#include <gsl/gsl_errno.h>
-#include <gsl/gsl_sf_bessel.h>
+#include "gsl/gsl_errno.h"
+#include "gsl/gsl_sf_bessel.h"
 
 typedef struct _besl
 {
