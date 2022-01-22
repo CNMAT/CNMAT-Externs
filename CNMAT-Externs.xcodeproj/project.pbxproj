@@ -14,9 +14,7 @@
 			);
 			dependencies = (
 				A8FD9BEF279B713300DE60AB /* PBXTargetDependency */,
-				A8FD9BED279B4BB000DE60AB /* PBXTargetDependency */,
 				A8FD9BE9279B4AA000DE60AB /* PBXTargetDependency */,
-				A8FD9BE7279B4A2000DE60AB /* PBXTargetDependency */,
 				A88E1DFA278DF5B700DFC848 /* PBXTargetDependency */,
 				52E957371B406BE700D1D7E2 /* PBXTargetDependency */,
 				9578D97E275681C000913739 /* PBXTargetDependency */,
@@ -945,26 +943,12 @@
 			remoteGlobalIDString = 52E447BE15F1891500C91B67;
 			remoteInfo = "bench~";
 		};
-		A8FD9BE6279B4A2000DE60AB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 52E447A215F1890E00C91B67;
-			remoteInfo = bdist;
-		};
 		A8FD9BE8279B4AA000DE60AB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 52E4479415F1890800C91B67;
 			remoteInfo = "analyzer~";
-		};
-		A8FD9BEC279B4BB000DE60AB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 52F10AF215F13D86008FC371;
-			remoteInfo = bessel;
 		};
 		A8FD9BEE279B713300DE60AB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -5486,20 +5470,10 @@
 			target = 52E447BE15F1891500C91B67 /* bench~ */;
 			targetProxy = A88E1DF9278DF5B700DFC848 /* PBXContainerItemProxy */;
 		};
-		A8FD9BE7279B4A2000DE60AB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 52E447A215F1890E00C91B67 /* bdist */;
-			targetProxy = A8FD9BE6279B4A2000DE60AB /* PBXContainerItemProxy */;
-		};
 		A8FD9BE9279B4AA000DE60AB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 52E4479415F1890800C91B67 /* analyzer~ */;
 			targetProxy = A8FD9BE8279B4AA000DE60AB /* PBXContainerItemProxy */;
-		};
-		A8FD9BED279B4BB000DE60AB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 52F10AF215F13D86008FC371 /* bessel */;
-			targetProxy = A8FD9BEC279B4BB000DE60AB /* PBXContainerItemProxy */;
 		};
 		A8FD9BEF279B713300DE60AB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
