@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="waveguide~" module="CNMAT-Externals">
+
+    <digest>
+    </digest>
+
+    <description>
+	Waveguide mesh physical model with stiffness
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+	The user must define the mesh structure using the "connect edge" message, configure input and output locations, and filter coefficients for each edge.<br/>
+	The basic mesh parameters (number of edges and nodes) must be specified at creation-time.<br/>
+	Energy can be injected into the mesh and read out of the mesh at any number of nodes
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="connect">
+	    <arglist>
+		<arg name="designator" type="symbol" optional="0" id="0" />
+		<arg name="instruction list" type="list" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		The connect messages can be configured as follows:<br/>
+		<ul>
+		    <li>input: [sig input #] [node #]</li>
+		    <li>output: [sig output #] [node #]</li>
+		    <li>edge: [edge #] [node #] [node #]</li>
+		</ul>
+		e.g., [connect input 0 0] or [connect edge 0 0 1]<br/><br/>
+		An "input" refers to the signal that is input into a given inlet.  An "output" refers to the signal that is output (copied and used elsewhere).<br/>
+		An edge refers to a waveguide in the mesh.<br/>
+		For more information about waveguides, please see <a href="https://en.wikipedia.org/wiki/Waveguide_filter">this article on waveguide filters</a>.
+	    </description>
+	</method>
+	<method name="reset">
+	    <description>
+		Reset state to zero, in case the filter mesh blows up
+	    </description>
+	</method>
+	<method name="set">
+	    <arglist>
+		<arg name="designator" type="symbol" optional="0" id="0" />
+		<arg name="coefficients, range, or value" type="variable" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		The set message allows you to modify the virtual physical characteristics of the filter mesh.<br/>
+		<ul>
+		    <li>fc: set damping coefficient. [edge #] [range start] [range end].  Range is 0. - 1.</li>
+		    <li>nl: set stiffness.  [edge #] [range #].  Range is 0. - 1.</li>
+		    <li>delay: set delay time.  [edge #] [range min ms] [range max ms].  Range is 0.0 ms - delaymax ms</li>
+		</ul>
+		e.g., [set fc 0 0.99], [set nl 0 0.5], or [set delay 0 5.]
+	    </description>
+	</method>
+	<method name="signal">
+	    <description>
+		A signal input that is used to excite the mesh model.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+	<attribute name="nodes" get="1" set="1" type="int" size="1">
+	    <description>
+		The number of nodes (verticies) in the mesh.
+	    </description>
+	</attribute>
+	<attribute name="edges" get="1" set="1" type="int" size="1">
+	    <description>
+		The number of edges (waveguides) in the mesh.
+	    </description>
+	</attribute>
+	<attribute name="inputs" get="1" set="1" type="int" size="1">
+	    <description>
+		The number of signal inputs (unlimited) in the mesh.
+	    </description>
+	</attribute>
+	<attribute name="outputs" get="1" set="1" type="int" size="1">
+	    <description>
+		The number of signal outputs (unlimited).
+	    </description>
+	</attribute>
+	<attribute name="size" get="1" set="1" type="int" size="1">
+	    <description>
+		The size of delay-line buffer in samples (default: 1024).
+	    </description>
+	</attribute>
+    </attributelist>
+
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="resonators~" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Send a message to the waveguide~ object.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [signal]">
+	    <description>
+		Synthesized audio out
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="Keywords">
+	    <description>
+		physical model, waveguide, mesh, stiffness
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

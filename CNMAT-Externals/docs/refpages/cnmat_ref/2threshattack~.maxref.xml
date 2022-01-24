@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="2threshattack~" module="CNMAT-Externs">
+
+    <digest>
+	Two-threshold attack detector, aka a <a href="http://en.wikipedia.org/wiki/Schmitt_trigger">Schmitt Trigger</a>
+    </digest>
+
+    <description>
+	An attack is recognized when the left input signal exceeds the <m>high</m> threshold value multiplied by the right input signal (a scalar).  After an initial attack, the left input signal must go below the <m>low</m> threshold multiple of the right input signal before the next attack can recognized.<br/><br/>
+
+	The leftmost (signal) outlet will yield mostly zeros.  This audio stream will output a value of 1 at each sample instant that an attack was detected. At this moment, the right outlet also outputs a <m>list</m> of two values:  The amplitudes of the two input signals.
+    </description>
+
+    <!--METADATA-->
+
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--INLETS-->
+
+    <inletlist>
+
+	<inlet id="0" type="signal">
+	    <digest>
+	    </digest>
+	    <description>
+		Input signal to analyze - threshold detection is based on this input signal.
+	    </description>
+	</inlet>
+
+	<inlet id="1" type="signal">
+	    <digest>
+	    </digest>
+	    <description>
+		Threshold level scalar - this value determines what the low and high thresholds are.  A value of 1. allows the low and high thresholds to remain unchanged.
+	    </description>
+	</inlet>
+    </inletlist>
+
+    <!--OUTLETS-->
+
+    <outletlist>
+	<outlet id="0" type="signal">
+	    <digest>
+	    </digest>
+	    <description>
+		Signal rate attack detection.  The output will consist mostly of zeros, and a 1 when an attack was detected.
+	    </description>
+	</outlet>
+	<outlet id="1" type="list">
+	    <digest>
+	    </digest>
+	    <description>
+		A list of two numbers is output when an attack is detected: the sample value followed by the level multiplier supplied by inlet 2.
+	    </description>
+	</outlet>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+
+    <objarglist>
+
+	<objarg name="low" optional="1" type="float">
+	    <digest>
+		Low thresh.
+	    </digest>
+	    <description>
+		Low threshold value - signal must go below this, multiplied by the scalar, for the object to recognize a second attack.
+	    </description>
+	</objarg>
+
+	<objarg name="high" optional="1" type="float">
+	    <digest>
+		Low thresh.
+	    </digest>
+	    <description>
+		High threshold value - signal must go above this, multiplied by the scalar, for the object to recognize an attack.
+	    </description>
+	</objarg>
+
+    </objarglist>
+
+    <!--MESSAGES-->
+
+    <methodlist>
+
+	<method name="input [signal]">
+	    <arglist>
+	    </arglist>
+	    <description>
+		Input signal to analyze - threshold detection is based on this input signal.
+	    </description>
+	</method>
+
+	<method name="low">
+	    <arglist>
+		<arg name="value" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Low threshold value - signal must go below this, multiplied by the scalar, for the object to recognize a second attack.
+	    </description>
+	</method>
+
+	<method name="high">
+	    <arglist>
+		<arg name="value" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		High threshold value - signal must go above this, multiplied by the scalar, for the object to recognize an attack.
+	    </description>
+	</method>
+
+	<method name="tellmeeverything">
+	    <description>
+		Output all information about the object's state to the Max window.
+	    </description>
+	</method>
+
+	<method name="version">
+	    <description>
+		Prints the current build's version information to the Max Window.
+	    </description>
+	</method>
+
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+
+    <!--EXAMPLE-->
+    
+    <!--SEEALSO-->
+
+    <seealsolist>
+	<seealso name=">~" />
+	<seealso name="peakamp~" />
+	<seealso name="cambio~" />
+    </seealsolist>
+
+</c74object>

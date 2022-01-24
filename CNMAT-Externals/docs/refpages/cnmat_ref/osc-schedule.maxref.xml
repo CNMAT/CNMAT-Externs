@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="osc-schedule" module="CNMAT-Externals">
+
+    <digest>
+	Schedule delivery of an OSC packet/bundle at a future time using an encoded timestamp
+    </digest>
+
+    <description>
+	Stores incoming OSC packets (bundles) and attempts to output them at the time indicated by the timestamp.
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--INLETS-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+    </objarglist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+	<attribute name="maxdelay" optional="1" type="float">
+	    <description>
+		This is the maximum delay permittable (in seconds) in which <m>osc-schedule</m> will send a bundle after the requested time has been passed.  The maximum delay can be increased, but for values larger than a few hours, the precision of event timing may be degraded by the use of floating point calculations in the MaxMSP scheduler.  The largest recommended value is 8000 seconds, or about 2 hours to retain millisecond precision.  By default OSC-schedule will not delay a message more than 1000 seconds into the future.
+	    </description>
+	</attribute>
+	<attribute name="packetsize" optional="1" type="int">
+	    <description>
+		The packetsize is the maximum length of an OSC message that may be stored, in bytes.  <m>osc-schedule</m> will filter out packets smaller than this.  The default is 1500.
+	    </description>
+	</attribute>
+	<attribute name="precision" optional="1" type="float">
+	    <digest>
+		The scheduling precision value in seconds.  For optimal performance, the scheduler precision of OSC-schedule should be set to 1.5x the scheduler precision of MaxMSP.  The default scheduler precision is 3 ms corresponding to the MaxMSP default setting of 2 ms precision.  A setting of 0.001 is equivalent to 1 millisecond.
+	    </digest>
+	</attribute>
+	<attribute name="queuesize" optional="1" type="int">
+	    <digest>
+		The number of messages that may be stored in the queue of pending events. Default is 100.  
+	    </digest>
+	</attribute>
+    </attributelist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="FullPacket">
+	    <arglist>
+		<arg name="length of packet (in bytes)" optional="0" type="int"/>
+		<arg name="pointer value (address in memory)" optional="0" type="int"/>
+	    </arglist>
+	    <description>
+		Send an OSC bundle to the osc-schedule object.  It is not expected that the user will generate the arguments for this message, but rather that it will be formatted by the <o>opensoundcontrol</o> object, which allows for definitions of timetags.
+	    </description>
+	</method>
+
+	<method name="reset">
+	    <description>
+		Reset the internal scheduling to cancel the last stored bundle, if applicable.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--DISCUSSION-->
+    <discussion>
+    </discussion>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="osc-timetag" />
+	<seealso name="opensoundcontrol" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		The first inlet of bdist accepts a number of types of messages.  Refer to the list above.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [FullPacket], Immediate">
+	    <description>
+		A scheduled bundle
+	    </description>
+	</entry>
+	<entry name ="Outlet 2 [FullPacket], Scheduled">
+	    <description>
+		A scheduled bundle that has missed it's deadline
+	    </description>
+	</entry>
+	<entry name ="Outlet 3 [FullPacket], Immediate">
+	    <description>
+		A bundle that has been set to immediately execute
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+		Note: This object has been deprecated albeit specific use cases.  For the current version of CNMAT OSC objects please see the ODOT library, available <a href="https://github.com/CNMAT/CNMAT-odot">here</a>.
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		schedule, CNMAT, timestamp, time
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

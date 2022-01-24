@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="bpf" module="CNMAT-Externals">
+
+    <digest>
+	bpf - break point function editor, CNMAT-style.
+    </digest>
+
+    <description>
+	The bpf object allows you to:
+	<ol>
+	    <li>Edit a number of functions within the same functions window</li>
+	    <li>Edit notes in note mode</li>
+	    <li>Display various types of ranges and statistics for your functions</li>
+	    <li>Display phase of input</li>
+	    <li>Change display resolution</li>
+	    <li>Name and tag functions by ID</li>
+	</ol>
+    </description>
+
+    <!--DISCUSSION-->
+    <discussion>
+	The bpf object has a number of modes that are either partially supported or unsupported entirely.  Please see specific messages listed for more details.
+    </discussion>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--INLETS-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+    </objarglist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+	<attribute name="bgFuncColor" get="1" set="1" type="float" size="4">
+	    <description>
+		Set the background color of all functions.  Format is RGBA.
+	    </description>
+	</attribute>
+	<attribute name="defaux_point" get="1" set="1" type="float" size="1">
+	    <description>
+		Set the point color that is used to demarcate phase traversal when a float is input.
+	    </description>
+	</attribute>
+	<attribute name="displaymode" get="1" set="1" type="float" size="1">
+	    <description>
+		Choose a display mode.  Note that mode 1 (staff mode) is unsupported at this time.
+		<ul>
+		    <li>0: breakpoint function mode</li>
+		    <li>1: staff mode</li>
+		</ul>
+	    </description>
+	</attribute>
+	<attribute name="drawlabels" get="1" set="1" type="float" size="1">
+	    <description>
+		If enabled, each point gets a unique ID.  Typically this number increments from zero, but can increment from other offsets depending on the state of the object.  See the [renumber] message for more information.
+	    </description>
+	</attribute>
+	<attribute name="drawposition" get="1" set="1" type="float" size="1">
+	    <description>
+		If enabled, the x phase input gets drawn into the object as a small point.
+	    </description>
+	</attribute>
+	<attribute name="gridColor" get="1" set="1" type="float" size="4">
+	    <description>
+		The color of the grid.  Format is RGBA.
+	    </description>
+	</attribute>
+	<attribute name="labelstart" get="1" set="1" type="int" size="1">
+	    <description>
+		Each point in bpf can have a label that is indexed from a given start integer.  This sets the initial offset for the first point in the series.
+	    </description>
+	</attribute>
+	<attribute name="lineColor" get="1" set="1" type="float" size="4">
+	    <description>
+		The color of the line between points.  Format is RGBA.
+	    </description>
+	</attribute>
+	<attribute name="lockinput" get="1" set="1" type="int" size="1">
+	    <description>
+		Lock user out of the creation/editing of points.
+	    </description>
+	</attribute>
+	<attribute name="lockx" get="1" set="1" type="int" size="1">
+	    <description>
+		Lock user out of the creation/editing of x values of points.
+	    </description>
+	</attribute>
+	<attribute name="locky" get="1" set="1" type="int" size="1">
+	    <description>
+		Lock user out of the creation/editing of y values of points.
+	    </description>
+	</attribute>
+	<attribute name="major_grid_x_grid_width" get="1" set="1" type="float" size="1">
+	    <description>
+		Set the width for the major (coarse) portion of the grid.  Only the lines in the x dimension are affected.
+	    </description>
+	</attribute>
+	<attribute name="major_grid_y_grid_height" get="1" set="1" type="float" size="1">
+	    <description>
+		Set the height for the major (coarse) portion of the grid.  Only the lines in the y dimension are affected.
+	    </description>
+	</attribute>
+	<attribute name="major_x_tics" get="1" set="1" type="float" size="variable">
+	    <description>
+		This attribute allows you to specify the coarse grid division locations manually.  It is simply a list of x values for the grid to draw with.  Note that this is not a standard use case for the object, and editing these data can lead to unexpected results in combination with other attributes.
+	    </description>
+	</attribute>
+	<attribute name="major_y_tics" get="1" set="1" type="float" size="variable">
+	    <description>
+		This attribute allows you to specify the coarse grid division locations manually.  It is simply a list of y values for the grid to draw with.  Note that this is not a standard use case for the object, and editing these data can lead to unexpected results in combination with other attributes.
+	    </description>
+	</attribute>
+	<attribute name="minor_x_tics" get="1" set="1" type="float" size="variable">
+	    <description>
+		This attribute allows you to specify the fine grid division locations manually.  It is simply a list of x values for the grid to draw with.  Note that this is not a standard use case for the object, and editing these data can lead to unexpected results in combination with other attributes.
+	    </description>
+	</attribute>
+	<attribute name="minor_y_tics" get="1" set="1" type="float" size="variable">
+	    <description>
+		This attribute allows you to specify the fine grid division locations manually.  It is simply a list of y values for the grid to draw with.  Note that this is not a standard use case for the object, and editing these data can lead to unexpected results in combination with other attributes.
+	    </description>
+	</attribute>
+	<attribute name="noteheadsize" get="1" set="1" type="float" size="1">
+	    <description>
+		The size of the notehead that gets drawn in staff mode.  This attribute is unsupported.
+	    </description>
+	</attribute>
+	<attribute name="num_minor_x_grid_divisions" get="1" set="1" type="float" size="4">
+	    <description>
+		The number of minor (fine) x grid divisions per major grid area.
+	    </description>
+	</attribute>
+	<attribute name="num_minor_y_grid_divisions" get="1" set="1" type="float" size="4">
+	    <description>
+		The number of minor (fine) x grid divisions per major grid area.
+	    </description>
+	</attribute>
+	<attribute name="pointColor" get="1" set="1" type="float" size="4">
+	    <description>
+		The color of the points in the bpf.  Format is RGBA.
+	    </description>
+	</attribute>
+	<attribute name="pointsize" get="1" set="1" type="float" size="1">
+	    <description>
+		The size of the points in the bpf, in pixels.
+	    </description>
+	</attribute>
+	<attribute name="positionColor" get="1" set="1" type="float" size="4">
+	    <description>
+		The color of the position indicator that is drawn when an x value is input into the inlet.  Format is RGBA.
+	    </description>
+	</attribute>
+	<attribute name="position_update_rate_ms" get="1" set="1" type="float" size="1">
+	    <description>
+		The update (refresh) rate of the position indicator when a signal is present in the inlet.  Note that a signal will override a float value.
+	    </description>
+	</attribute>
+	<attribute name="selectionColor" get="1" set="1" type="float" size="4">
+	    <description>
+		The color of the selected point, which gets highlighted after the user clicks.
+	    </description>
+	</attribute>
+	<attribute name="show_x_grid" get="1" set="1" type="int" size="1">
+	    <description>
+		Show the x grid, including both major and minor tics as they are currently defined.
+	    </description>
+	</attribute>
+	<attribute name="show_x_grid_tics" get="1" set="1" type="int" size="1">
+	    <description>
+		Show the x grid "tics".
+	    </description>
+	</attribute>
+	<attribute name="show_y_grid" get="1" set="1" type="int" size="1">
+	    <description>
+		Show the y grid, including both major and minor tics as they are currently defined.
+	    </description>
+	</attribute>
+	<attribute name="show_y_grid_tics" get="1" set="1" type="int" size="1">
+	    <description>
+		Show the x grid "tics".
+	    </description>
+	</attribute>
+	<attribute name="showdurations" get="1" set="1" type="int" size="1">
+	    <description>
+		Show durations of the notes as they are entered into the staff in staff mode.  This attribute is unsupported.
+	    </description>
+	</attribute>
+	<attribute name="snaptogrid" get="1" set="1" type="int" size="1">
+	    <description>
+		Enable snapping to the grid when dragging points around.
+	    </description>
+	</attribute>
+	<attribute name="step" get="1" set="1" type="int" size="1">
+	    <description>
+		Enable/disable step mode, which draws the points in a stepped fashion instead of in linear breakpoints.
+	    </description>
+	</attribute>
+	<attribute name="textColor" get="1" set="1" type="float" size="4">
+	    <description>
+		The color of the display text in staff mode.  Format is RGBA.  This attribute is unsupported.
+	    </description>
+	</attribute>
+	<attribute name="xmax" get="1" set="1" type="float" size="1">
+	    <description>
+		Set the maximum width (right) that the bpf object will display for the break point domain, in milliseconds.
+	    </description>
+	</attribute>
+	<attribute name="xmin" get="1" set="1" type="float" size="4">
+	    <description>
+		Set the minimum width (left) that the bpf object will display for the break point domain, in milliseconds.
+	    </description>
+	</attribute>
+	<attribute name="ymax" get="1" set="1" type="float" size="4">
+	    <description>
+		Set the maximum height (top) that the bpf object will display for the break point domain, in milliseconds.
+	    </description>
+	</attribute>
+	<attribute name="ymin" get="1" set="1" type="float" size="4">
+	    <description>
+		Set the minimum height (bottom) that the bpf object will display for the break point domain, in milliseconds.
+	    </description>
+	</attribute>
+    </attributelist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="addfunction">
+	    <arglist>
+		<arg name="function id" type="int" optional="1" id="0" />
+	    </arglist>
+	    <description>
+		Add a new function to the bpf function stack.
+	    </description>
+	</method>
+	<method name="clear">
+	    <description>
+		Clear all data.
+	    </description>
+	</method>
+	<method name="clearcurrentfunction">
+	    <description>
+		Clear the currently selected function.
+	    </description>
+	</method>
+	<method name="clearfunction">
+	    <arglist>
+		<arg name="function id" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Clear the function with the id specified.
+	    </description>
+	</method>
+	<method name="clearregion">
+	    <arglist>
+		<arg name="start x" type="float" optional="0" id="0" />
+		<arg name="end x" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		Clear a region, given an x start and x end.  The currently selected function is addressed for this action.
+	    </description>
+	</method>
+	<method name="clearregionforallfunctions">
+	    <description>
+		Clear a region within the scope of all functions, given an x start and x end.
+	    </description>
+	</method>
+	<method name="deletecurrentfunction">
+	    <description>
+		Delete the currently selected function.
+	    </description>
+	</method>
+	<method name="deletefunction">
+	    <arglist>
+		<arg name="function id" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Delete a function associated with an id.
+	    </description>
+	</method>
+	<method name="deleteselected">
+	    <description>
+		Delete the selected function.
+	    </description>
+	</method>
+	<method name="dump">
+	    <description>
+		Dump the contents of bpf out the rightmost outlet.  The format is [function_index point_index x y aux_point].
+	    </description>
+	</method>
+	<method name="float">
+	    <description>
+		An input float is used as a lookup for the functions present in bpf's memory at that location.  This message will cause output of the y values of all functions out the leftmost outlet.
+	    </description>
+	</method>
+	<method name="functionlist">
+	    <arglist>
+		<arg name="function list" type="list" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		A list of the functions that bpf will activate.  By default, functions are active when created/added, but at times you may want to hide specific functions and this is a way to indicate that.  The list must both ascend in integer values and start/end on valid functions.	
+	    </description>
+	</method>
+	<method name="getnumfunctions">
+	    <description>
+		Dump the number of functions out the dump outlet (rightmost).  The message that will be sent is [numfunctions x], with x being the number of functions present in the object.
+	    </description>
+	</method>
+	<method name="hidefunction">
+	    <arglist>
+		<arg name="function id" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Hide a function given by the id.
+	    </description>
+	</method>
+	<method name="int">
+	    <description>
+		The bpf object has (minimal) key command support based on integers relating to specific keycodes.  This allows the user to connect the [key] object to the inlet of bpf and type the following keys:<br/><br/>
+		<ul>
+		    <li>left arrow (28): nudge the selected point to the left by one grid tick</li>
+		    <li>right arrow (29): nudge the selected point to the right by one grid tick</li>
+		    <li>up arrow (30): nudge the selected point up by one grid tick</li>
+		    <li>down arrow (31): nudge the selected point down by one grid tick</li>
+		</ul>
+	    </description>
+	</method>
+	<method name="list">
+	    <arglist>
+		<arg name="function id" type="int" optional="0" id="0" />
+		<arg name="x" type="float" optional="0" id="0" />
+		<arg name="y" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		A list in the inlet is expected to be a tuple with a function id, and x, and a y value.  Note that if the coordinates are out of the bounding box, they are still valid.  If a given function index is missing, bpf will create it, and the subsequent indices to make up for the difference, if necessary.
+	    </description>
+	</method>
+	<method name="major_x_tics">
+	    <arglist>
+		<arg name="list" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		This attribute allows you to specify the coarse grid division locations manually.  It is simply a list of x values for the grid to draw with.  Note that this is not a standard use case for the object, and editing these data can lead to unexpected results in combination with other attributes.
+	    </description>
+	</method>
+	<method name="major_y_tics">
+	    <arglist>
+		<arg name="list" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		This attribute allows you to specify the coarse grid division locations manually.  It is simply a list of x values for the grid to draw with.  Note that this is not a standard use case for the object, and editing these data can lead to unexpected results in combination with other attributes.
+	    </description>
+	</method>
+	<method name="minor_x_tics">
+	    <arglist>
+		<arg name="list" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		This attribute allows you to specify the fine grid division locations manually.  It is simply a list of x values for the grid to draw with.  Note that this is not a standard use case for the object, and editing these data can lead to unexpected results in combination with other attributes.
+	    </description>
+	</method>
+	<method name="minor_y_tics">
+	    <arglist>
+		<arg name="list" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		This attribute allows you to specify the fine grid division locations manually.  It is simply a list of y values for the grid to draw with.  Note that this is not a standard use case for the object, and editing these data can lead to unexpected results in combination with other attributes.
+	    </description>
+	</method>
+	<method name="set_all_aux_points">
+	    <arglist>
+		<arg name="location" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		If the bpf object is in step mode, an aux point is drawn for each point in the function.  The "value" of an aux point describes the horizontal location of the point along the current segment, at which a threshold variable is flipped.
+	    </description>
+	</method>
+	<method name="set_aux_points_for_function">
+	    <arglist>
+		<arg name="function id" type="int" optional="0" id="0" />
+		<arg name="location" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		If the bpf object is in step mode, an aux point is drawn for each point in the function.  The "value" of an aux point (for a given function) describes the horizontal location of the point along the current segment, at which a threshold variable is flipped.
+	    </description>
+	</method>
+	<method name="set_aux_points_for_selection">
+	    <arglist>
+		<arg name="location" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		If the bpf object is in step mode, an aux point is drawn for each point in the function.  The "value" of an aux point (for a given selection) describes the horizontal location of the point along the current segment, at which a threshold variable is flipped.
+	    </description>
+	</method>
+	<method name="setfunction">
+	    <arglist>
+		<arg name="function id" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Set the bounding box to the given function id.  Other functions are greyed out.  If a given function index is missing, bpf will create it, and the subsequent indices to make up for the difference.
+	    </description>
+	</method>
+	<method name="setfunctioncolor">
+	    <arglist>
+		<arg name="R" type="float" optional="0" id="0" />
+		<arg name="G" type="float" optional="0" id="1" />
+		<arg name="B" type="float" optional="0" id="2" />
+		<arg name="A" type="float" optional="0" id="3" />
+	    </arglist>
+	    <description>
+		Set the current function's color.
+	    </description>
+	</method>
+	<method name="setfunctionlinecolor">
+	    <arglist>
+		<arg name="R" type="float" optional="0" id="0" />
+		<arg name="G" type="float" optional="0" id="1" />
+		<arg name="B" type="float" optional="0" id="2" />
+		<arg name="A" type="float" optional="0" id="3" />
+	    </arglist>
+	    <description>
+		Set the current function's line color.
+	    </description>
+	</method>
+	<method name="setfunctionname">
+	    <arglist>
+		<arg name="name" type="symbol" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Set the name of the function, which is used in correlation with a te_breakout~ object.  This message is currently unsupported.
+	    </description>
+	</method>
+	<method name="setfunctionpointcolor">
+	    <arglist>
+		<arg name="R" type="float" optional="0" id="0" />
+		<arg name="G" type="float" optional="0" id="1" />
+		<arg name="B" type="float" optional="0" id="2" />
+		<arg name="A" type="float" optional="0" id="3" />
+	    </arglist>
+	    <description>
+		Set the current function's point color.
+	    </description>
+	</method>
+	<method name="setnumfunctions">
+	    <arglist>
+		<arg name="number" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Set the number of functions.  If functions don't exist, create them, otherwise, remove the relevant number of functions to meet the number.
+	    </description>
+	</method>
+	<method name="signal">
+	    <description>
+		An input signal is used as a lookup for the functions present in bpf's memory at that location.  This is currently unsupported.
+	    </description>
+	</method>
+	<method name="snap_all_points_to_grid">
+	    <description>
+		Snap all of the points to the grid.
+	    </description>
+	</method>
+	<method name="snap_current_function_to_grid">
+	    <description>
+		Snap all points in the current function to the grid.
+	    </description>
+	</method>
+	<method name="snap_function_to_grid">
+	    <arglist>
+		<arg name="function id" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Snap a specific function's points to the grid.
+	    </description>
+	</method>
+	<method name="snap_selection_to_grid">
+	    <description>
+		Snap all points in the selection to the grid.
+	    </description>
+	</method>
+	<method name="unselect">
+	    <description>
+		Unselect (deselect) all points.
+	    </description>
+	</method>
+	<method name="version">
+	    <description>
+		Print version information to the Max window.
+	    </description>
+	</method>
+	<method name="xminmax">
+	    <arglist>
+		<arg name="x minimum" type="float" optional="0" id="0" />
+		<arg name="x maximum" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		Set the x boundaries, as a range of two values, that the bpf object will display for its domain, in milliseconds.
+	    </description>
+	</method>
+	<method name="yminmax">
+	    <arglist>
+		<arg name="y minimum" type="float" optional="0" id="0" />
+		<arg name="y maximum" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		Set the y boundaries, as a range of two values, that the bpf object will display for its domain, in milliseconds.
+	    </description>
+	</method>
+	<method name="zoomtofit">
+	    <description>
+		Zoom bounding box to fit the selection.  Create a selection by holding shift-command and dragging in the bounding box.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="xydisplay" />
+	<seealso name="bdist" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		The inlet of bpf accepts a number of types of messages.  Refer to the list above.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [list]">
+	    <description>
+		Functions evaluated for a given x value.
+	    </description>
+	</entry>
+	<entry name ="Outlet 2 [list]">
+	    <description>
+		The (x,y) coordinates for the selected point.
+	    </description>
+	</entry>
+	<entry name ="Outlet 3 [anything]">
+	    <description>
+		Dump and get messages are output here.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		bpf, CNMAT, transfer function, break point, many
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

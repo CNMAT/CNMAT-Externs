@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="printit" module="CNMAT-Externals">
+
+    <digest>
+	print out information that is normally hidden by Max
+    </digest>
+
+    <description>
+	Verbose version of "print" that tells you all there is to know about the given Max data object, including diagnostic information and details on arguments, data type, and more.
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+	Note on OSC:  The OpenSoundControl object uses the message "FullPacket" with two integer arguments as a sort of pointer to the binary representation of an OSC packet. Printit prints the contents of such an OSC packet, or will crash Max if you send it the message FullPacket with the wrong two integers.
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+	<objarg name="label" optional="1" type="symbol">
+	    <description>
+		A label for your data that gets posted to the Max window, tied to a particular instance of [printit].  Same idea as the [print] object.
+	    </description>
+	</objarg>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="anything">
+	    <description>
+		Any message sent to the printit object will cause diagnostic information to be posted to the Max window.  A symbol/message and its associated arguments (if applicable) will be displayed, along with the various data types pertaining to each atom.
+	    </description>
+	</method>
+	<method name="bang">
+	    <description>
+		A bang sent to the printit object will cause diagnostic information to be posted to the Max window.
+	    </description>
+	</method>
+	<method name="float">
+	    <description>
+		A float will display the number itself and the type of float that the Max system uses.  If an int is given with too many arguments, printit will report this.
+	    </description>
+	</method>
+	<method name="int">
+	    <description>
+		An int will display the number itself and mention that this is in fact an int.  If an int is given with too many arguments, printit will report this.
+	    </description>
+	</method>
+	<method name="list">
+	    <description>
+		A list and its associated arguments will be displayed, along with the various data types pertaining to each atom.
+	    </description>
+	</method>
+	<method name="version">
+	    <description>
+		Print version information to the Max window.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+    </attributelist>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="print" />
+	<seealso name="o.printbytes" />
+	<seealso name="o.print" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Send a message to the [printit] object.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+		The [printit] object differs from the [print] object in that it offers some introspection into what is going on under the hood of Max.  It can be useful to see exactly how Max interprets data as you debug patches and evaluate whether or not the messages/values that you think you are sending are being interpreted correctly.
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		print, console, diagnostics, troubleshooting
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

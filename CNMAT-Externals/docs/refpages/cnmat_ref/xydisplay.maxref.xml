@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="xydisplay" module="CNMAT-Externals">
+
+    <digest>
+	Create a 2d path and traverse it	
+    </digest>
+
+    <description>
+	The xydisplay object allows a path to be traversed through an input phase.  As you edit the object, you'll receive diagnosic information out the outlets.  You can dump its contents via a dump outlet.  You can desginate drawing styles, select points, and dynamically create/manipulate the points from the outside.  It also offers methods to search and sort point data.
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--INLETS-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="bang">
+	    <arglist>
+	    </arglist>
+	    <description>
+		Output a list containing all of the points, starting with the smallest index and incrementing upward.
+	    </description>
+	</method>
+	<method name="clear">
+	    <arglist>
+	    </arglist>
+	    <description>
+		Clear the points from the display.  Note that this does not reset the index counter, which can be accomplished with the [renumber] message.
+	    </description>
+	</method>
+	<method name="dump">
+	    <arglist>
+	    </arglist>
+	    <description>
+		Dump all of the contents out the rightmost outlet, followed by a [done] message.  This output contains lists of every point in the following form of [index x y].
+	    </description>
+	</method>
+	<method name="findnearest">
+	    <arglist>
+		<arg name="x" type="float" optional="0" id="0"/>
+		<arg name="y" type="float" optional="0" id="1"/>
+	    </arglist>
+	    <description>
+		Find the nearest point to the input xy location.  The point will be selected without output.
+	    </description>
+	</method>
+	<method name="findnearestx">
+	    <arglist>
+		<arg name="x" type="float" optional="0" id="0"/>
+	    </arglist>
+	    <description>
+		Find the nearest point to the input x location.  The point will be selected without output.
+	    </description>
+	</method>
+	<method name="findnearesty">
+	    <arglist>
+		<arg name="y" type="float" optional="0" id="0"/>
+	    </arglist>
+	    <description>
+		Find the nearest point to the input y location.  The point will be selected without output.
+	    </description>
+	</method>
+	<method name="float">
+	    <arglist>
+	    </arglist>
+	    <description>
+		A float value will traverse the breakpoint function that is represented by various indices.  This input causes the corresponding interpolated output of xy coords to be sent out the 3rd outlet.  This number must be within the existing indices, i.e. if there are two points "3" and "4", a float value of "3.5" will yield the interpolated coordinates between them.
+	    </description>
+	</method>
+	<method name="list">
+	    <arglist>
+	    </arglist>
+	    <description>
+		A list of xy pairs will generate points.  [0.2 0.3 0.5 0.5] will create a point at [0.2, 0.3], and a second point at [0.5, 0.5].  Note that the index counter will not be reset without passing the [renumber] message to the object.
+	    </description>
+	</method>
+	<method name="movepoint">
+	    <arglist>
+		<arg name="index" type="int" optional="0" id="0"/>
+		<arg name="x" type="float" optional="0" id="1"/>
+		<arg name="y" type="float" optional="0" id="2"/>
+	    </arglist>
+	    <description>
+		Move the index to a given xy destination.  The index must be valid, and if it is not, xydisplay will issue an error to the Max window.
+	    </description>
+	</method>
+	<method name="moveselected">
+	    <arglist>
+		<arg name="x" type="float" optional="0" id="0"/>
+		<arg name="y" type="float" optional="0" id="1"/>
+	    </arglist>
+	    <description>
+		Move the selected (highlighted) point to an xy destination.  A selection must exist - if it does not, xydisplay will post an error to the Max window.
+	    </description>
+	</method>
+	<method name="renumber">
+	    <arglist>
+	    </arglist>
+	    <description>
+		Reorder the points, indexing from 0.
+	    </description>
+	</method>
+	<method name="select">
+	    <arglist>
+		<arg name="index" type="int" optional="0" id="0"/>
+	    </arglist>
+	    <description>
+		Select a point, given by the index.  This message will cause the xy coordinates of the point to be sent out the second outlet.
+	    </description>
+	</method>
+	<method name="set">
+	    <arglist>
+		<arg name="list of xy points" type="list" optional="0" id="0"/>
+	    </arglist>
+	    <description>
+		Generate new points.  A point is specified by an x and a y coordinate pair.  Specify as many new points in this list as you like - order of indices is depicted by the order of the pairs in the list.  Example: [0.25, 0.25, 0.5, 0.5].  <br/><br/>
+		The index count increments upward.
+	    </description>
+	</method>
+	<method name="setpoint">
+	    <arglist>
+		<arg name="index" type="int" optional="0" id="0"/>
+		<arg name="x" type="float" optional="0" id="1"/>
+		<arg name="y" type="float" optional="0" id="2"/>
+	    </arglist>
+	    <description>
+		Set the location of a specified point without causing output.  The index must be valid, and if it is not, xydisplay will issue an error to the Max window.
+	    </description>
+	</method>
+	<method name="setselected">
+	    <arglist>
+		<arg name="x" type="float" optional="0" id="1"/>
+		<arg name="y" type="float" optional="0" id="2"/>
+	    </arglist>
+	    <description>
+		Set the location of the selected point without causing output.  A selection must exist - if it does not, xydisplay will post an error to the Max window.
+	    </description>
+	</method>
+	<method name="setselection">
+	    <arglist>
+		<arg name="index" type="int" optional="0" id="0"/>
+	    </arglist>
+	    <description>
+		Select a given index without causing output.
+	    </description>
+	</method>
+	<method name="unselect">
+	    <arglist>
+	    </arglist>
+	    <description>
+		Deselect all points.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+	<attribute name="bgcolor" get="1" set="1" type="float" size="4">
+	    <description>
+		Sets the background color of the xydisplay object in RGBA format.
+	    </description>
+	</attribute>
+	<attribute name="bordercolor" get="1" set="1" type="float" size="4">
+	    <description>
+		Sets the border color of the xydisplay object in RGBA format.
+	    </description>
+	</attribute>
+	<attribute name="connect_points" get="1" set="1" type="int" size="1">
+	    <description>
+		If enabled, a line will be drawn between the points in the xydisplay.
+	    </description>
+	</attribute>
+	<attribute name="drawlabels" get="1" set="1" type="int" size="1">
+	    <description>
+		If enabled, label numbers will be drawn next to the points in the xydisplay.
+	    </description>
+	</attribute>
+	<attribute name="drawpoint" get="1" set="1" type="int" size="1">
+	    <description>
+		If enabled, a point will be drawn along the breakpoint function's line when a float is input into the object.
+	    </description>
+	</attribute>
+	<attribute name="locked" get="1" set="1" type="int" size="1">
+	    <description>
+		Lock the user out of editing.
+	    </description>
+	</attribute>
+	<attribute name="parameter_enable" get="1" set="1" type="int" size="1">
+	    <description>
+		Enable parameter store/recall support.
+	    </description>
+	</attribute>
+	<attribute name="pointcolor" get="1" set="1" type="float" size="4">
+	    <description>
+		Sets the point color of the xydisplay object in RGBA format.
+	    </description>
+	</attribute>
+	<attribute name="pointdiameter" get="1" set="1" type="float" size="1">
+	    <description>
+		Sets the point diameter of the xydisplay.
+	    </description>
+	</attribute>
+	<attribute name="selectedcolor" get="1" set="1" type="float" size="4">
+	    <description>
+		Sets the selected color of the xydisplay object in RGBA format.
+	    </description>
+	</attribute>
+	<attribute name="xmax" get="1" set="1" type="float" size="1">
+	    <description>
+		Sets the maximum limit for the x axis coordinate space of the object.
+	    </description>
+	</attribute>
+	<attribute name="xmin" get="1" set="1" type="float" size="1">
+	    <description>
+		Sets the minimum limit for the x axis coordinate space of the object.
+	    </description>
+	</attribute>
+	<attribute name="ymax" get="1" set="1" type="float" size="1">
+	    <description>
+		Sets the maximum limit for the y axis coordinate space of the object.
+	    </description>
+	</attribute>
+	<attribute name="ymin" get="1" set="1" type="float" size="1">
+	    <description>
+		Sets the minimum limit for the y axis coordinate space of the object.
+	    </description>
+	</attribute>
+
+    </attributelist>
+
+    <!--DISCUSSION-->
+    <discussion>
+    </discussion>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="bpf"/>
+	<seealso name="rbfi"/>
+	<seealso name="function"/>
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Send a message to the xydisplay object.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [list]">
+	    <description>
+		Output a list of all the points.  List is formatted as xy pairs in sequence.
+	    </description>
+	</entry>
+	<entry name ="Outlet 2 [list]">
+	    <description>
+		Output selection data when a selection is active and/or requested via a message.  Format is [index x y]
+	    </description>
+	</entry>
+	<entry name ="Outlet 3 [list]">
+	    <description>
+		Output the interpolated xy value for a given input phase along the trajectory of the breakpoint function.
+	    </description>
+	</entry>
+	<entry name ="Outlet 4 [variable]">
+	    <description>
+		Output data when object receives a [dump] message.  The format is a list containing [index x y], and a [done] message at the end.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		CNMAT, interpolation, points, editor, UI
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

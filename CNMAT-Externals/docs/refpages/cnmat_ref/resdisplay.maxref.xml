@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="resdisplay" module="CNMAT-Externals">
+
+    <digest>
+	Displays resonance models 
+    </digest>
+
+    <description>
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+	Resonance Models are lists of (frequency, gain, decayrate) triples.  Sinusoidal models are lists of (frequency, gain) duples.
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="bang">
+	    <arglist>
+	    </arglist>
+	    <description>
+		Output all data contained in the object.	
+	    </description>
+	</method>
+	<method name="clear">
+	    <description>
+		Clear all resonances or sinusoids from memory.
+	    </description>
+	</method>
+	<method name="displayrange">
+	    <arglist>
+		<arg name="low boundary in Hz" type="float" optional="0" id="0" />
+		<arg name="high boundary in Hz" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+	    </description>
+	</method>
+	<method name="list">
+	    <description>
+		Input a list of frequency, gain, decay rate triples.  See the <o>resonators~</o> and <o>res-transform</o> objects for more information - this is the standard method of getting data into resdisplay.
+	    </description>
+	</method>
+	<method name="sinusoids">
+	    <description>
+		Input a list of frequency, gain duples.  See the <o>sinusoids~</o> object for more information.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+	<attribute name="ampmax" get="1" set="1" type="float" size="1">
+	    <description>
+		Adjust the y-axis max for the linear scale view mode.
+	    </description>
+	</attribute>
+	<attribute name="ampmax_log" get="1" set="1" type="float" size="1">
+	    <description>
+		Adjust the y-axis max for the logarithmic view mode (<m>log</m> must be enabled).
+	    </description>
+	</attribute>
+	<attribute name="ampmin" get="1" set="1" type="float" size="1">
+	    <description>
+		Adjust the y-axis min for the linear scale view mode.
+	    </description>
+	</attribute>
+	<attribute name="ampmin_log" get="1" set="1" type="float" size="1">
+	    <description>
+		Adjust the y-axis min for the logarithmic view mode (<m>log</m> must be enabled).
+	    </description>
+	</attribute>
+	<attribute name="bgcolor" get="1" set="1" type="float" size="4">
+	    <description>
+		The background color.  Format is RGBA.
+	    </description>
+	</attribute>
+	<attribute name="bordercolor" get="1" set="1" type="float" size="4">
+	    <description>
+		The border color.  Format is RGBA.
+	    </description>
+	</attribute>
+	<attribute name="datacolor" get="1" set="1" type="float" size="4">
+	    <description>
+		The data color.  Format is RGBA.
+	    </description>
+	</attribute>
+	<attribute name="freqmax" get="1" set="1" type="float" size="1">
+	    <description>
+		The upper boundary of the frequency display in Hz.
+	    </description>
+	</attribute>
+	<attribute name="freqmin" get="1" set="1" type="float" size="1">
+	    <description>
+		The lower boundary of the frequency display in Hz.
+	    </description>
+	</attribute>
+	<attribute name="log" get="1" set="1" type="int" size="1">
+	    <description>
+		Put the y-axis  on a logarithmic scale
+	    </description>
+	</attribute>
+	<attribute name="mode" get="1" set="1" type="int" size="1">
+	    <description>
+		Choose a mode for the display.
+		<ul>
+		    <li>mode 0: horizontal</li>
+		    <li>mode 1: horizontal</li>
+		</ul>
+	    </description>
+	</attribute>
+	<attribute name="selectioncolor" get="1" set="1" type="float" size="4">
+	    <description>
+		The selection color.  Format is RGBA.
+	    </description>
+	</attribute>
+    </attributelist>
+
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="resonators~" />
+	<seealso name="res-transform" />
+	<seealso name="sinusoids~" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Sent a message to the resdisplay object.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [selected list, unselected list]">
+	    <description>
+		Output either selected or unselected data.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="Keywords">
+	    <description>
+		display, resonances, sinusoids
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="bench~" module="CNMAT-Externals">
+
+    <digest>
+	Simple benchmarking utility for signals.
+    </digest>
+
+    <description>
+	bench~ outputs a signal, representing how long it takes to compute a given MSP network that falls between its input and its output, utilizing your CPU's cycle counter for reference.  You employ bench~ by instantiating two copies of it - one for the <i>input</i> to be measured, and one for the <i>output</i>.  There <i>must</i> be two separate bench~ objects, similar to Max's <m>tapin~</m> and <m>tapout~</m> objects.  When signal arrives in the left inlet of an <i>input</i> bench~ object, the <i>input</i> object outputs a reference <m>signal</m> out the right outlet, which should be connected to the right inlet of the <i>output</i> object.  The <i>output</i> object simply stores that <m>signal</m>.  The <i>input</i> object then outputs the <m>signal</m> out the left outlet, which presumably will have said network attached, and which occupy some time to process.  Once this process has been computed, the resultant signal is assessed at the <i>output</i> object's left inlet, which will consequentially check the current time vs the input time, and output the difference (as a signal).  The output of the <i>output</i> bench~ object is a measurement in milliseconds: a record of how long it took to perform a task between the input and the output.
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">benchmarking</metadata>
+    </metadatalist>
+
+    <!--INLETS-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+    	<objarg name="type" optional="0" type="symbol">
+    	    <description>
+    		The object's communication type.  This must be either the word "in" or "out", indicating which use case you would like the object to adhere to.
+    	    </description>
+    	</objarg>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+
+	<method name="signal">
+	    <description>
+		Measure the time between the DSP processing time of the objects between the <o>bench~ in</o> and <o>bench~ out</o> objects.
+	    </description>
+	</method>
+
+	<method name="version">
+	    <description>
+		Prints the current build's version information to the Max Window.
+	    </description>
+	</method>
+
+    </methodlist>
+
+    <!--DISCUSSION-->
+    <discussion>
+    </discussion>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="bench" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [signal]">
+	    <description>
+		The first inlet of bench~, signal input.
+	    </description>
+	</entry>
+	<entry name ="Inlet 2 [signal]">
+	    <description>
+		In "out" mode, input links to <o>bench~ in</o> object.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [signal]">
+	    <description>
+    In "in" mode, passes through the input signal value. In "out" mode, outputs a signal value, indicating the measured time in dsp ticks between input and output.
+	    </description>
+	</entry>
+  <entry name ="Outlet 2 [signal]">
+	    <description>
+    In "in" mode, second outlet passes start tick value to be connected to inlet 2 of a <o>bench~ out</o> object.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		benchmark, bench, CNMAT
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

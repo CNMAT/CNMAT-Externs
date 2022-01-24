@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="randdist" module="CNMAT-Externals">
+
+    <digest>
+	Random distributions
+    </digest>
+
+    <description>
+	Generate random numbers with a variety of distributions
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+    </discussion>
+
+    <!--INLETS-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+	<objarg name="distribution" optional="1" type="symbol">
+	    <description>
+		The distribution that is accessed when randdist is instantiated.
+	    </description>
+	</objarg>
+	<objarg name="parameter list" optional="1" type="list">
+	    <description>
+		The parameter list for a given distribution.  See below for details on parameters.
+	    </description>
+	</objarg>
+    </objarglist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+    </attributelist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="bang">
+	    <arglist>
+	    </arglist>
+	    <description>
+		Generate a random number, based on the distribution defined.  Default is uniform.
+	    </description>
+	</method>
+	<method name="distlist">
+	    <arglist>
+		<arg name="size" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		This message tells randdist to output a list of numbers instead of a single float.  The elements in the list represent separate queries of a type of randomness.  This can be useful for outputting a topology of values based on a specific distribution.	    	
+	    </description>
+	</method>
+	<method name="float">
+	    <arglist>
+	    </arglist>
+	    <description>
+		Scalar for the random numbers generated when randdist receives a bang.
+	    </description>
+	</method>
+	<method name="int">
+	    <arglist>
+	    </arglist>
+	    <description>
+		An int has the same effect as the [distlist] message.
+	    </description>
+	</method>
+	<method name="list">
+	    <arglist>
+	    </arglist>
+	    <description>
+		The size of this list is dependent on which distribution is set up for the object.  For example, a gaussian distribution would require a list of one element, and that element would pertain to the 'sigma' parameter.  See the various distributions listed in this reference for full details.
+	    </description>
+	</method>
+	<method name="loadbang">
+	    <arglist>
+	    </arglist>
+	    <description>
+		If this message is issued after randdist is instantiated, the object will store the current seed status for the next time that the patch is loaded.  This can be useful in generated predictable behavior and shapes.
+	    </description>
+	</method>
+	<method name="nonparametric">
+	    <arglist>
+		<arg name="non-parameteric list" type="list" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		The non-parameteric message allows the user to draw/edit their own distribution.  For each list element that is input, thre is an index and a weight.  The index is a chosen value, and the weight is how frequently that value is chosen.  A value of 1. equates to that index being chosen most of the time.  A value of zero will not allow the index to appear in the output.  If there are more than one non-zero values in the list, the probability is shared between them.  <br/><br/>
+		Example:  the list [0. 0. 1. 0. 0.1] will output a zero (2) most of the time, and every once in a while will output a 4.
+	    </description>
+	</method>
+	<method name="tellmeeverything">
+	    <arglist>
+	    </arglist>
+	    <description>
+		Output all information about the object's state to the Max window.
+	    </description>
+	</method>
+	<method name="version">
+	    <arglist>
+	    </arglist>
+	    <description>
+		Print version information to the Max window.
+	    </description>
+	</method>
+	<method name="gaussian">
+	    <arglist>
+		<arg name="sigma" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		The normal distribution.  A common probability-based distribution.  Read more <a href="https://en.wikipedia.org/wiki/Normal_distribution">here</a>.
+	    </description>
+	</method>
+	<method name="gaussian_tail">
+	    <arglist>
+		<arg name="lower limit" type="float" optional="0" id="0" />
+		<arg name="sigma" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		The normal distribution with a decay-tail property.  Read more <a href="https://en.wikipedia.org/wiki/Sub-Gaussian_distribution">here</a> and <a href="https://en.wikipedia.org/wiki/Gaussian_function#Gaussian_profile_estimation">here</a>.
+	    </description>
+	</method>
+	<method name="bivariate_gaussian">
+	    <arglist>
+		<arg name="sigma_x" type="float" optional="0" id="0" />
+		<arg name="sigma_y" type="float" optional="0" id="1" />
+		<arg name="rho" type="float" optional="0" id="2" />
+	    </arglist>
+	    <description>
+		Returns a pair of random deviates from within the boundaries of sigma x and y, respectively.  rho is a correlation measure between the two for what is returned, and should lie between 1 and -1.  Read more <a href="https://en.wikipedia.org/wiki/Multivariate_normal_distribution#Bivariate_case">here</a>.
+	    </description>
+	</method>
+	<method name="exponential">
+	    <arglist>
+		<arg name="mu" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Describes the time between events in a Poisson point process.  Read more <a href="https://en.wikipedia.org/wiki/Exponential_distribution">here</a>.
+	    </description>
+	</method>
+	<method name="erlang">
+	    <arglist>
+		<arg name="a" type="float" optional="0" id="0" />
+		<arg name="n" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		A two-parameter probability distribution.  The first is a positive integer, and the second a positive real number.
+	    </description>
+	</method>
+	<method name="laplace">
+	    <arglist>
+		<arg name="width" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		The "double exponential distribution".  This distribution is basically a mirror of two exponential distibutions.  The width is representative of the spread in the exponential function(s) that is drawn from when numbers are generated.
+	    </description>
+	</method>
+	<method name="exppow">
+	    <arglist>
+		<arg name="scale" type="float" optional="0" id="0" />
+		<arg name="exponent" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		This function returns a random variate from the exponential power distribution with scale parameter and exponent.  The scale is the height of the maximum returned value, and the exponent is how tightly fitted the sigmoid is as it hovers around zero.
+	    </description>
+	</method>
+	<method name="cauchy">
+	    <arglist>
+		<arg name="scale" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		The distribution of the ratio of independent normally distributed random variables.  Read more <a href="https://en.wikipedia.org/wiki/Cauchy_distribution">here</a>.
+	    </description>
+	</method>
+	<method name="rayleigh">
+	    <arglist>
+		<arg name="sigma" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		A continuous probability distribution for positive-valued random variables, named after Lord Rayleigh.  Sigma is equivalent to a scale parameter.  Read more <a href="https://en.wikipedia.org/wiki/Rayleigh_distribution">here</a>.
+	    </description>
+	</method>
+	<method name="rayleigh_tail">
+	    <arglist>
+		<arg name="sigma" type="float" optional="0" id="0" />
+		<arg name="a" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		Similar to the rayleigh distribution, but with a lower limit of 'a'.
+	    </description>
+	</method>
+	<method name="landau">
+	    <arglist>
+	    </arglist>
+	    <description>
+		A probability distribution with a "fat tail" along the x axis.  Mean/variance are undefined.  Read more <a href="https://en.wikipedia.org/wiki/Landau_distribution">here</a>.
+	    </description>
+	</method>
+	<method name="levy">
+	    <arglist>
+		<arg name="scale" type="float" optional="0" id="0" />
+		<arg name="exponent" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		A probability distribution for a non-negative variable.  Read more <a href="https://en.wikipedia.org/wiki/Lévy_distribution">here</a>.
+	    </description>
+	</method>
+	<method name="levy_skew">
+	    <arglist>
+		<arg name="scale" type="float" optional="0" id="0" />
+		<arg name="exponent" type="float" optional="0" id="1" />
+		<arg name="skewness" type="float" optional="0" id="2" />
+	    </arglist>
+	    <description>
+		The levy distribution with skew applied.  Skew (skewness) must be a float between -1. and 1.  
+	    </description>
+	</method>
+	<method name="gamma">
+	    <arglist>
+		<arg name="alpha" type="float" optional="0" id="0" />
+		<arg name="beta" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		The alpha parameter shapes the function drawn from and beta functions as a rate parameter.  Read more <a href="https://en.wikipedia.org/wiki/Gamma_distribution">here</a>.
+	    </description>
+	</method>
+	<method name="uniform">
+	    <arglist>
+		<arg name="a" type="float" optional="0" id="0" />
+		<arg name="b" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		Equally probability distribution.  'a' and 'b' represent the locations on the x axis in which the number will be generated.  Read more <a href="https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)">here</a>.
+	    </description>
+	</method>
+	<method name="lognormal">
+	    <arglist>
+		<arg name="zeta" type="float" optional="0" id="0" />
+		<arg name="sigma" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		A continuous probability distribution of a random variable whose logarithm is normally distributed.  Read more <a href="https://en.wikipedia.org/wiki/Log-normal_distribution">here</a>.
+	    </description>
+	</method>
+	<method name="chisq">
+	    <arglist>
+		<arg name="nu" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		The chi-squared distribution is the distribution of a sum of the squares of k independent standard normal variables.  Read more <a href="https://en.wikipedia.org/wiki/Chi-squared_distribution">here</a>.
+	    </description>
+	</method>
+	<method name="f">
+	    <arglist>
+		<arg name="nu1" type="float" optional="0" id="0" />
+		<arg name="nu2" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		The f-distribution is a continuous probability distribution that arises frequently as the null distribution of a test statistic, most notably in the analysis of variance.  Read more <a href="https://en.wikipedia.org/wiki/F-distribution">here</a>.
+	    </description>
+	</method>
+	<method name="t">
+	    <arglist>
+		<arg name="nu" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		The t-distribution is any member of a family of continuous probability distributions that arises when estimating the mean of a normally distributed population in situations where the sample size is small and population standard deviation is unknown.  Read more <a href="https://en.wikipedia.org/wiki/Student%27s_t-distribution">here</a>.
+	    </description>
+	</method>
+	<method name="beta">
+	    <arglist>
+		<arg name="a" type="float" optional="0" id="0" />
+		<arg name="b" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		A family of continuous probability distributions defined on the interval [0, 1] parametrized by two positive shape parameters, denoted by α and β, that appear as exponents of the random variable and control the shape of the distribution.  Read more <a href="https://en.wikipedia.org/wiki/Beta_distribution">here</a>.
+	    </description>
+	</method>
+	<method name="logistic">
+	    <arglist>
+		<arg name="scale" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		A continuous probability distribution in which its cumulative distribution function is the logistic function.  This distribution has heavier tails compared to normal distribution.  Read more <a href="https://en.wikipedia.org/wiki/Logistic_distribution">here</a>.
+	    </description>
+	</method>
+	<method name="pareto">
+	    <arglist>
+		<arg name="exponent" type="float" optional="0" id="0" />
+		<arg name="scale" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		A power law probability distribution that is used in description of many types of observable phenomena.  Read more <a href="https://en.wikipedia.org/wiki/Pareto_distribution">here</a>.
+	    </description>
+	</method>
+	<method name="weibull">
+	    <arglist>
+		<arg name="scale" type="float" optional="0" id="0" />
+		<arg name="exponent" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		A continuous probability distribution that was originally applied to describe particle size.  Read more <a href="https://en.wikipedia.org/wiki/Weibull_distribution">here</a>.
+	    </description>
+	</method>
+	<method name="gumbel1">
+	    <arglist>
+		<arg name="a" type="float" optional="0" id="0" />
+		<arg name="b" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		A distribution mainly used in the analysis of extreme values and event-history modeling.  Read more <a href="https://en.wikipedia.org/wiki/Type-1_Gumbel_distribution">here</a>.	
+	    </description>
+	</method>
+	<method name="gumbel2">
+	    <arglist>
+		<arg name="a" type="float" optional="0" id="0" />
+		<arg name="b" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		Similar to the weibull distribution.  Read more <a href="https://en.wikipedia.org/wiki/Type-2_Gumbel_distribution">here</a>.	
+	    </description>
+	</method>
+	<method name="dirichlet">
+	    <arglist>
+		<arg name="alpha (k floats)" type="list" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		A multivariate generalization of the beta distribution.  The list here designates the number of dimensions of K.  Read more <a href="https://en.wikipedia.org/wiki/Dirichlet_distribution">here</a>.
+	    </description>
+	</method>
+	<method name="poisson">
+	    <arglist>
+		<arg name="mu" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		A discrete probability distribution that expresses the probability of a number of events within a fixed interval of time/space (IF these events occur with a known constant rate and independently of the time since the last event).  Read more <a href="https://en.wikipedia.org/wiki/Poisson_distribution">here</a>.
+	    </description>
+	</method>
+	<method name="bernoulli">
+	    <arglist>
+		<arg name="probability" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		A probability distribution of any single experiment that asks a yes–no question; the question results in a boolean-valued outcome, a single bit of information whose value is true with probability p and false outcome with probability q in the equation [q = 1 - p].  Read more <a href="https://en.wikipedia.org/wiki/Bernoulli_distribution">here</a>.
+	    </description>
+	</method>
+	<method name="binomial">
+	    <arglist>
+		<arg name="probability" type="float" optional="0" id="0" />
+		<arg name="n trials" type="int" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		The binomial distribution is frequently used to model the number of successes in a sample of size n drawn with replacement from a population of size N.  Read more <a href="https://en.wikipedia.org/wiki/Binomial_distribution">here</a>.
+	    </description>
+	</method>
+	<method name="multinomial">
+	    <arglist>
+		<arg name="n" type="int" optional="0" id="0" />
+		<arg name="k floats (returns a list of k elements)" type="list" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		A generalization of the binomial distribution, which is based on 'n'.  K specifies the number of categories.  Read more <a href="https://en.wikipedia.org/wiki/Multinomial_distribution">here</a>.
+	    </description>
+	</method>
+	<method name="negative_binomial">
+	    <arglist>
+		<arg name="probability" type="float" optional="0" id="0" />
+		<arg name="n trials" type="int" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		A discrete probability distribution of the number of successes in a sequence of independent and identically distributed Bernoulli trials before a specified (non-random) number of failures (denoted r) occurs.  Read more <a href="https://en.wikipedia.org/wiki/Negative_binomial_distribution">here</a>.
+	    </description>
+	</method>
+	<method name="pascal">
+	    <arglist>
+		<arg name="probability" type="float" optional="0" id="0" />
+		<arg name="n trials" type="int" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		A special case of the negative binomial distribution.  Read more <a href="https://en.wikipedia.org/wiki/Negative_binomial_distribution">here</a>.
+	    </description>
+	</method>
+	<method name="geometric">
+	    <arglist>
+		<arg name="probability" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		The geometric distribution gives the probability that the first occurrence of success requires k independent trials, each with success probability p.
+	    </description>
+	</method>
+	<method name="hypergeometric">
+	    <arglist>
+		<arg name="n1" type="int" optional="0" id="0" />
+		<arg name="n2" type="int" optional="0" id="1" />
+		<arg name="t" type="int" optional="0" id="2" />
+	    </arglist>
+	    <description>
+		A discrete probability distribution that describes the probability of k successes in N draws from a finite population (of size n) that contains exactly k objects with that feature, wherein each draw is either a success or a failure.  Read more <a href="https://en.wikipedia.org/wiki/Hypergeometric_distribution">here</a>.  n1 is the number of elements of "type 1" and n2 elements of "type 2".  This setup yields the probability of obtaining k elements of "type 1" in t samples from the population without replacement.  See the <a href="https://www.gnu.org/software/gsl/manual/html_node/The-Hypergeometric-Distribution.html#The-Hypergeometric-Distribution">reference function</a> for more information.
+	    </description>
+	</method>
+	<method name="multivariate_hypergeometric">
+	    <arglist>
+		<arg name="n" type="int" optional="0" id="0" />
+		<arg name="list of probabilities" type="list" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		Refer to the <a href="https://en.wikipedia.org/wiki/Probability_mass_function">probability mass function</a> for more information on the functionality of this distribution.  Read more <a href="https://en.wikipedia.org/wiki/Hypergeometric_distribution#Multivariate_hypergeometric_distribution">here</a>.
+	    </description>
+	</method>
+	<method name="logarithmic">
+	    <arglist>
+		<arg name="probability" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		A discrete probability distribution derived from the Maclaurin series expansion.  Read more <a href="https://en.wikipedia.org/wiki/Logarithmic_distribution">here</a>.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="bessel" />
+	<seealso name="bdist" />
+	<seealso name="random" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Send a message to the randdist object.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [list or float]">
+	    <description>
+		Generated numbers as either a single float or list of floats.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		random distribution, CNMAT, generative
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

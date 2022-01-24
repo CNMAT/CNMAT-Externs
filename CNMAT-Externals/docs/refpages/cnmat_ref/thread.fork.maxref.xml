@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="thread.fork" module="CNMAT-Externals">
+
+    <digest>
+	Thread-level parallelism for event domain computation
+    </digest>
+
+    <description>
+	This object creates a thread that is separate to the main threads in Max.  Events received in its inlet are moved to the other thread for output.
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+	WARNING: this object will crash MaxMSP if used improperly or with objects that are not "overdrive safe".<br/>
+	Any event received by thread.join is passed back into the main thread.
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="anything">
+	    <description>
+		Move any message into a new thread.
+	    </description>
+	</method>
+	<method name="bang">
+	    <description>
+		Move a bnag into a new thread.
+	    </description>
+	</method>
+	<method name="float">
+	    <description>
+		Move a float into a new thread.
+	    </description>
+	</method>
+	<method name="int">
+	    <description>
+		Move an int into a new thread.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+    </attributelist>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="thread.join" />
+	<seealso name="thread.which" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Send any message into a newly created thread.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [anything]">
+	    <description>
+		Pass any message within a newly created thread.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="Keywords">
+	    <description>
+		thread, fork, join
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

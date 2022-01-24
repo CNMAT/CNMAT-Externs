@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="list-interpolate" module="CNMAT-Externals">
+
+    <digest>
+	Linear interpolation between two lists
+    </digest>
+
+    <description>
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+	[list-interpolate] remembers the last two lists you sent it.<br/>
+	A float interpolates between the two most recently received lists. (0.-1.).<br/>
+	A bang moves one "step" towards the most recently received list.<br/>
+	Once the interpolation destination is reached, a bang out the right outlet and then bang does nothing until you send a new list.
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+	<objarg name="number of steps" optional="1" type="int">
+	    <description>
+		The number of steps required to perform an interpolation from the first list to the last.
+	    </description>
+	</objarg>
+	<objarg name="maximum length of list" optional="1" type="int">
+	    <description>
+		This number determines the maximum list length in the same way that the <o>zl</o> object's "zlmaxsize" attribute works.
+	    </description>
+	</objarg>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="bang">
+	    <description>
+		If two valid lists have been received, a bang will advance the interpolation from the first to the second one step.  The number of steps is defined by the <m>steps</m> message, and can be updated dynamically.
+	    </description>
+	</method>
+	<method name="float">
+	    <description>
+		A float value between 0 and 1 interpolates between the two most recently received lists.  "0.0" is equivalent to the first list with no interpolation, and "1.0" is equivalent to list 2 with no interpolation.
+	    </description>
+	</method>
+	<method name="list">
+	    <description>
+		The first time the object receives a list, it is stored.  Interpolation cannot occur without a subsequent list.  The second time the object receives a list, this second list is used as an interpolation destination from the first.  The third time the object receives a list, the (formerly second) list will now become the interpolation source (0.0), and the new list will become the interpolation destination (1.0), and so on.
+	    </description>
+	</method>
+	<method name="steps">
+	    <arglist>
+		<arg name="number of steps" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Change the number of steps required to perform an interpolation from the first list to the last.
+	    </description>
+	</method>
+	<method name="tellmeeverything">
+	    <arglist>
+	    </arglist>
+	    <description>
+		Print diagnostic information about the list length, capacity, step count, current count, zeropad status, inputs, and rate of change to the Max window.
+	    </description>
+	</method>
+	<method name="zeropad">
+	    <arglist>
+		<arg name="flag" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Enable or disable zeropad.  If enabled, the last list received will set the length for evaluation.  If the second list is smaller, the first will be truncated to meet the number of elements.  If the second list is larger, the first list will have zeros added to the end until the length is met, so that interpolation can be performed.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+    </attributelist>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="list-accum" />
+	<seealso name="zl" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Send a message to the list-interpolate object.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [list]">
+	    <description>
+		Interpolated list out.
+	    </description>
+	</entry>
+	<entry name ="Outlet 2 [bang]">
+	    <description>
+		Send a bang when step-based interpolation has completed (similar to the <o>line</o> object).
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		list, interpolation, step, morph
+	    </description>
+	</entry>
+    </misc>
+</c74object>

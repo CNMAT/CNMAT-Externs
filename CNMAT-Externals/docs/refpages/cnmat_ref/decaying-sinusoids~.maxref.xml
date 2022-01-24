@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="decaying-sinusoids~" module="CNMAT-Externals">
+
+    <digest>
+	Bank of exponentially-decaying sinusoids
+    </digest>
+
+    <description>
+	This object has a virtual time index used to compute the exponentially decaying sinusoid.  It allows the user to jump to a time in seconds. Time 0 is the beginning of the decay. Negative times are possible but dangerous because amplitudes <em>grow</em> exponentially as you go back from time 0.
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+	Sets of sinusoids are specified as arguments or as a list. They are designated in groups of three floats: freq (Hz), gain, and decay rate (this format is also used by res-transform and resonators~).  Decaying-sinusoids~ can be substituted for resonators~ for impulsive excitations. An advantage of this object is its ability (via the included "time machine)" to play the impulse response forward and backwards (even before the beginning of time!).
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+	<objarg name="sinusoidal list of triplets" optional="0" type="list">
+	    <description>
+		Sets of sinusoids are specified as arguments or as a list. They designated in groups of three floats:<br/>
+		<ul>
+		    <li>freq (Hz)</li>
+		    <li>gain</li>
+		    <li>decay rate</li>
+		</ul>
+		This format is also used by res-transform and resonators~.
+	    </description>
+	</objarg>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="clear">
+	    <arglist>
+	    </arglist>
+	    <description>
+		Clear the sinusoids currently in memory.
+	    </description>
+	</method>
+	<method name="float">
+	    <description>
+		A float sets the overall gain of the sinusoids currently active.  This is a scalar for the partials that are output out the outlet.
+	    </description>
+	</method>
+	<method name="goto">
+	    <arglist>
+		<arg name="time in seconds" type="float" optional="0" id="0"/>
+	    </arglist>
+	    <description>
+		Go to a virtual time.
+	    </description>
+	</method>
+	<method name="list">
+	    <arglist>
+		<arg name="sinusoids" type="list" optional="0" id="0"/>
+	    </arglist>
+	    <description>
+		Sets of sinusoids are specified as arguments or as a list. They designated in groups of three floats:<br/>
+		<ul>
+		    <li>freq (Hz)</li>
+		    <li>gain</li>
+		    <li>decay rate</li>
+		</ul>
+		This format is also used by res-transform and resonators~.
+	    </description>
+	</method>
+	<method name="max_vtime">
+	    <arglist>
+		<arg name="time in seconds" type="float" optional="0" id="0"/>
+	    </arglist>
+	    <description>
+		This message sets the upper limit (maximum virtual time) of what is readable within the virtual time index.
+	    </description>
+	</method>
+	<method name="min_vtime">
+	    <arglist>
+		<arg name="time in seconds" type="float" optional="0" id="0"/>
+	    </arglist>
+	    <description>
+		Set the minimum virtual time.  This can help alleviate issues associated with exponentially growing amplitudes as you jump back in time (with negative time designations).
+	    </description>
+	</method>
+	<method name="rate">
+	    <arglist>
+		<arg name="scalar" type="float" optional="0" id="0"/>
+	    </arglist>
+	    <description>
+		This scalar updates all decay rates across all sinusoids in memory, and affects the behavior of the [goto] messages and signals in the way that the model will exponentially decay.
+	    </description>
+	</method>
+	<method name="signal">
+	    <description>
+		Control the time location (in seconds) of the object with a signal.  Rather than control virtual time with the "goto", "rate", "min_vtime", and "max_vtime" messages, you can send this signal as input for the virtual time (vtime).
+	    </description>
+	</method>
+	<method name="version">
+	    <description>
+		Print version information to the Max window.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+    </attributelist>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="sinusoids~" />
+	<seealso name="resonators~" />
+	<seealso name="oscillators~" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Send a message or signal to the decaying-sinusoids~ object.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [signal]">
+	    <description>
+		Audio of sinusoids out
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+		This object is designed for use with an object titled [timemachine~], which will be included in a future release.  Although this object assists in specifying the time index, the user is welcome to generate this signal as they like.  [decaying-sinusoids~] can be substituted for resonators~ for impulsive excitations. An advantage of this object is its ability (via [time machine]) to play the impulse response forward and backwards.
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		sinusoids, exponential decay, resonance, indexing
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="osc-timetag" module="CNMAT-Externals">
+
+    <digest>
+	Generate, transform, and manipulate OSC timetags.
+    </digest>
+
+    <description>
+	This object works with CNMAT's OpenSoundControl object, OSC-schedule, etc.  It is meant for generating a timetag based on a number of user-specified standards, outlined below.
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--INLETS-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+    </objarglist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+	<attribute name="to" optional="1" type="symbol">
+	    <description>
+		Conversion "to".  Options for specification are float, int, iso8601, and blank.  Coerce a timetag's representation into another format.
+		<ul>
+		    <li><m>float / f</m>: convert to a float representation.</li>
+		    <li><m>int / i / unix</m>: convert to an integer representation, aka UNIX time.  The standard UNIX timestamp is an integer # of seconds since Jan 1 1970.  Accuracy 1 second, expires 2038.</li>
+		    <li><m>iso8601</m>: convert to ISO 8601.  A string representation commonly used with XML encodings (final Z indicates GMT timezone).  Accuracy to fractions of a second, epoch year 1970.</li>
+		    <li><m>blank (default, NTP)</m>:  NTP is a 64-bit fixed point encoding used for network time synchronization and by OSC bundles.  Accuracy approx 200 picoseconds, expires 2037.</li>
+		    <li><m>FullPacket</m>: Convert into an OSC packet</li>
+		</ul>
+	    </description>
+	</attribute>
+	<attribute name="from" optional="1" type="symbol">
+	    <description>
+		Conversion "from".  Options for specification are float, int, iso8601, and blank.  The conversion from any format results in an NTP timestamp.
+		<ul>
+		    <li><m>float / f</m>: convert to a float representation.</li>
+		    <li><m>int / i / unix</m>: convert to an integer representation, aka UNIX time.  The standard UNIX timestamp is an integer # of seconds since Jan 1 1970.  Accuracy 1 second, expires 2038.</li>
+		    <li><m>iso8601:</m> convert to ISO 8601.  A string representation commonly used with XML encodings (final Z indicates GMT timezone).  Accuracy to fractions of a second, epoch year 1970.</li>
+		    <li><m>blank (default) / t</m>:  NTP is a 64-bit fixed point encoding used for network time synchronization and by OSC bundles.</li>
+		</ul>
+	    </description>
+	</attribute>
+	<attribute name="op" optional="1" type="symbol">
+	    <description>
+		Perform operations on timestamps:
+		<ul>
+		    <li><m>+</m>: The + operation adds two timestamps. Be mindful not to overflow the result.</li>
+		    <li><m>-</m>: The - operation subtracts two timestamps. Be mindful not to overflow the result or produce negative output.</li>
+		    <li><m>*</m>: The multiply operation is for time-dilation or scaling. The scaling factor is an integer number.  Scaling of absolute time values can easily produce overflow in the result; typically this is used to scale a relative time value only.</li>
+		    <li><m>cmp</m>: Compare two timestamps: -1 if A is less than B, 0 if A is equivalent to B, 1 if A is greater than B</li>
+		    <li><m>d</m>: The derivative operation computes the difference between successive timestamps.  Typically this is used with the floating point output mode, and to make measurements of elapsed time between events.</li>
+		</ul>
+	    </description>
+	</attribute>
+    </attributelist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="FullPacket">
+	    <arglist>
+		<arg name="length of packet (in bytes)" optional="0" type="int"/>
+		<arg name="pointer value (address in memory)" optional="0" type="int"/>
+	    </arglist>
+	    <description>
+		Send an OSC bundle to the osc-timetag object.  It is not expected that the user will generate this.
+	    </description>
+	</method>
+
+	<method name="OSCTimeTag">
+	    <arglist>
+		<arg name="first 32-bit int" type="int" optional="0" id="0" />
+		<arg name="second 32-bit int" type="int" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		OSC-timetag / NTP:  This is the default format for timetags to be received.  There are two 32-bit ints that comprise a larger 64-bit int to specify the time.  <br/>
+		NTP is a 64-bit fixed point encoding used for network time synchronization and by OSC bundles.
+	    </description>
+	</method>
+	<method name="now">
+	    <description>
+		Generate a timestamp based on the current time, based on the @to designation.  If none has been given, an NTP timestamp is output.  Equivalent to [bang].
+	    </description>
+	</method>
+	<method name="immediate">
+	    <description>
+		"immediate" outputs the special time tag [OSCTimeTag 0 1] (see OSC specification for details).  Bundles with the immediate timetag bypass any scheduling system.  Conversion to various types may have no logical result.
+	    </description>
+	</method>
+	<method name="bang">
+	    <description>
+		Same as [now].  See above.
+	    </description>
+	</method>
+	<method name="float">
+	    <description>
+		Same as [now].  See above.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--DISCUSSION-->
+    <discussion>
+    </discussion>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="osc-schedule" />
+	<seealso name="opensoundcontrol" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Send messages here to format and output a timetag.  Timetags need to be prepended with osc-style messages for the opensoundcontrol object to understand them.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [list]">
+	    <description>
+		The output timetag, in the format specified.	
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+		Note: This object has been deprecated albeit specific use cases.  For the current version of CNMAT OSC objects please see the ODOT library, available <a href="https://github.com/CNMAT/CNMAT-odot">here</a>.
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		schedule, CNMAT, timestamp, time
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

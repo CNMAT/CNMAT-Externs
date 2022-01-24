@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="oscillators~" module="CNMAT-Externals">
+
+    <digest>
+	Bank of tabulated function oscillators
+    </digest>
+
+    <description>
+	Generate a number of oscillators, based on a periodic table defined in a [buffer~] object.  Note that a buffer~ <em>must</em> be specified.
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+	<objarg name="buffer name" optional="0" type="float">
+	    <description>
+		Specify the name of a buffer.  The buffer should be 65536 samples in length, and can be filled with any content.
+	    </description>
+	</objarg>
+	<objarg name="list of frequency/amplitude duples" optional="1" type="symbol">
+	    <description>
+		Specify a list of frequency/amplitude duples (pairs) in a list.  This will be the initial bank of oscillators until another is sent into the object's inlet.
+	    </description>
+	</objarg>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="clear">
+	    <description>
+		Clear the contents of the oscillators object.  This action will zero out the output signal from the object.
+	    </description>
+	</method>
+	<method name="list">
+	    <description>
+		Specify a list of frequency/amplitude duples (pairs) in a list.  An example would be the list [440. 0.1 442. 0.05 1100. 0.05], which is comprised of the following oscillators:
+		<ol>
+		    <li>440. 0.1</li>
+		    <li>442. 0.05</li>
+		    <li>1100. 0.05</li>
+		</ol>
+	    </description>
+	</method>
+	<method name="noglissbirthmode">
+	    <arglist>
+		<arg name="flag" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		This mode enables/disables glissandi when creating new oscillators within the bank.  If this mode is on, the object will <em>not</em> interpolate between frequencies when a new frequency is added to the bank.  The default behavior is off, meaning that the object will interpolate new frequencies as they are birthed.
+	    </description>
+	</method>
+	<method name="set">
+	    <arglist>
+		<arg name="buffer" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Set the buffer from which oscillators~ pulls its periodic wavetable.
+	    </description>
+	</method>
+	<method name="version">
+	    <description>
+		Print version information to the Max window.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+    </attributelist>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="sinusoids~" />
+	<seealso name="decaying-sinusoids~" />
+	<seealso name="resonators~" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Send a message to the oscillators~ object.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [signal]">
+	    <description>
+		Tabulated function oscillators out.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		oscillator, table, lookup, frequency, amplitude
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="slipOSC" module="CNMAT-Externals">
+
+    <digest>
+    </digest>
+
+    <description>
+	slipOSC takes data from the serial object and SLIP decodes into OSC FullPacket messages.  It also goes the other direction for sending OSC FullPacket messages into a SLIP encoded serial stream.
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="FullPacket">
+	    <arglist>
+		<arg name="length of packet (in bytes)" optional="0" type="int"/>
+		<arg name="pointer value (address in memory)" optional="0" type="int"/>
+	    </arglist>
+	    <description>
+		Send an OSC bundle to the opensoundcontrol object.  It is not expected that the user will generate this.
+	    </description>
+	</method>
+	<method name="debug">
+	    <description>
+		Toggle debugging on or off.
+	    </description>
+	</method>
+	<method name="errorreporting">
+	    <description>
+		Turn error reporting on or off.
+	    </description>
+	</method>
+	<method name="int">
+	    <description>
+		Pass an integer character to the object for decoding.
+	    </description>
+	</method>
+	<method name="list">
+	    <description>
+		Pass a list of integer characters to the object for decoding.
+	    </description>
+	</method>
+	<method name="printcontents">
+	    <description>
+		Print the contents that the object has in its memory, which includes the buffer address and size.
+	    </description>
+	</method>
+	<method name="version">
+	    <description>
+		Print version information to the Max window.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+    </attributelist>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="opensoundcontrol" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Sent a message or OSC packet to the slipOSC object.
+	    </description>
+	</entry>
+	<entry name ="Inlet 2 [anything]">
+	    <description>
+		Sent a message or OSC packet to the slipOSC object.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [FullPacket, bang]">
+	    <description>
+		OSC packets out.  A bang is output after messages in OSC packet.
+	    </description>
+	</entry>
+	<entry name ="Outlet 2 [FullPacket]">
+	    <description>
+		OSC messages decoded from OSC packet.
+	    </description>
+	</entry>
+	<entry name ="Outlet 3 [list]">
+	    <description>
+		Time tag (list of two ints) from the OSC packet.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="Keywords">
+	    <description>
+		OSC, OpenSoundControl, serial, slipOSC
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

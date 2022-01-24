@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="lcm" module="CNMAT-Externals">
+
+    <digest>
+	Least common multiple
+    </digest>
+
+    <description>
+	Given a bunch of integers, what's the smallest integer that's an even multiple of all of them?
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+	<objarg name="list of integers" optional="1" type="list">
+	    <description>
+		A list of integers functions similary to the <o>pack</o> object.  For each of the list elements, a new inlet will be created.  This inlet can be used to update that particular list element after instantiation.  If no argument is given, it is assumed that the object will either be used with an input list or with two numbers - the default number of inlets is two (2).
+	    </description>
+	</objarg>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="bang">
+	    <description>
+		Output the last LCM that was calculated.
+	    </description>
+	</method>
+	<method name="int">
+	    <description>
+		An int in the left inlet will cause output of the least common multiple (LCM) of a given set of numbers.  An int can be input into any inlet to build up the evaluated set.  The simplest version of this evaluation is comparing two ints, one in the right inlet and one in the left.
+	    </description>
+	</method>
+	<method name="list">
+	    <description>
+		A list in the left inlet will function as a group of integers to be evaluated for their LCM, and will immediately cause output.
+	    </description>
+	</method>
+	<method name="tellmeeverything">
+	    <description>
+		Print the LCM of the current group of numbers in memory to the Max window.
+	    </description>
+	</method>
+	<method name="version">
+	    <description>
+		Print version information to the Max window.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+    </attributelist>
+
+    <!--SEEALSO-->
+    <seealsolist>
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [int or list]">
+	    <description>
+		Calculate the LCM in one of the following ways:
+		<ol>
+		    <li>an int will cause output based on other ints given to the right inlets</li>
+		    <li>a list will cause output based on the list elements present</li>
+		</ol>
+	    </description>
+	</entry>
+	<entry name ="Inlet 2+N [int]">
+	    <description>
+		An int will be stored as one in a group of numbers to be evaluated for a LCM, with N being the number of inlets created based on the object's arguments.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [int]">
+	    <description>
+		Output the LCM of a list of numbers 
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		lcm, least common multiple
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

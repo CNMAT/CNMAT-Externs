@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="gridpanel" module="CNMAT-Externals">
+
+    <digest>
+	Simple utility for drawing a UI grid.
+    </digest>
+
+    <description>
+	<m>gridpanel</m> is simple grid-based, UI element.  The number of X and Y divisions for the grid are configurable.  The object responds to idle mousing, and allows for the line width to be edited.
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--INLETS-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="xdivisions">
+	    <arglist>
+		<arg name="number of x divisions" type="int" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		The number of divisions for the x (columns) portion of the grid
+	    </description>
+	</method>
+	<method name="ydivisions">
+	    <arglist>
+		<arg name="number of y divisions" type="int" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		The number of divisions for the y (rows) portion of the grid
+	    </description>
+	</method>
+	<method name="divisions">
+	    <arglist>
+		<arg name="number of divisions" type="int" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		The number of divisions for both the x and y divisions.
+	    </description>
+	</method>
+	<method name="linewidth">
+	    <arglist>
+		<arg name="width of line in pixels" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		The width of the line in pixels.  A float value is accepted, for sub-pixel accuracy in drawing.
+	    </description>
+	</method>
+	<method name="idlemousing">
+	    <arglist>
+		<arg name="idle mousing" type="int" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		Turn idle mousing on or off (1/0).  When on, moving the cursor inside the box will cause the object to select (and output) the cell closest to the mouse coordinates.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--DISCUSSION-->
+    <discussion>
+    </discussion>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="matrix~"/>
+	<seealso name="router"/>
+	<seealso name="matrixctrl"/>
+    </seealsolist>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [list]">
+	    <description>
+		A list containing two elements:  The x and y cell location for the currently selected cell.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		grid, mouse, UI, CNMAT 
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

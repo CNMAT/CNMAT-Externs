@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="vsnapshot~" module="CNMAT-Externals">
+
+    <digest>
+	Output a list representing the signal vector associated with a given signal's input, similar to <o>snapshot~</o>
+    </digest>
+
+    <description>
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+	vsnapshot~ behaves just like <o>snapshot~</o> but outputs the entire signal vector.
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+	<objarg name="interval in ms" optional="0" type="int">
+	    <description>
+		The interval with which to poll the incoming signal's vector information.  At this interval, snapshots of said signal vector will be output.
+	    </description>
+	</objarg>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="bang">
+	    <description>
+		Output a signal vector, based on the signal input.  A bang is reserved for manual outputting (polling) of the incoming signal's vector.  Issuing a bang usually assumes that you have either disabled automatic polling with an <m>int</m>, issued an argument of zero, or omitted an argument entirely.
+	    </description>
+	</method>
+	<method name="int">
+	    <description>
+		Turn automatic polling on or off (1/0).  This assumes that you have designated an interval, either as an argument to the object or as an int in the right inlet.
+	    </description>
+	</method>
+	<method name="signal">
+	    <description>
+		The incoming signal to take a snapshot of.
+	    </description>
+	</method>
+	<method name="start">
+	    <description>
+		Start polling.  This is the same as issuing a 1.
+	    </description>
+	</method>
+	<method name="stop">
+	    <description>
+		Stop polling.  This is the same as issuing a 0.
+	    </description>
+	</method>
+	<method name="version">
+	    <description>
+		Print version information to the Max window.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+    </attributelist>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="snapshot~"/>
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Send a message to the vsnapshot~ object.
+	    </description>
+	</entry>
+	<entry name ="Inlet 2 [float]">
+	    <description>
+		The second inlet can be used to set the interval (an int).
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [list]">
+	    <description>
+		The signal vector as a list.  The length of this list corresponds directly to the signal vector size of MSP, found in the audio status window.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="Keywords">
+	    <description>
+		snapshot, vector, signal
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

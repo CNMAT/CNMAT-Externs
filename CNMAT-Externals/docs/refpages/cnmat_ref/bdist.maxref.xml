@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="bdist" module="CNMAT-Externals">
+
+    <digest>
+	The <a href="https://en.wikipedia.org/wiki/Beta_distribution">beta distribution</a>
+    </digest>
+
+    <description>
+	bdist calculates the beta distribution, corresponding parameters, and displays it.
+	The Y value along the distribution can be queried with an X input.  The A and B parameters are issued independently.
+	The object can also be queried for a value chosen within its distribution in a variety of ways.
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--INLETS-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="distlist">
+	    <arglist>
+		<arg name="An int, or a list of pairs" type="int or list" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Issue a list of pairs specifying the distribution topology to draw from when choosing values for output.  The number of pairs corresponds to the number of values issued, and each value represents a separate value being chosen.
+	    </description>
+	</method>
+
+	<method name="bang">
+	    <description>
+		Choose a value for output, based on the object's current distribution.
+	    </description>
+	</method>
+	    
+	<method name="a">
+	    <arglist>
+		<arg name="float value for 'a'" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		The 'a' parameter of the beta distribution (α)
+	    </description>
+	</method>
+
+	<method name="b">
+	    <arglist>
+		<arg name="float value for 'b'" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		The 'b' parameter of the beta distribution (β)
+	    </description>
+	</method>
+
+	<method name="displaymode">
+	    <arglist>
+		<arg name="mode name" type="symbol" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		The displaymode for display.  Valid modes are "CDF" (cumulative distribution function) and "PDF" (probability density function).
+	    </description>
+	</method>
+
+	<method name="float" type="float">
+	    <description>
+		A float in the left inlet will output the corresponding Y value along the X axis of the transfer function.<br/>
+		A float in the middle inlet will set the 'a' parameter for the current distribution, recalculate, and display the result.<br/>
+		A float in the right inlet will set the 'b' parameter for the current distribution, recalculate, and display the result.<br/>
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--DISCUSSION-->
+    <discussion>
+    </discussion>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="randdist" />
+	<seealso name="bessel" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		The first inlet of bdist accepts a number of types of messages.  Refer to the list above.
+	    </description>
+	</entry>
+	<entry name ="Inlet 2 [float]">
+	    <description>
+		Set the 'a' parameter for the current distribution, recalculate, and display the result.
+	    </description>
+	</entry>
+	<entry name ="Inlet 3 [float]">
+	    <description>
+		Set the 'b' parameter for the current distribution, recalculate, and display the result.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [list or float]">
+	    <description>
+		This output is variable, and can be one of the following:<br/><br/>
+		- Y output from corresponding X input<br/>
+		- A list of chosen values from the distribution designated in the left inlet<br/>
+		- A float that represents a chosen value from either a <m>bang</m> in the left inlet, or a when the object receives the message [distlist 1]<br/>
+	    </description>
+	</entry>
+	<entry name ="Outlet 2 [variable]">
+	    <description>
+		Outputs a number of descriptors outlining the characteristics of the distribution, sent upon any change in the parameterizations.  These include:<br/><br/>
+		- mean [value]<br/>
+		- variance [value]<br/>
+		- skewness [value]<br/>
+		- kurtosis [value]<br/>
+		- mode [value]<br/>
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		bdist, CNMAT, transfer function
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

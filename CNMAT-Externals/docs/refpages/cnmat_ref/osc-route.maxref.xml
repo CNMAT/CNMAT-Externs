@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="osc-route" module="CNMAT-Externals">
+
+    <digest>
+	Dispatch OSC messages according to an address hierarchy stripping off the portion of the address that matched
+    </digest>
+
+    <description>
+	osc-route does pattern matching on osc-style messages. All messages with addresses that match an address specified as an argument to osc-route are bundled together and sent out the corresponding outlet with the portion of the address that match removed.  It is a deprecated object which has been replaced by <m>o.route</m> in the <a href="https://github.com/CNMAT/CNMAT-odot">ODOT library</a>.
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--INLETS-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+	<objarg name="anything" optional="0" type="symbol">
+	    <description>
+		Each argument of osc-route creates a dedicated outlet for output of the pattern matching. The right-most outlet is used for all unmatched addresses and data in an incoming bundle (delegation).  At least one argument is required.
+	    </description>
+	</objarg>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+
+	<method name="allmessages">
+	    <description>
+		[allmessages] prints out an entire OSC address space in the Max window.  It is somewhat kludgy and dangerous.
+	    </description>
+	</method>
+
+	<method name="anything/list">
+	    <description>
+		osc-route will route any osc-style messages to the proper place by stripping off the portion of the address that is matched.  The resultant message or value will be dispatched to the relevant outlet.
+	    </description>
+	</method>
+	    
+	<method name="set">
+	    <arglist>
+		<arg name="outlet number" type="int" optional="0" id="0" />
+		<arg name="address" type="symbol" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		The set message allows the dynamic association of an address prefix to a given outlet number.  e.g., <m>set 1 /foo</m>.
+	    </description>
+	</method>
+
+	<method name="version">
+	    <arglist>
+	    </arglist>
+	    <description>
+		Prints relevant version information to the Max window.
+	    </description>
+	</method>
+
+    </methodlist>
+
+    <!--DISCUSSION-->
+    <discussion>
+	osc-route is the conceptual opposite to the <m>pak</m> object, and similar to the <m>route</m> object -- it can be used to translate values from odot back into Max. Note that <m>osc-route</m> can also output bundles (if the address contains a sub-bundle, or if the pattern matching applies to more than one address), and therefore is a robust filter for odot bundles.  Valid syntax is an initial address starting with a '/', followed by a string that represents the name in the namespace, and then data associated with it.  e.g., '/foo/bar 1 2 3.141592'.
+    </discussion>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="route" />
+	<seealso name="o.route" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Input anything to be matched and/or routed.  The object will yield and error if the osc-style message is malformed.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [anything]">
+	    <description>
+		This output is variable, and corresponds to the data retained after osc-route matches an address.
+	    </description>
+	</entry>
+	<entry name ="Outlet 1+N [anything]">
+	    <description>
+		The unmatched output comes out of this outlet, which is always the rightmost.  This behavior is identical to the <m>route</m> object.  1+N specifies that the object will have a variable number of outlets.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+		Please note:  osc-route has been replaced by <m>o.route</m> in the ODOT library.  <m>o.route</m>'s functionality is identical with respect to passing osc-style messages, but has the added functionality of supporting OSC bundles.
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		osc-route, CNMAT, dispatch
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="sinusoids~" module="CNMAT-Externals">
+
+    <digest>
+	Bank of sinusoidal oscillators
+    </digest>
+
+    <description>
+	Synthesize a bank of sinusoids by specifying a list of frequency, amplitude pairs (as the optional arguments or by sending a list).
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+	<objarg name="bwe" optional="1" type="symbol">
+	    <description>
+		If the first argument is the symbol "bwe" then the sinusoids are noise modulated using a model referred to by Kelly Fitz as "bandwidth-enhanced."  If the first argument is not "bwe", then it is assume it is a portion of a defined list of sinusoids.  
+	    </description>
+	</objarg>
+	<objarg name="list of frequency/amplitude pairs" optional="1" type="list">
+	    <description>
+		Specify a list of frequency, amplitude pairs as the optional arguments.<br/><br/>
+		In bwe mode, the list consists of frequency, amplitude, noisiness triples.<br/><br/>
+		In the sinusoids~ object, the noise is implemented (as in Loris) by amplitude-modulating each sinusoid with some band-limited gaussian noise. The formula for each partial's ampltidue is:
+		<ul>
+		    <li>carrier_amp: sqrt( 1. - noisiness ) * amp</li>
+		    <li>modulation_index: sqrt( 2. * noisiness ) * amp</li>
+		    <li>amplitude of each sample = carrier_amp + (noise * modulation_index)</li>
+		</ul>
+		When the noisiness changes, the carrier_amp and modulation_index ramp linearly from the old values to the new over the course of the next signal vector.
+	    </description>
+	</objarg>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="clear">
+	    <description>
+		Smoothly fade all sinusoids down to zero amplitude over the next signal buffer, then cease synthesis (thereby saving CPU).
+	    </description>
+	</method>
+	<method name="list">
+	    <description>
+		Specify a list of frequency/amplitude duples (pairs) in a list.  An example would be the list [440. 0.1 442. 0.05 1100. 0.05], which is comprised of the following oscillators:
+		<ol>
+		    <li>440. 0.1</li>
+		    <li>442. 0.05</li>
+		    <li>1100. 0.05</li>
+		</ol>
+
+		In bwe mode, the user can input a list of frequency, amplitude, noisiness triples.
+	    </description>
+	</method>
+	<method name="tellmeeverything">
+	    <description>
+		Print current # of oscillators and their parameters
+	    </description>
+	</method>
+	<method name="verbose">
+	    <description>
+		Enable verbose mode, which prints out diagnostic information as needed.
+	    </description>
+	</method>
+	<method name="version">
+	    <description>
+		Print version information to the Max window.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+    </attributelist>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="decaying-sinusoids~" />
+	<seealso name="resonators~" />
+	<seealso name="resdisplay~" />
+	<seealso name="oscbank~" />
+	<seealso name="ioscbank~" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Send a message to the sinusoids~ object.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [signal]">
+	    <description>
+		Audio output of sinusoids.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name = "More details">
+	    <description>
+		The "noisiness" parameter for each partial is exactly like the "bandwidth" parameter in the <a href="http://www.hakenaudio.com/Loris/">Loris analysis/synthesis system</a>.  The bandwidth-enhanced option to sinusoids~ was designed to support synthesis of Loris-produced bandwidth-enhanced sinusoidal models.  Kelly Fitz states that "If the noisiness (bandwidth in Loris-speak) is 0, then the partial is a pure sinusoid (at the time of that breakpoint anyway), if the noisiness is 1, then the pure sinusoid is completely suppressed, and the partial is purely narrowband noise, centered at the frequency of the partial.  What matters very little, within limits of course, is the exact bandwidth of the narrowband noise. As long as the noise bands are wide enough (in frequency) to overlap (that is, they are wider, in general, than the instantaneous frequency distance between partials), then variation (within reason) in the bandwidth of the noise modulator does not seem to greatly affect the quality of the synthesis, and when even the effects are audible, it is often the case that the syntheses all seem to be of the same "quality". In other words, none is preferable to all the others, in general. We have not found any heuristics for making a signal-dependent decision about the bandwidth of the modulator."
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		sinusoids, sinewaves, oscillator, noise, additive synthesis
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

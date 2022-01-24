@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="roughness" module="CNMAT-Externals">
+
+    <digest>
+    </digest>
+
+    <description>
+	Estimates the amount of perceptual dissonance in a sonority.  Based on Richard Parncutt's source code.
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+	See <a href="http://www.cnmat.berkeley.edu/publications/real-time-analysis-sensory-dissonance">this paper</a> for more details on roughness and perceptual dissonance.
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="SDIFtime">
+	    <arglist>
+		<arg name="time in seconds" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Set the timestamp, in seconds, at which to evaluate an SDIF file for roughness.
+	    </description>
+	</method>
+	<method name="anything">
+	    <description>
+		The anything message allows you to specify the two formulae available for calculating roughness.<br/>
+		Options are:<br/>
+		<ul>
+		    <li>parncutt</li>
+		    <li>kk</li>
+		</ul>
+		Please see below regarding details on the preferred <m>set-cbw-type</m> message.
+	    </description>
+	</method>
+	<method name="list">
+	    <description>
+		Send a list of frequencies and amplitudes in for the object to analyze.
+	    </description>
+	</method>
+	<method name="process_SDIF">
+	    <description>
+		Process an SDIF frame for roughness information.  The <m>set</m> message specifies which SDIF file (in Max's memory) to refer to, and the relevant timestamp is issued via <m>SDIFtime</m>.
+	    </description>
+	</method>
+	<method name="scIndex">
+	    <description>
+		The exponent of the standard curve to use when evaluating roughness.
+	    </description>
+	</method>
+	<method name="set">
+	    <description>
+		Set the SDIF buffer that this object refers to.
+	    </description>
+	</method>
+	<method name="set-cbw-type">
+	    <arglist>
+		<arg name="type" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Set the type of calculation used when assessing roughness.  Options are:
+		<ul>
+		    <li>1: Parncutt: Using Hutchinson and Knopoff's critical bandwidth formula:</li>
+		    <li>2: Moore and Glasberg</li>
+		</ul>
+	    </description>
+	</method>
+	<method name="tellmeeverything">
+	    <description>
+		Print information about the author, copyright, current formula, and expression used to the Max window.
+	    </description>
+	</method>
+	<method name="version">
+	    <description>
+		Print version information to the Max window.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+    </attributelist>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="loudness" />
+	<seealso name="SDIF-buffer" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Send a message to the roughness object.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [list or float]">
+	    <description>
+		A float is output between 0. and 1. as a measure of roughness given at the input by a <m>list</m> message.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="Keywords">
+	    <description>
+		roughness, analysis, partials, frequency, amplitude
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

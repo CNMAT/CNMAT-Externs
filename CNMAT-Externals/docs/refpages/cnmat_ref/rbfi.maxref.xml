@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="rbfi" module="CNMAT-Externals">
+
+    <digest>
+	Radial Basis Function Interpolator
+    </digest>
+
+    <description>
+			
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+	rbfi is a radial basis function interpolation tool that allows you to utilize multiple presets/bases in tandem.  This idea originates back to David Wessel in conceiving of a high dimensional space output from a low dimentional control structure.  
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="add_point">
+	    <arglist>
+		<arg name="name" type="symbol" optional="1" id="0" />
+		<arg name="coords" type="list" optional="1" id="0" />
+		<arg name="inner_radius" type="float" optional="1" id="0" />
+		<arg name="outer_radius" type="float" optional="1" id="0" />
+		<arg name="locked" type="int" optional="1" id="0" />
+		<arg name="rgb" type="list" optional="1" id="0" />
+	    </arglist>
+	    <description>
+		The add_point message, alone, will create an unlocked point in the space with an assigned name, random coordinates, and the default inner and outer radii.<br/>
+		The add_point message allows for variable arguments.  They are all optional, but if one is used, its related arguments need to be specified.<br/><br/>
+		The options are:<br/>
+		<ul>
+		    <li>coords [float x, float y]</li>
+		    <li>name [symbol]</li>
+		    <li>inner_radius [float between 0-1]</li>
+		    <li>outer_radius [float between 0-1]</li>
+		    <li>locked [int flag]</li>
+		    <li>rgb [float r, float g, float b, float a]</li>
+		</ul>
+	    </description>
+	</method>
+	<method name="anything">
+	    <description>
+	    </description>
+	</method>
+	<method name="clear">
+	    <description>
+		Clear the space by removing all points.
+	    </description>
+	</method>
+	<method name="delete_point">
+	    <arg name="name" type="symbol" optional="0" id="0" />
+	    <description>
+		Delete a point based on its name.  
+	    </description>
+	</method>
+	<method name="dump">
+	    <description>
+		Dump information about all points and their parameters out the rightmost outlet, followed by a bang.  For more information about what exactly gets sent, see the output section below.
+	    </description>
+	</method>
+	<method name="getnumpoints">
+	    <description>
+		Output the number of points out the rightmost outlet, in the form of "numpoints N".
+	    </description>
+	</method>
+	<method name="inner_radius">
+	    <description>
+		Set the default inner radius (a float between 0 and 1) for new points to be created.
+	    </description>
+	</method>
+	<method name="move">
+	    <arg name="name" type="symbol" optional="0" id="0" />
+	    <arg name="x" type="float" optional="0" id="1" />
+	    <arg name="y" type="float" optional="0" id="2" />
+	    <description>
+		Move a point to a new coordinate.  The arguments are [name, x, y].					
+	    </description>
+	</method>
+	<method name="outer_radius">
+	    <description>
+		Set the default inner radius (a float between 0 and 1) for new points to be created.
+	    </description>
+	</method>
+	<method name="pop">
+	    <description>
+		"pop" out of a space layer that you are currently in to the parent space.  This basically brings you one level up in the space hierarchy, similar to backing up one level in a patcher hierarchy.
+	    </description>
+	</method>
+	<method name="push">
+	    <arg name="preset name" type="symbol" optional="0" id="2" />
+	    <description>
+		Create (push) a space layer, adding it to the stack of spaces.  The idea is that this new space is created within the context of a single preset, which is addressed in the argument.  This is an experimental feature - use at your own risk.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+	<attribute name="always_draw_circles" get="1" set="1" type="int" size="1">
+	    <description>
+		Enable circles (both inner and outer) for all points, whether or not they have been set to draw in an individual preset.
+	    </description>
+	</attribute>
+	<attribute name="always_draw_labels" get="1" set="1" type="int" size="1">
+	    <description>
+		Enable labels for all points, whether or not they have been set to draw in an individual preset.
+	    </description>
+	</attribute>
+	<attribute name="bgcolor" get="1" set="1" type="float" size="4">
+	    <description>
+		The background color.  Format is RGBA.
+	    </description>
+	</attribute>
+	<attribute name="bordercolor" get="1" set="1" type="float" size="4">
+	    <description>
+		The border color.  Format is RGBA.
+	    </description>
+	</attribute>
+	<attribute name="compatmode" get="1" set="1" type="int" size="1">
+	    <description>
+		This legacy attribute changes the behavior of the dump message.  The default setting is 0, which should be appropriate for most users.
+	    </description>
+	</attribute>
+	<attribute name="enable_multiple_crosshairs" get="1" set="1" type="int" size="1">
+	    <description>
+		Enable or disable multiple crosshairs
+	    </description>
+	</attribute>
+	<attribute name="font_size" get="1" set="1" type="float" size="1">
+	    <description>
+		The font size.
+	    </description>
+	</attribute>
+	<attribute name="line_width_float" get="1" set="1" type="float" size="1">
+	    <description>
+		The width of the line, in partial pixels.
+	    </description>
+	</attribute>
+	<attribute name="mouse_active_beyond_rect" get="1" set="1" type="int" size="1">
+	    <description>
+		When enabled, the mouse if active beyond the borders of the UI object, meaning that if you start a click-drag action, it can continue outside of the bounds and still result in a valid point.  If disabled, the mouse input will be clipped at the bounding box.
+	    </description>
+	</attribute>
+	<attribute name="parameter_enable" get="1" set="1" type="int" size="1">
+	    <description>
+		When enabled, all parameters are exposed to the pattr system for storage and recall.
+	    </description>
+	</attribute>
+	<attribute name="pointdiameter" get="1" set="1" type="float" size="1">
+	    <description>
+		The size of the point that is able to be selected when the user shift-clicks in the space.  Larger point diameters will yield an easier target, but can also mean that there is bleed to surrounding points, making it harder to detect which point was intended by the selection.
+	    </description>
+	</attribute>
+	<attribute name="rbf" get="1" set="1" type="float" size="1">
+	    <description>
+		The size of the point that is able to be selected when the user shift-clicks in the space.  Larger point diameters will yield an easier target, but can also mean that there is bleed to surrounding points, making it harder to detect which point was intended by the selection.
+	    </description>
+	</attribute>
+	<attribute name="xhaircolor" get="1" set="1" type="float" size="4">
+	    <description>
+		The color of the crosshair that is drawn when the user clicks or drags within the space.  Format is RGBA.
+	    </description>
+	</attribute>
+	<attribute name="xmax" get="1" set="1" type="float" size="1">
+	    <description>
+		The maximum value in the x domain of the 2-dimensional space.
+	    </description>
+	</attribute>
+	<attribute name="xmin" get="1" set="1" type="float" size="1">
+	    <description>
+		The minimum value in the x domain of the 2-dimensional space.
+	    </description>
+	</attribute>
+	<attribute name="ymax" get="1" set="1" type="float" size="1">
+	    <description>
+		The maximum value in the y domain of the 2-dimensional space.
+	    </description>
+	</attribute>
+	<attribute name="ymin" get="1" set="1" type="float" size="1">
+	    <description>
+		The maximum value in the y domain of the 2-dimensional space.
+	    </description>
+	</attribute>
+    </attributelist>
+
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="xydisplay" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Send a message to the rbfi object.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [list]">
+	    <description>
+		The combined weights' output represents how the circles interact as you have placed them in xy space.  The range of influence yields a mixed output whereby you may have more than one weight present.
+	    </description>
+	</entry>
+	<entry name ="Outlet 2 [list]">
+	    <description>
+		Distance from the cursor to the centers of each preset.  This variable list includes the names of each preset as well.  Exemplary list: <br/><br/>
+		[/rectangle 1.171836 /triangle 1.858279 /sawtooth 1.858279 /sine 0.838713]
+	    </description>
+	</entry>
+	<entry name ="Outlet 3 [list]">
+	    <description>
+		Name and xy coordinates of the preset being moved
+	    </description>
+	</entry>
+	<entry name ="Outlet 4 [variable]">
+	    <description>
+		List containing the xy coordinates of the mouse position, mouseup, and mousedown messages
+	    </description>
+	</entry>
+	<entry name ="Outlet 5 [variable]">
+	    <description>
+		Dump output when dump message is sent.  This outputs each preset in sequence with it's various parameters, and a done message after all presets have been dumped.  Exemplary list: <br/><br/>
+		[/rectangle name /rectangle coords -0.5 0. rgb 0.5625 0.75 0.1875 inner_radius 0.1 outer_radius 0.5]
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		rbfi, radial basis function, interpolation, spaces, weighted parameters
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

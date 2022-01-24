@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="analyzer~" module="CNMAT-Externs">
+	<!--METADATA-->
+	<metadatalist>
+		<metadata name="author">CNMAT</metadata>
+		<metadata name="tag">CNMAT-Externals</metadata>
+	</metadatalist>
+
+	<digest>
+		FFT-Based Perceptual Analysis
+	</digest>
+
+	<description>
+		FFT-Based Perceptual Analysis
+	</description>
+
+	<!--DISCUSSION-->
+
+	<!--INLETS-->
+	<inletlist>
+		<inlet id="0" type="signal">
+			<digest>
+				input signal to analyze
+			</digest>
+			<description>
+				input signal to analyze
+			</description>
+		</inlet>
+	</inletlist>
+
+	<!--OUTLETS-->
+	<outletlist>
+		<outlet id="0" type="list">
+			<digest>
+				Cooked Pitch (Midi, Hz) (list)
+			</digest>
+			<description>
+				Cooked Pitch (Midi, Hz) (list)
+			</description>
+		</outlet>
+
+		<outlet id="1" type="float">
+			<digest>
+				Loudness (float)
+			</digest>
+			<description>
+				Loudness (float)
+			</description>
+		</outlet>
+
+		<outlet id="2" type="float">
+			<digest>
+				Brightness (float)
+			</digest>
+			<description>
+				Brightness (float)
+			</description>
+		</outlet>
+
+		<outlet id="3" type="float">
+			<digest>
+			</digest>
+			<description>
+				Noisiness (float) 0-1
+			</description>
+		</outlet>
+
+		<outlet id="4" type="list">
+			<digest>
+			</digest>
+			<description>
+				Bark decomposition (list of/or 25 floats)
+			</description>
+		</outlet>
+
+		<outlet id="5" type="bang">
+			<digest>
+			</digest>
+			<description>
+				Onset detection (bang)
+			</description>
+		</outlet>
+
+		<outlet id="5" type="list">
+			<digest>
+			</digest>
+			<description>
+				Raw Pitch (Midi, Amp) (list)
+			</description>
+		</outlet>
+
+		<outlet id="7" type="float">
+			<digest>
+			</digest>
+			<description>
+				Overall amplitude in dB (float)
+			</description>
+		</outlet>
+
+		<outlet id="8" type="list">
+			<digest>
+			</digest>
+			<description>
+				Sinusoidal decomposition (freq, amp) (list)
+			</description>
+		</outlet>
+
+		<outlet id="9" type="FullPacket">
+			<digest>
+			</digest>
+			<description>
+				OSC FullPacket bundle containing all analysis data.
+			</description>
+		</outlet>
+
+	</outletlist>
+
+	<!--ARGUMENTS-->
+	<objarglist>
+		<objarg name="buffersize" optional="1" type="int/float">
+			<digest>
+				Buffer size in <m>int</m> samples, or <m>float</m> milliseconds. Default buffer size is 1024.
+			</digest>
+			<description>
+				The Buffer size is the size of the windowed samples, and can be less than the FFT size, which results in zero padding. Default buffer size is 1024 samples.<br/><br/>
+
+				<m>int</m> for size in samples<br/>
+				<m>float</m> for size in milliseconds.<br/><br/>
+
+				Buffer size must be &lt;&#61; FFT size, &gt;&#61; hop size, and &gt;&#61; the signal vector size.
+			</description>
+		</objarg>
+
+		<objarg name="hopsize" optional="1" type="int/float">
+			<digest>
+				Hop size in <m>int</m> samples, or <m>float</m> milliseconds. Default hop size is 512.
+			</digest>
+			<description>
+				Hop size (distance between the FFT frames) in <m>int</m> samples, or <m>float</m> milliseconds. Smaller hop sizes result in faster output of data. Default hop size is 512. <br/><br/>
+
+				<m>int</m> for size in samples<br/>
+				<m>float</m> for size in milliseconds.<br/><br/>
+
+				Hop size must be &lt;&#61; Buffer size, and &gt;&#61; the signal vector size.
+			</description>
+		</objarg>
+
+		<objarg name="fftsize" optional="1" type="int/float">
+			<digest>
+				FFT size in <m>int</m> samples, or <m>float</m> milliseconds. Default FFT size is 1024.
+			</digest>
+			<description>
+				FFT size in <m>int</m> samples, or <m>float</m> milliseconds. Larger FFT sizes are more accurate in the lower frequencies, at the expense of time (which can be compensated with smaller hop sizes).<br/><br/>
+
+				<m>int</m> for size in samples<br/>
+				<m>float</m> for size in milliseconds.<br/><br/>
+
+				Default FFT size is 1024. Minimum FFT size is 512.<br/><br/>
+
+				FFT size must be &gt;&#61; buffer size, &gt;&#61; hop size, and &gt;&#61; the signal vector size.
+			</description>
+		</objarg>
+
+		<objarg name="windowtype" optional="1" type="symbol">
+			<digest>
+				Type of amplitude window applied to buffer. Default is <m>blackman70</m>.
+			</digest>
+			<description>
+				Window shape applied to the sample buffer (aligned to the buffer size). Default is <m>blackman70</m>.
+				<br/><br/>
+				Options:<br/>
+				<m>rectangular</m><br/>
+				<m>hanning</m><br/>
+				<m>hamming</m><br/>
+				<m>blackman62</m><br/>
+				<m>blackman70</m><br/>
+				<m>blackman74</m><br/>
+				<m>blackman92</m><br/>
+			</description>
+		</objarg>
+
+		<objarg name="initialdelay" optional="1" type="int">
+			<digest>
+				Inital delay in number of signal vectors, default is 0.
+			</digest>
+			<description>
+				Inital delay in number of signal vectors, default is 0.<br/><br/>
+
+				Use the delay argument when using this object multiple times in parallel to avoid over loading the CPU with several FFTs occuring at the same time, e.g. choose 0, 1, 2, etc. FFTs will occur at different times, each one separated by the time length of a signal vector.
+			</description>
+		</objarg>
+
+		<objarg name="numpitches" optional="1" type="int">
+			<digest>
+				Number of pitches (1-3) to attempt to extract polyphonically, default is 1.
+			</digest>
+			<description>
+				Number of pitches (1-3) to attempt to extract polyphonically, default is 1.
+			</description>
+		</objarg>
+
+		<objarg name="numpeakstofind" optional="1" type="int">
+			<digest>
+				Number of peaks to find (1-100), default is 20.
+			</digest>
+			<description>
+				Number of peaks to find (1-100), default is 20.
+			</description>
+		</objarg>
+
+		<objarg name="numpeakstooutput" optional="1" type="int">
+			<digest>
+				Number of peaks to output (1-100), default is 0.
+			</digest>
+			<description>
+				Number of peaks to output (1-100), default is 0.
+			</description>
+		</objarg>
+
+		<objarg name="barkformat" optional="1" type="symbol">
+			<digest>
+				Bark output format, <m>list</m>(default) or <m>nolist</m> (25 outlets).
+			</digest>
+			<description>
+				Bark output format, <m>list</m>(default) or <m>nolist</m>. <br/><br/>
+
+				Note: with the legacy <m>nolist</m> setting, 25 outlets are created for the individual Bark bins. (not recommended)
+			</description>
+		</objarg>
+	</objarglist>
+	<!--MESSAGES-->
+	<methodlist>
+		<method name="float">
+			<digest>
+				set hop size in milliseconds.
+			</digest>
+			<description>
+				set hop size in milliseconds.
+			</description>
+		</method>
+
+		<method name="int">
+			<digest>
+				set hop size in samples.
+			</digest>
+			<description>
+				set hop size in samples.
+			</description>
+		</method>
+
+		<method name="amp-range">
+			<digest>
+				(list) low and high amplitude threshold.
+			</digest>
+			<description>
+				Low and high amplitude threshold (list): if signal amplitude is below the low threshold, no pitches or peaks are output. The high threshold is a minimum at which "cooked" outputs may appear.
+			</description>
+		</method>
+
+		<method name="vibrato">
+			<digest>
+				(list) pitch variation threshold: <m>milliseconds</m> <m>semitones</m>
+			</digest>
+			<description>
+				List of two values:<br/>
+				(1) A period in milliseconds over which the raw pitch may not deviate more than:<br/>
+				(2) an interval in semitones (float) from the average pitch to report it as a note to the "cooked" pitch outlet.
+			</description>
+		</method>
+
+		<method name="reattack">
+			<digest>
+				(list) loudness variation threshold: <m>milliseconds</m> <m>dB</m>
+			</digest>
+			<description>
+				List of two values:<br/>
+				(1) A period in milliseconds over which a re-attack is reported if the amplitude rises more than:<br/>
+				(2) a value in dB.<br/><br/>
+
+				The re-attack will result in a <m>bang</m> in the attack outlet and may give rise to repeated notes in the cooked pitch output.
+			</description>
+		</method>
+
+		<method name="npartial">
+			<digest>
+				(int) overtone weight coeficient.
+			</digest>
+			<description>
+				Higher partials are weighed less strongly than lower ones in determining the pitch -- this specifies the number of the partial (7) which will be weighted half as strongly as the fundamental.
+			</description>
+		</method>
+
+		<method name="print">
+			<digest>
+				print parameter values.
+			</digest>
+			<description>
+				print parameter values.
+			</description>
+		</method>
+
+		<method name="tellmeeverything">
+			<description>
+				Output all information about the object's state to the Max window.
+			</description>
+		</method>
+		<method name="version">
+			<digest>
+				Get current version information
+			</digest>
+			<description>
+				Prints the current build version to the Max Window.
+			</description>
+		</method>
+	</methodlist>
+
+	<!--ATTRIBUTES-->
+	<attributelist>
+		<attribute name="min" get="1" set="1" type="float" size="1">
+			<digest>
+				minimum bound for accumulation
+			</digest>
+			<description>
+				minimum bound for accumulation
+			</description>
+		</attribute>
+
+		<attribute name="buffersize" get="1" set="1" type="int/float" size="1">
+			<digest>
+				Buffer size in <m>int</m> samples, or <m>float</m> milliseconds. Default buffer size is 1024.
+			</digest>
+			<description>
+				The Buffer size is the size of the windowed samples, and can be less than the FFT size, which results in zero padding. Default buffer size is 1024 samples.<br/><br/>
+
+				<m>int</m> for size in samples<br/>
+				<m>float</m> for size in milliseconds.<br/><br/>
+
+				Buffer size must be &lt;&#61; FFT size, &gt;&#61; hop size, and &gt;&#61; the signal vector size.
+			</description>
+		</attribute>
+
+		<attribute name="hopsize" get="1" set="1" type="int/float" size="1">
+			<digest>
+				Hop size in <m>int</m> samples, or <m>float</m> milliseconds. Default hop size is 512.
+			</digest>
+			<description>
+				Hop size (distance between the FFT frames) in <m>int</m> samples, or <m>float</m> milliseconds. Smaller hop sizes result in faster output of data. Default hop size is 512. <br/><br/>
+
+				<m>int</m> for size in samples<br/>
+				<m>float</m> for size in milliseconds.<br/><br/>
+
+				Hop size must be &lt;&#61; Buffer size, and &gt;&#61; the signal vector size.
+			</description>
+		</attribute>
+
+		<attribute name="fftsize" get="1" set="1" type="int/float" size="1">
+			<digest>
+				FFT size in <m>int</m> samples, or <m>float</m> milliseconds. Default FFT size is 1024.
+			</digest>
+			<description>
+				FFT size in <m>int</m> samples, or <m>float</m> milliseconds. Larger FFT sizes are more accurate in the lower frequencies, at the expense of time (which can be compensated with smaller hop sizes).<br/><br/>
+
+				<m>int</m> for size in samples<br/>
+				<m>float</m> for size in milliseconds.<br/><br/>
+
+				Default FFT size is 1024. Minimum FFT size is 512.<br/><br/>
+
+				FFT size must be &gt;&#61; buffer size, &gt;&#61; hop size, and &gt;&#61; the signal vector size.
+			</description>
+		</attribute>
+
+		<attribute name="windowtype" get="1" set="1" type="symbol" size="1">
+			<digest>
+				Type of amplitude window applied to buffer. Default is <m>blackman70</m>.
+			</digest>
+			<description>
+				Window shape applied to the sample buffer (aligned to the buffer size). Default is <m>blackman70</m>.
+				<br/><br/>
+				Options:<br/>
+				<m>rectangular</m><br/>
+				<m>hanning</m><br/>
+				<m>hamming</m><br/>
+				<m>blackman62</m><br/>
+				<m>blackman70</m><br/>
+				<m>blackman74</m><br/>
+				<m>blackman92</m><br/>
+			</description>
+		</attribute>
+
+		<attribute name="initialdelay" get="1" set="1" type="int" size="1">
+			<digest>
+				Inital delay in number of signal vectors, default is 0.
+			</digest>
+			<description>
+				Inital delay in number of signal vectors, default is 0.<br/><br/>
+
+				Use the delay argument when using this object multiple times in parallel to avoid over loading the CPU with several FFTs occuring at the same time, e.g. choose 0, 1, 2, etc. FFTs will occur at different times, each one separated by the time length of a signal vector.
+			</description>
+		</attribute>
+
+		<attribute name="numpitches" get="1" set="1" type="int" size="1">
+			<digest>
+				Number of pitches (1-3) to attempt to extract polyphonically, default is 1.
+			</digest>
+			<description>
+				Number of pitches (1-3) to attempt to extract polyphonically, default is 1.
+			</description>
+		</attribute>
+
+		<attribute name="numpeakstofind" get="1" set="1" type="int" size="1">
+			<digest>
+				Number of peaks to find (1-100), default is 20.
+			</digest>
+			<description>
+				Number of peaks to find (1-100), default is 20.
+			</description>
+		</attribute>
+
+		<attribute name="numpeakstooutput" get="1" set="1" type="int" size="1">
+			<digest>
+				Number of peaks to output (1-100), default is 0.
+			</digest>
+			<description>
+				Number of peaks to output (1-100), default is 0.
+			</description>
+		</attribute>
+
+		<attribute name="barkformat" get="1" set="1" type="symbol" size="1">
+			<digest>
+				Bark output format, <m>list</m>(default) or <m>nolist</m> (25 outlets).
+			</digest>
+			<description>
+				Bark output format, <m>list</m>(default) or <m>nolist</m>. Can only be set on initialization.<br/><br/>
+
+				Note: with the legacy <m>nolist</m> setting, 25 outlets are created for the individual Bark bins. (not recommended)
+			</description>
+		</attribute>
+
+	</attributelist>
+
+	<!--EXAMPLE-->
+	<!--SEEALSO-->
+	<seealsolist>
+		<seealso name="fzero~" />
+	</seealsolist>
+
+
+</c74object>

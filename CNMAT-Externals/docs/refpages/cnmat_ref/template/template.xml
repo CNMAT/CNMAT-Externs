@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="some name" module="CNMAT-Externals">
+
+    <digest>
+		Short description here; summarize
+    </digest>
+
+    <description>
+		Longer decription here, include some background and details as to what the object does and why it exists.
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+		Relevant discussion about the object, it's history, what is has in common with other objects, etc.
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+	<objarg name="myfloat" optional="0" type="float">
+	    <description>
+			float argument description
+	    </description>
+	</objarg>
+	<objarg name="mysymbol" optional="1" type="symbol">
+	    <description>
+			symbol argument description
+	    </description>
+	</objarg>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="my_message_with_args">
+	    <arglist>
+		<arg name="arg1name" type="int" optional="0" id="0" />
+		<arg name="arg2name" type="symbol" optional="1" id="1" />
+	    </arglist>
+	    <description>
+			desc of the messages, including bits describing which items are option, if applicable.
+	    </description>
+	</method>
+	<method name="bang">
+	    <description>
+			bang does x
+	    </description>
+	</method>
+	<method name="float">
+	    <description>
+			float does x
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+	<attribute name="min" get="1" set="1" type="float" size="1">
+	    <description>
+			minimum bound for accumulation
+	    </description>
+	</attribute>
+	<attribute name="bgcolor" get="1" set="1" type="float" size="4">
+	    <attributelist>
+	    <description>
+	    	Love the bg color.  Format is RGBA.
+	    </description>
+	</attribute>
+    </attributelist>
+
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="some object name" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+			The first inlet of bdist accepts a number of types of messages.  Refer to the list above.
+	    </description>
+	</entry>
+	<entry name ="Inlet 2 [float]">
+	    <description>
+			Set the 'a' parameter for the current distribution, recalculate, and display the result.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [list or float]">
+	    <description>
+			Outlet description
+	    </description>
+	</entry>
+	<entry name ="Outlet 2 [variable]">
+	    <description>
+			If the object receives a [dump] message, lists of size N will come out here.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+	    	Some extra text about the subject; stories and folklore
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		bdist, CNMAT, transfer function
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

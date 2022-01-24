@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="poly.bus~" module="CNMAT-Externals">
+
+    <digest>
+	Receive audio over a virtual bus connection of a named <o>poly.send~</o> object.
+    </digest>
+
+    <description>
+	poly.bus~ and <o>poly.send~</o> fix performance and delay issues that come up with having many outputs or sends come out of <o>poly~</o>.  They enable the user to freely assign a <o>poly~</o> output with a named destination.
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+	This object is meant to be used with the <o>poly.send~</o> object.  It allows the user to circumvent the issue in poly~ by which a signal is delayed by one signal vector when using <o>send~</o> and <o>receive~</o>.  It also allows for direct addressing of signals within the context of a poly~ instance to MSP networks out of said poly~ instance.
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+	<objarg name="name" optional="0" type="symbol">
+	    <description>
+		The name of the bus to receive on.  A corresponding <o>poly.send~</o> object must have the same name for this virtual connection to be made.
+	    </description>
+	</objarg>
+	<objarg name="number of channels" optional="0" type="int">
+	    <description>
+		The number of bus channels that are available to send over the virtual connection point.  The channel being sent on is designated in the <o>poly.send~</o> object.
+	    </description>
+	</objarg>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="signal">
+	    <description>
+		A signal is used to ensure order of operations in the DSP graph, rather than sending any audio.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+    </attributelist>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="poly.send~" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [signal]">
+	    <description>
+		A signal is used to ensure order of operations in the DSP graph, rather than sending any audio.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [signal]">
+	    <description>
+		The first virtual output bus in the array.
+	    </description>
+	</entry>
+	<entry name ="Outlet 2+N [signal]">
+	    <description>
+		The second (or larger) virtual output bus in the array, with N being the number of output channels.  The minimum number of output channels necessary is 1, so these outlets are optional.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		virtual bus, performance critical, addressing
+	    </description>
+	</entry>
+    </misc>
+</c74object>

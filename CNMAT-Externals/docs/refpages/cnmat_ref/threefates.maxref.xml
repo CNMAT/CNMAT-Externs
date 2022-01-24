@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="threefates" module="CNMAT-Externals">
+
+    <digest>
+    </digest>
+
+    <description>
+	Manage births and deaths of sinusoidal partial tracks, outputting control data for an oscillator bank.  Threefates was designed to sit between sdif-tuples and sinusoids~.
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+	<objarg name="max partials" optional="1" type="int">
+	    <description>
+		Maximum number of partials to manage.
+	    </description>
+	</objarg>
+	<objarg name="num params" optional="1" type="int">
+	    <description>
+		How many parameters each partial has besides its index.  This is useful for <o>sinusoids~</o> when it is in "bwe" mode.
+	    </description>
+	</objarg>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="list">
+	    <description>
+		Input is a list of [index, frequency, gain] triples.
+	    </description>
+	</method>
+	<method name="tellmeeverything">
+	    <description>
+		Print out author, copyright info, and diagnostic info about the lives and deaths of partials.
+	    </description>
+	</method>
+	<method name="version">
+	    <description>
+		Print version information to the Max window.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+    </attributelist>
+
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="SDIF-tuples" />
+	<seealso name="sinusoids~" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Send a message to the threefates object.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [list]">
+	    <description>
+		Output is a list of [frequency, gain] pairs.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+		Why you sometimes see a "0. 0.": <br/>
+		sinusoids~'s notion of a partial's identity is just its position in the [freq, amp] list. When a partial dies you still have to keep the higher-position partials in their same positions.
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		partials, death, birth
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

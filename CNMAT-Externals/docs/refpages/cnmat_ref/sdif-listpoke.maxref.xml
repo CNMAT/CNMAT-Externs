@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="SDIF-listpoke" module="CNMAT-Externals">
+
+    <digest>
+	Poke (write) data into an SDIF-buffer with Max lists
+    </digest>
+
+    <description>
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--INLETS-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+	<objarg name="buffer name" optional="0" type="float">
+	    <description>
+		The name of the SDIF-buffer.  Required because it has to be referenced by other objects in the SDIF suite.  The name of an SDIF-buffer is like the name of an MSP buffer~: it's a symbol that you assign as an argument to the SDIF-buffer object, and then other objects refer to the SDIF-buffer by its name.
+	    </description>
+	</objarg>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="errorreporting">
+	    <arglist>
+		<arg name="active" type="int" optional="0" id="0"/>
+	    </arglist>
+	    <description>
+		Turn on error reporting.  This message currently does nothing.
+	    </description>
+	</method>
+	<method name="list">
+	    <arglist>
+	    </arglist>
+	    <description>
+		Sending a raw list of numbers is equivalent to the "listpoke" message.
+	    </description>
+	</method>
+	<method name="listpoke">
+	    <arglist>
+		<arg name="list of values to write" type="list" optional="0" id="0"/>
+	    </arglist>
+	    <description>
+		A flat list is converted internally in the object.  This conversion to a matrix is one-row-at-a-time, the inverse of how SDIF-tuples works.  The number of rows and columns is determined by the contents of the SDIF buffer.  If the list [1. 2. 3. 4. 5. 6. 7. 8.] comes in and there are 4 rows with two columns, then the matrix will look like:
+		<ul>
+		    <li>[1] [2]</li>
+		    <li>[3] [4]</li>
+		    <li>[5] [6]</li>
+		    <li>[7] [8]</li>
+		</ul>
+	    </description>
+	</method>
+	<method name="matrixtype">
+	    <description>
+		Specify the 4-character matrix type for your new matrix. Issuing this message with no argument tells the object to reuse the frame type as the matrix type.<br/>
+		Some options are:
+		<ul>
+		    <li>1FQ0: Fundamental Frequency Estimates</li>
+		    <li>1STF: Discrete Short-Term Fourier Transform</li>
+		    <li>1PIC: Picked Spectral Peaks</li>
+		    <li>1TRC: Sinusoidal Tracks</li>
+		    <li>1HRM: Pseudo-harmonic Sinusoidal Tracks</li>
+		    <li>1RES: Resonances / Exponentially Decaying Sinusoids</li>
+		    <li>1TDS: Time Domain Samples</li>
+		</ul>
+		The list above describes intiial standard frame types compiled in 1999, and can be found <a href="http://cnmat.org/SDIF/FrameTypes.html">here</a>.<br/>
+		For information on more frame types, please see the main <a href="http://sdif.sourceforge.net/standard/types-main.html">SDIF types page</a>.
+	    </description>
+	</method>
+	<method name="newmatrix">
+	    <description>
+		The [newmatrix] message allows you to contruct an SDIF matrix with Max.  It takes 5 arguments.
+		<arglist>
+		    <arg name="frametime" type="symbol" optional="0"/>
+		    <arg name="matrixtype" type="symbol" optional="0"/>
+		    <arg name="number of rows" type="int" optional="0"/>
+		    <arg name="number of columns" type="int" optional="0"/>
+		    <arg name="everything else - a matrix of data, like the [listpoke] message." type="list" optional="1"/>
+		</arglist>
+	    </description>
+	</method>
+	<method name="numcolumns">
+	    <description>
+		This message can be used when creating a new matrix.<br/><br/>
+		Set number of columns for your new matrix. The number of arguments to "listpoke" divided by this number is therefore the number of rows for your new matrix.
+		<arglist>
+		    <arg name="number" type="int" optional="0"/>
+		</arglist>
+	    </description>
+	</method>
+	<method name="set">
+	    <description>
+		Change the SDIF-buffer this object writes to.
+		<arglist>
+		    <arg name="buffer name" type="symbol" optional="0"/>
+		</arglist>
+	    </description>
+	</method>
+	<method name="tellmeeverything">
+	    <description>
+		Output all information about the object's state to the Max window.
+		<arglist>
+		</arglist>
+	    </description>
+	</method>
+	<method name="time">
+	    <description>
+		Set the time for data that you'll add with the [listpoke] or [list] messages.<br/>
+		Some considerations:<br/>
+		<ul>
+		    <li>If your SDIF buffer doesn't have a frame at this time, then "listpoke" will create a new frame.</li>
+		    <li>If your SDIF buffer does have a frame at this time, but that frame doesn't contain your desired matrix type, "listpoke" will add the new matrix to the old frame.  Otherwise "listpoke" will overwrite the old matrix (and warn you that it does so).</li>
+		</ul>
+		<arglist>
+		    <arg name="seconds" type="float" optional="0"/>
+		</arglist>
+	    </description>
+	</method>
+	<method name="version">
+	    <description>
+		Print version information to the Max window.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--DISCUSSION-->
+    <discussion>
+    </discussion>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="SDIF-buffer" />
+	<seealso name="SDIF-fileinfo" />
+	<seealso name="SDIF-info" />
+	<seealso name="SDIF-ranges" />
+	<seealso name="SDIF-tuples" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Send a message to the sdif-listpoke object.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="More details">
+	    <description>
+		An SDIF stream is a matrix of data that can be queried, manipulated, and written.  The Sound Description Interchange Format (“SDIF”) offers a framework for representing high-level sound descriptions such as sum-of-sinusoids, noise bands, time-domain samples, and formants.  Many of these sound descriptions are mutable models, affording operations such as filtering, morphing, pitch shifting, and time stretching.  SDIF data consists of time-tagged frames, each containing one or more two-dimensional matrices of data such as floating-point numbers and a frame type ID indicating what kind of sound description the frame represents. For example, an SDIF frame representing additive synthesis data has a single matrix where rows represent individual sinusoids and columns represent parameters such as frequency, amplitude, and phase. A stream is a sequence of frames of the same frame type that represents a single “sonic object” evolving through time. An SDIF file may contain one stream, or multiple streams with interleaved frames. Each frame has a Stream ID, a meaningless 32-bit number that uniquely identifies the stream to which it belongs.
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		SDIF, CNMAT, list, matrix
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

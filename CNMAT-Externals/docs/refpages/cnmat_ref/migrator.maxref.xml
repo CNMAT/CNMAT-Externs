@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="migrator" module="CNMAT-Externals">
+
+    <digest>
+	Spectral/harmonic transformation, based on David Wessel's "migrate" abstraction
+    </digest>
+
+    <description>
+	Migrate from one set of frequencies and amplitudes to another probabilistically, and based on various parameters.
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+	<objarg name="standard deviation" optional="1" type="float">
+	    <description>
+		The standard deviation of the Gaussian distribution (used to choose migration values), in semitones.
+	    </description>
+	</objarg>
+	<objarg name="number of oscillators" optional="1" type="symbol">
+	    <description>
+		The number of frequency/amplitude pairs that are output.
+	    </description>
+	</objarg>
+	<objarg name="base amplitude" optional="1" type="symbol">
+	    <description>
+		The default amplitude for oscillators during the migration of frequencies.  
+	    </description>
+	</objarg>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="bang">
+	    <description>
+		Update migrator's algorithm by one tick.  If the destination frequency set (including associated amplitudes) has been reached, the output will remain more or less the same because no further migration can occur.  If this transition has not been completed, the frequency content present in the output audio stream will shift over time until the migration has completed.
+	    </description>
+	</method>
+	<method name="forcefeed">
+	    <arglist>
+		<arg name="list of frequency/amplitude pairs" type="list" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Use forcefeed to change harmony immediately.  The list that is input here is the same format as the standard list input except migration is not performed.
+	    </description>
+	</method>
+	<method name="int">
+	    <description>
+		Turn automatic updating on or off (1 or 0), which schedules updates every 25 milliseconds.  If disabled, migrator can be updated with a bang.
+	    </description>
+	</method>
+	<method name="list">
+	    <arglist>
+		<arg name="list of frequency/amplitude pairs" type="list" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		A list of frequency/amplitude pairs tells migrator what frequencies to migrate to during the updating of its algorithm.  <br/>
+		An exemplary list would be: <br/><br/>
+		[220. 1. 233.08 0.9 246.94 0.3 261.63 0.9 277.18 0.2]
+	    </description>
+	</method>
+	<method name="nOsc_smooth">
+	    <arglist>
+		<arg name="number of oscillators in output" type="list" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		When this message is used to update the number of oscillators in the migrated output, it instructs migrator to perform a smooth transition with respect to amplitudes.
+	    </description>
+	</method>
+	<method name="tellmeeverything">
+	    <description>
+		Print information about the author, copyright, update status, number of oscillators in memory, oscillator amplitude, time interval, fade, and standard deviation to the Max window.
+	    </description>
+	</method>
+	<method name="version">
+	    <description>
+		Print version information to the Max window.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+	<attribute name="fade" get="1" set="1" type="int" size="1">
+	    <description>
+		The number of updates it takes for each oscillator to fade in and out
+	    </description>
+	</attribute>
+	<attribute name="nOsc" get="1" set="1" type="int" size="1">
+	    <description>
+		Change the number of frequency/amplitude pairs that are output
+	    </description>
+	</attribute>
+	<attribute name="oscamp" get="1" set="1" type="float" size="1">
+	    <description>
+		Amplitude of all oscillators
+	    </description>
+	</attribute>
+	<attribute name="output" get="1" set="1" type="int" size="1">
+	    <description>
+		Change the output mode.  Options are:<br/>
+		<ul>
+		    <li>mode 0: concatenate output (default). </li>
+		    <li>mode 1: output each frequency/amplitude pair individually.</li>
+		</ul>
+	    </description>
+	</attribute>
+    </attributelist>
+
+
+    <!--SEEALSO-->
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Send a message to the migrator object.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [list]">
+	    <description>
+		Output a list when migrator's algorithm is active.  This output will change depending on the mode selected (see above).
+	    </description>
+	</entry>
+	<entry name ="Outlet 2 [variable]">
+	    <description>
+		The second outlet outputs the last frequency that was changed.
+	    </description>
+	</entry>
+	<entry name ="Outlet 3 [variable]">
+	    <description>
+		Index number of the partial being updated.
+	    </description>
+	</entry>
+	<entry name ="Outlet 4 [variable]">
+	    <description>
+		Send a bang when the list wraps around to the beginning.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="Keywords">
+	    <description>
+		migrator, statistics, probability, spectral, transformation, harmonics
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

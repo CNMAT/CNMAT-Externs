@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="res-transform" module="CNMAT-Externals">
+
+    <digest>
+	Transformations for Resonance Models
+    </digest>
+
+    <description>
+	res-transform stores model as list of [frequency, amplitude, decay-rate] triples, just like resonators~.  It allows for easy manipulation of resonances in its tranformations.
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+	Resonance Models are lists of (frequency, amplitude, decay rate) triples.  Bandwidth Enhanced Sinusoidal models can be transformed interpreting decay rate as "noisiness"
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+	<objarg name="list" optional="1" type="symbol">
+	    <description>
+		An optional list of frequency, gain, decay rate triples specifies the resonant model that the object adheres to.  This list can be input dynamically via the inlet.  For example, the list [540. 0.5 4. 543.5 0.4 2.] is comprised of two resonances:<br/>
+		<ol>
+		    <li>540. 0.5 4.</li>
+		    <li>543.5 0.4 2.</li>
+		</ol>
+		<br/>
+	    </description>
+	</objarg>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="attenuate">
+	    <arglist>
+		<arg name="gain in dB" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Attenuate model by some amount of gain in dB.
+	    </description>
+	</method>
+	<method name="attenuation-spread">
+	    <arglist>
+		<arg name="spread" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Alter the attenuation spread by a factor.  This message is meant to be used in conjunction with <m>cluster-size</m>.
+	    </description>
+	</method>
+	<method name="bang">
+	    <description>
+		A bang sends the previously stored resonances out the outlet.
+	    </description>
+	</method>
+	<method name="clear">
+	    <description>
+		Clear all transformations, leaving the resonance data intact.
+	    </description>
+	</method>
+	<method name="cluster-size">
+	    <arglist>
+		<arg name="size" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Define the number of elements in a cluster.  See note on clusters below.
+	    </description>
+	</method>
+	<method name="evenfrequencyscale">
+	    <arglist>
+		<arg name="scalar" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Scale the even-ordered frequencies in the model.
+	    </description>
+	</method>
+	<method name="evengainscale">
+	    <arglist>
+		<arg name="scalar" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Scale the even-ordered amplitudes in the model with a gain adjustment.
+	    </description>
+	</method>
+	<method name="formant-form">
+	    <arglist>
+		<arg name="list of formants" type="list" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Specify the model as a list of formants.
+	    </description>
+	</method>
+	<method name="frequency-add">
+	    <arglist>
+		<arg name="list of formants" type="list" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Add an offset to all frequencies in the bank of resonances.
+	    </description>
+	</method>
+	<method name="frequency-around">
+	    <arglist>
+		<arg name="frequency window" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		The total frequency space in Hz that a cluster occupies.  This message is meant to be used in conjunction with <m>cluster-size</m>.
+	    </description>
+	</method>
+	<method name="frequency-base">
+	    <arglist>
+		<arg name="frequency in Hz" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Set the pitch base of the model, in hertz.  This message is meant to be combined with the <m>midi-pitch</m> or <m>pitch</m> messages, and should be issued first.
+	    </description>
+	</method>
+	<method name="frequency-scale">
+	    <arglist>
+		<arg name="scalar" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Scale (multiply) all frequencies in the bank of resonances.
+	    </description>
+	</method>
+	<method name="frequency-spread">
+	    <arglist>
+		<arg name="spread" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Spread the frequencies in the bank of resonances so that they spectrally expand or contract.
+	    </description>
+	</method>
+	<method name="frequency-maximum">
+	    <arglist>
+		<arg name="maximum Hz" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		The maximum frequency allowable in the model.  Frequencies outside of this maximum will be removed from the output, but will remain in memory.
+	    </description>
+	</method>
+	<method name="frequency-minimum">
+	    <arglist>
+		<arg name="minimum Hz" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		The minimum frequency allowable in the model.  Frequencies outside of this minimum will be removed from the output, but will remain in memory.
+	    </description>
+	</method>
+	<method name="frequencypivot">
+	    <arglist>
+		<arg name="Hz" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+	    </description>
+	</method>
+	<method name="gain-range">
+	    <arglist>
+		<arg name="min" type="float" optional="0" id="0" />
+		<arg name="max" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		Specify a range of valid amplitudes in the model.
+	    </description>
+	</method>
+	<method name="gain-scale">
+	    <arglist>
+		<arg name="scalar" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Scale (multiply) all amplitudes in the bank of resonances.
+	    </description>
+	</method>
+	<method name="gain-scale">
+	    <arglist>
+		<arg name="scalar" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Scale (multiply) all amplitudes in the bank of resonances.
+	    </description>
+	</method>
+	<method name="list">
+	    <arglist>
+		<arg name="list of triples" type="list" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		A list of frequency, gain, decay rate triples specifies the resonant model that the object stores.  This list can be dynamically updated, which instantly updates the output.<br/><br/>
+		For example, the list [540. 0.5 4. 543.5 0.4 2.] is comprised of two resonances:<br/>
+		<ol>
+		    <li>540. 0.5 4.</li>
+		    <li>543.5 0.4 2.</li>
+		</ol>
+		<br/>
+	    </description>
+	</method>
+	<method name="midi-pitch">
+	    <arglist>
+		<arg name="midi value" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Transpose all frequencies in the model to desired midi note number, based on the <m>frequency-base</m>.
+	    </description>
+	</method>
+	<method name="more">
+	    <arglist>
+		<arg name="resonances" type="list" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Allows the user to append resonances to the model.  The format is the same as the <m>list</m> message.
+	    </description>
+	</method>
+	<method name="oddfrequencyscale">
+	    <arglist>
+		<arg name="scalar" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Scale the odd-ordered frequencies in the model.
+	    </description>
+	</method>
+	<method name="oddgainscale">
+	    <arglist>
+		<arg name="scalar" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Scale the odd-ordered amplitudes in the model with a gain adjustment.
+	    </description>
+	</method>
+	<method name="partialmaximum">
+	    <arglist>
+		<arg name="partial number" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Reduce the maximum number of partials required for output in the model to this number.  
+	    </description>
+	</method>
+	<method name="partialminimum">
+	    <arglist>
+		<arg name="partial number" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Increase the minimum number of partials required for output in the model to this number.  
+	    </description>
+	</method>
+	<method name="pitch">
+	    <arglist>
+		<arg name="frequency in Hz" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Transpose all frequencies in the model to desired pitch in Hz, based on the <m>frequency-base</m>.
+	    </description>
+	</method>
+	<method name="rate-scale">
+	    <arglist>
+		<arg name="scalar" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Scale the decay rates present for all partials in the model.
+	    </description>
+	</method>
+	<method name="rate-spread">
+	    <arglist>
+		<arg name="spread" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Alter the decay rate spread by a factor.  This message is meant to be used in conjunction with <m>cluster-size</m>.
+	    </description>
+	</method>
+	<method name="resonances">
+	    <arglist>
+		<arg name="list of frequency, amplitude, decay rate triples" type="list" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		This message is identical to the <m>list</m> message in its expected format.
+	    </description>
+	</method>
+	<method name="setoneamplitude">
+	    <arglist>
+		<arg name="partial index" type="int" optional="0" id="0" />
+		<arg name="gain" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		Set the partial given by the index to a specified gain.
+	    </description>
+	</method>
+	<method name="setonefrequency">
+	    <arglist>
+		<arg name="partial index" type="int" optional="0" id="0" />
+		<arg name="frequency in Hz" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		Set the partial given by the index to a specified frequency.
+	    </description>
+	</method>
+	<method name="setonerate">
+	    <arglist>
+		<arg name="partial index" type="int" optional="0" id="0" />
+		<arg name="decayrate" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		Set the partial given by the index to a specified decay rate.
+	    </description>
+	</method>
+	<method name="setoneresonance">
+	    <arglist>
+		<arg name="partial index" type="int" optional="0" id="0" />
+		<arg name="frequency" type="float" optional="0" id="1" />
+		<arg name="amplitude" type="float" optional="0" id="2" />
+		<arg name="decayrate" type="float" optional="0" id="3" />
+	    </arglist>
+	    <description>
+		Set a specific partial's resonance by defining its frequency, amplitude, and decay rate.
+	    </description>
+	</method>
+	<method name="setonesinusoid">
+	    <arglist>
+		<arg name="partial index" type="int" optional="0" id="0" />
+		<arg name="frequency" type="float" optional="0" id="1" />
+		<arg name="amplitude" type="float" optional="0" id="2" />
+	    </arglist>
+	    <description>
+		Set a specific partial's resonance by defining its frequency and amplitude.  This message assumes that you have already issued a <m>sinusoids</m> message.
+	    </description>
+	</method>
+	<method name="sinusoids">
+	    <arglist>
+		<arg name="list of frequency, amplitude duples" type="int" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		A list of frequency and gain duples specifies an additive sinusoidal model that the object stores.  This list can be dynamically updated, which instantly updates the output.<br/><br/>
+		For example, the list [540. 0.5 543.5 0.4] is comprised of two sinusoids:<br/>
+		<ol>
+		    <li>540. 0.5 4.</li>
+		    <li>543.5 0.4 2.</li>
+		</ol>
+		<br/>
+	    </description>
+	</method>
+	<method name="spectral-corner">
+	    <arglist>
+		<arg name="Hz" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Change the spectral corner of the model to a new frequency in Hz.  This message can be used in combination with the <m>spectral-slope</m> message.
+	    </description>
+	</method>
+	<method name="spectral-slope">
+	    <arglist>
+		<arg name="amount" type="float" optional="0" id="0" />
+	    </arglist>
+	    <description>
+		Change the spectral slope of the model.  A positive or negative value yields different results in brightness and timbre.  This message can be used in combination with <m>spectral-slope</m>.
+	    </description>
+	</method>
+	<method name="tellmeeverything">
+	    <description>
+		Print information about the status of the object to the Max window.	
+	    </description>
+	</method>
+	<method name="version">
+	    <description>
+		Print version information to the Max window.
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+    </attributelist>
+
+    <!--SEEALSO-->
+    <seealsolist>
+	<seealso name="decaying-sinusoids~" />
+	<seealso name="list-interpolate" />
+	<seealso name="resdisplay" />
+	<seealso name="resonators~" />
+	<seealso name="sin-transform" />
+    </seealsolist>
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [anything]">
+	    <description>
+		Send a model or tranformation to the res-transform object and output.
+	    </description>
+	</entry>
+	<entry name ="Inlet 2 [anything]">
+	    <description>
+		Send a model or tranformation to the res-transform object and store.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [list]">
+	    <description>
+		resonators or sinusoids list out
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="Note on clusters">
+	    <description>
+		A word on clusters:  Clusters are a set number of resonances <m>cluster-size</m> grown from each resonance in an model. Clusters are created after the basic transformations are applied.  Clusters around the harmonic partials create roughness.  Harmonics are "grown" from a single 1Hz resonance.  
+	    </description>
+	</entry>
+	<entry name ="Keywords">
+	    <description>
+		transformation, resonance, model, sinusoid
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>

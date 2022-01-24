@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="sphY" module="CNMAT-Externals">
+
+    <digest>
+    </digest>
+
+    <description>
+	sphY computes the real-valued spherical harmonics at a point (phi, theta) up to order n.
+    </description>
+
+    <!--METADATA-->
+    <metadatalist>
+	<metadata name="author">CNMAT</metadata>
+	<metadata name="tag">CNMAT-Externals</metadata>
+	<metadata name="tag">CNMAT</metadata>
+    </metadatalist>
+
+    <!--DISCUSSION-->
+    <discussion>
+	Copyright 2006-2008 Franz Zotter<br/>
+	Ported to MaxMSP by Andy Schmeder
+    </discussion>
+
+    <!--INLETS-->
+    <!--do not use-->
+    <inletlist>
+    </inletlist>
+
+    <!--OUTLETS-->
+    <!--do not use-->
+    <outletlist>
+    </outletlist>
+
+    <!--ARGUMENTS-->
+    <objarglist>
+    </objarglist>
+
+    <!--MESSAGES-->
+    <methodlist>
+	<method name="eval">
+	    <arglist>
+		<arg name="theta (declination)" type="float" optional="0" id="0" />
+		<arg name="phi (azimuth)" type="float" optional="0" id="1" />
+	    </arglist>
+	    <description>
+		Evaluate the spherical harmonics at a given point and output.
+	    </description>
+	</method>
+	<method name="index">
+	    <description>
+		Output the [order, degree] index pairs
+	    </description>
+	</method>
+    </methodlist>
+
+    <!--ATTRIBUTES-->
+    <attributelist>
+	<attribute name="order" get="1" set="1" type="float" size="1">
+	    <description>
+		Specify the order of spherical harmonics to use when calculating.<br/>
+		<ul>
+		    <li>[1] outputs: monopole, dipole (x), dipole (y), dipole (z)</li>
+		    <li>[2] outputs: monopole, dipoles (x, y, z), quadrapoles (...)</li>
+		</ul>
+	    </description>
+	</attribute>
+    </attributelist>
+
+    <!--SEEALSO-->
+
+    <misc name = "Input">
+	<entry name ="Inlet 1 [index, eval]">
+	    <description>
+		Send either <m>index</m> or <m>eval</m> in for output.
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Output">
+	<entry name ="Outlet 1 [list or float]">
+	    <description>
+		One of two messages come out of this outlet:
+		<ul>
+		    <li>"r", [list].  order 1 outputs: monopole, dipole (x), dipole (y), dipole (z).  order 2 outputs: monopole, dipoles (x, y, z), quadrapoles (...)</li>
+		    <li>"index", [list]: degree index pairs.</li>
+		</ul>
+	    </description>
+	</entry>
+    </misc>
+
+    <misc name = "Discussion">
+	<entry name ="Keywords">
+	    <description>
+		spherical harmonics, dipoles, monopoles, quadrapole
+	    </description>
+	</entry>
+    </misc>
+
+</c74object>
