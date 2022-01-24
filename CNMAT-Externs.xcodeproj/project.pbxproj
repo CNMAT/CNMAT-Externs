@@ -13,14 +13,16 @@
 			buildPhases = (
 			);
 			dependencies = (
+				A8FD9BF5279E727700DE60AB /* PBXTargetDependency */,
+				A8FD9BF3279E726A00DE60AB /* PBXTargetDependency */,
+				95594933274B6B690059B956 /* PBXTargetDependency */,
+				95594935274B6BFB0059B956 /* PBXTargetDependency */,
 				A8FD9BEF279B713300DE60AB /* PBXTargetDependency */,
 				A8FD9BE9279B4AA000DE60AB /* PBXTargetDependency */,
 				A88E1DFA278DF5B700DFC848 /* PBXTargetDependency */,
 				52E957371B406BE700D1D7E2 /* PBXTargetDependency */,
 				9578D97E275681C000913739 /* PBXTargetDependency */,
 				52E44BAA15F28BD300C91B67 /* PBXTargetDependency */,
-				95594935274B6BFB0059B956 /* PBXTargetDependency */,
-				95594933274B6B690059B956 /* PBXTargetDependency */,
 				5219622716E6C70700EA7DDF /* PBXTargetDependency */,
 				5219622916E6C70700EA7DDF /* PBXTargetDependency */,
 				5219622B16E6C70700EA7DDF /* PBXTargetDependency */,
@@ -956,6 +958,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 52E447B015F1891100C91B67;
 			remoteInfo = bench;
+		};
+		A8FD9BF2279E726A00DE60AB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52E447A215F1890E00C91B67;
+			remoteInfo = bdist;
+		};
+		A8FD9BF4279E727700DE60AB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52F10AF215F13D86008FC371;
+			remoteInfo = bessel;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -5480,6 +5496,16 @@
 			target = 52E447B015F1891100C91B67 /* bench */;
 			targetProxy = A8FD9BEE279B713300DE60AB /* PBXContainerItemProxy */;
 		};
+		A8FD9BF3279E726A00DE60AB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52E447A215F1890E00C91B67 /* bdist */;
+			targetProxy = A8FD9BF2279E726A00DE60AB /* PBXContainerItemProxy */;
+		};
+		A8FD9BF5279E727700DE60AB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52F10AF215F13D86008FC371 /* bessel */;
+			targetProxy = A8FD9BF4279E727700DE60AB /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
@@ -7227,6 +7253,7 @@
 		52E44A4115F2882100C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7250,6 +7277,7 @@
 		52E44A4215F2882100C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -8155,7 +8183,7 @@
 		52F10AAE15F07157008FC371 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -8249,7 +8277,7 @@
 		52F10AAF15F07157008FC371 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
