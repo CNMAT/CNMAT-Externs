@@ -13,6 +13,7 @@
 			buildPhases = (
 			);
 			dependencies = (
+				A886559827A1C3D7009D2C2A /* PBXTargetDependency */,
 				A8FD9BF5279E727700DE60AB /* PBXTargetDependency */,
 				A8FD9BF3279E726A00DE60AB /* PBXTargetDependency */,
 				95594933274B6B690059B956 /* PBXTargetDependency */,
@@ -75,6 +76,7 @@
 			buildPhases = (
 			);
 			dependencies = (
+				A886559627A1C2E6009D2C2A /* PBXTargetDependency */,
 				A4BA997824E45188006FD002 /* PBXTargetDependency */,
 				A4BA998424E45188006FD002 /* PBXTargetDependency */,
 				A4BA99B424E45188006FD002 /* PBXTargetDependency */,
@@ -937,6 +939,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 52F10AF215F13D86008FC371;
 			remoteInfo = bessel;
+		};
+		A886559527A1C2E6009D2C2A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52E44A3515F2882100C91B67;
+			remoteInfo = randdist;
+		};
+		A886559727A1C3D7009D2C2A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52E44A3515F2882100C91B67;
+			remoteInfo = randdist;
 		};
 		A88E1DF9278DF5B700DFC848 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2555,8 +2571,8 @@
 			children = (
 				52E4495815F2879500C91B67 /* dirichlet_v_gelman.maxpat */,
 				52E4495915F2879500C91B67 /* Info.plist */,
-				52E4495A15F2879500C91B67 /* libranddist.c */,
 				52E4495B15F2879500C91B67 /* libranddist.h */,
+				52E4495A15F2879500C91B67 /* libranddist.c */,
 				52E4495C15F2879500C91B67 /* randdist.c */,
 				A4ADD8321FCFDF6500A59C42 /* randdist.maxhelp */,
 			);
@@ -5481,6 +5497,16 @@
 			target = 52F10AF215F13D86008FC371 /* bessel */;
 			targetProxy = A4BA99C524E45188006FD002 /* PBXContainerItemProxy */;
 		};
+		A886559627A1C2E6009D2C2A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52E44A3515F2882100C91B67 /* randdist */;
+			targetProxy = A886559527A1C2E6009D2C2A /* PBXContainerItemProxy */;
+		};
+		A886559827A1C3D7009D2C2A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52E44A3515F2882100C91B67 /* randdist */;
+			targetProxy = A886559727A1C3D7009D2C2A /* PBXContainerItemProxy */;
+		};
 		A88E1DFA278DF5B700DFC848 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 52E447BE15F1891500C91B67 /* bench~ */;
@@ -7254,6 +7280,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7265,7 +7292,9 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = "@../max-sdk-base/c74support/max-includes/c74_linker_flags.txt";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cnmat.randdist;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -7278,6 +7307,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7290,6 +7320,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				OTHER_CFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = "@../max-sdk-base/c74support/max-includes/c74_linker_flags.txt";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cnmat.randdist;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8183,7 +8214,7 @@
 		52F10AAE15F07157008FC371 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -8219,7 +8250,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_NO_COMMON_BLOCKS = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = "../max-sdk-base/c74support/max-includes/macho-prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -8277,7 +8308,7 @@
 		52F10AAF15F07157008FC371 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -8313,7 +8344,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_NO_COMMON_BLOCKS = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREFIX_HEADER = "../max-sdk-base/c74support/max-includes/macho-prefix.pch";
 				GCC_UNROLL_LOOPS = YES;
@@ -8494,6 +8525,7 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "CNMAT-Externs copy-Info.plist";
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "@../max-sdk-base/c74support/max-includes/c74_linker_flags.txt";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "x86_64 arm64";
 			};
@@ -8506,6 +8538,7 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "CNMAT-Externs copy-Info.plist";
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "@../max-sdk-base/c74support/max-includes/c74_linker_flags.txt";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "x86_64 arm64";
 			};
