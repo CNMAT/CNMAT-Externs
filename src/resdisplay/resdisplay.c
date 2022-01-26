@@ -332,7 +332,7 @@ void rd_mousedrag(t_rd *x, t_object *patcherview, t_pt pt, long modifiers){
 				
 	}else{
 		//if its in between both, move the closest one. 
-		if (abs(f - x->selection.min) < abs(f - x->selection.max)){
+		if (fabs(f - x->selection.min) < fabs(f - x->selection.max)){
 			x->selection.min = f;
 		} else {
 			x->selection.max = f;
