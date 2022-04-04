@@ -8476,6 +8476,7 @@
 				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "CNMAT-Externs copy-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "@../max-sdk-base/c74support/max-includes/c74_linker_flags.txt";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8489,6 +8490,7 @@
 				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "CNMAT-Externs copy-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "@../max-sdk-base/c74support/max-includes/c74_linker_flags.txt";
 				PRODUCT_NAME = "$(TARGET_NAME)";
