@@ -100,7 +100,7 @@ shift-drag while dragging a point should snap it to the y-value of the point wit
 #endif
 
 #ifdef WIN
-#include "../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"
+#include "../../../max-sdk-base/c74support/max-includes/common/commonsyms.c"
 #endif
 
 #define MAX_NUM_FUNCTIONS 64
@@ -1078,7 +1078,7 @@ t_int *bpf_perform(t_int *w){
 				memset(x->ptrs[(i * 3) + 2], 0, n * sizeof(t_float));
 			}
 			t_symbol *name;
-			if(name = bpf_mangleName(x->name, 0, i)){
+            if((name = bpf_mangleName(x->name, 0, i))){
 				name->s_thing = (t_object *)(x->ptrs[(i * 3)]);
 			}
 			if(name = bpf_mangleName(x->name, 1, i)){

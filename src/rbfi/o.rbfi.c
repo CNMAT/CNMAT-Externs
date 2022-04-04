@@ -76,7 +76,7 @@
 #include "omax_util.h"
 
 #ifdef WIN32
-#include "../../../SDK/MaxSDK-5/c74support/max-includes/common/commonsyms.c"
+#include "../../../max-sdk-base/c74support/max-includes/common/commonsyms.c"
 #else
 #include <mach/mach_time.h>
 #endif

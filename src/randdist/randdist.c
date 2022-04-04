@@ -453,7 +453,7 @@ void rdist_setstate(t_rdist *x, t_object *attr, int argc, t_atom *argv){
 void rdist_rememberstate(t_rdist *x){
 	char buf[L_tmpnam];
 	int n = 0;
-	if(tmpnam(buf)){
+	if(mkstemp(buf)){
 		FILE *fp = fopen(buf, "w");
 		gsl_rng_fwrite(fp, x->rng_last);
 		fclose(fp);
@@ -477,7 +477,7 @@ void rdist_rememberstate(t_rdist *x){
 void rdist_resetstate(t_rdist *x){
 	if(x->statelen){
 		char buf[L_tmpnam];
-		if(tmpnam(buf)){
+		if(mkstemp(buf)){
 			FILE *fp = fopen(buf, "w");
 			fwrite(x->state, 1, x->statelen, fp);
 			fclose(fp);

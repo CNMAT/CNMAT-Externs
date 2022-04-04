@@ -60,7 +60,7 @@ VERSION 1.2.1: Fixed a bug where in the computation of the denominator in rho_pr
 
 #define VERY_SMALL 0.00000000001
 
-#include "SDIF-buffer.h"  //  includes sdif.h, sdif-mem.h, sdif-buf.h
+#include "../SDIF-buffer/SDIF-buffer.h"  //  includes sdif.h, sdif-mem.h, sdif-buf.h
 #include "sdif-util.h"
 
 typedef struct _rho
@@ -132,7 +132,7 @@ int main(void){
 	
 	SDIFresult r;
 	
-	if (r = SDIF_Init()) {
+    if ((r = SDIF_Init())) {
 		ouchstring("%s: Couldn't initialize SDIF library! %s", 
 		           NAME,
 		           SDIF_GetErrorString(r));
@@ -140,14 +140,14 @@ int main(void){
 		return 0;
 	}
 	
-	if (r = SDIFmem_Init(my_getbytes, my_freebytes)) {
+    if ((r = SDIFmem_Init(my_getbytes, my_freebytes))) {
 		post("¥ %s: Couldn't initialize SDIF memory utilities! %s", 
 		     NAME,
 		     SDIF_GetErrorString(r));
     return 1;
 	}
 		
-	if (r = SDIFbuf_Init()) {
+    if ((r = SDIFbuf_Init())) {
 		post("¥ %s: Couldn't initialize SDIF buffer utilities! %s", 
 		     NAME,
 		     SDIF_GetErrorString(r));

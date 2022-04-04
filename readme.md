@@ -28,12 +28,12 @@ Download FFTW [here](http://fftw.org/download.html), and extract the package int
 
 Then, cd into the fftw directory.  Since we are still supporting i386 processors, you need to configure `fftw` to build a universal version. To configure for i386 and x86_64:
 
-1. `./configure CC="gcc -arch i386 -arch x86_64" CXX="g++ -arch i386 -arch x86_64" CPP="gcc -E" CXXCPP="g++ -E"`
+1. `./configure CC="gcc -arch arm64 -arch x86_64" CXX="g++ -arch arm64 -arch x86_64" CPP="gcc -E" CXXCPP="g++ -E"`
 
 2. Then `sudo make` to compile the `libfftw3.a` in the `../fftw/.libs` directory.  Note that you don't invoke `make install` as you need the xcode project to refer to this specific location.
 This is the (default) double precision version. However, there are some files that refer to the floating point version. To add the floating point version you need to repeat the above steps, but with the single precision flag `--enable-single`:
 
-3. `./configure CC="gcc -arch i386 -arch x86_64" CXX="g++ -arch i386 -arch x86_64" CPP="gcc -E" CXXCPP="g++ -E" --enable-single`
+3. `./configure CC="gcc -arch arm64 -arch x86_64" CXX="g++ -arch arm64 -arch x86_64" CPP="gcc -E" CXXCPP="g++ -E" --enable-single`
 
 4. Then `sudo make` to compile the `libfftw3f.a` in the `../fftw/.libs` directory.
 
@@ -47,7 +47,7 @@ Download GSL [here](http://gnu.mirror.constant.com/gsl/).  Find the package you'
 
 Configuring GSL is the same situation as FFTW:  configure for both i386 and x86_64:
 
-1. `./configure CC="gcc -arch i386 -arch x86_64" CPP="gcc -E" CXXCPP="g++ -E"`
+1. `./configure CC="gcc -arch arm64 -arch x86_64" CPP="gcc -E" CXXCPP="g++ -E"`
 
 2. `sudo make`
 
@@ -199,6 +199,7 @@ git clone https://github.com/CNMAT/libomax
 git clone https://github.com/CNMAT/CNMAT-SDIF
 git clone https://github.com/CNMAT/CNMAT-OSC
 git clone https://github.com/Cycling74/max-sdk
+git clone https://github.com/pure-data/pure-data
 ```
 
 ### 5. libo and libomax

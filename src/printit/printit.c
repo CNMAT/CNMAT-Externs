@@ -63,7 +63,7 @@ VERSION 0.4.1: Added min and max OSC Packet sizes as a heuristic protection agai
 
 typedef struct printit
 {
-	Object o_ob;				// required header
+	t_object o_ob;				// required header
 	t_symbol *my_name;
   int min_OSCPacket_size, max_OSCPacket_size;
 } printit;
@@ -162,6 +162,7 @@ void printit_assist (printit *x, void *box, long msg, long arg, char *dstString)
 void printit_bang(printit *x)
 {
 	object_post((t_object *)x, "%s: received a bang.", x->my_name->s_name);
+    
 }
 
 void printit_float(printit *x, double d)

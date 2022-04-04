@@ -18,8 +18,8 @@
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		1257EEB60AE6A0C1007E4472 /* timewarp~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "timewarp~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		522DBB452209E0FD00C9A8BE /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../../../max-sdk/source/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = "<group>"; };
-		52C04ED11DE47BDB00008763 /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../../../../max6-sdk/c74support/max-includes/common/commonsyms.c"; sourceTree = "<group>"; };
+		522DBB452209E0FD00C9A8BE /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../../../max-sdk-base/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = "<group>"; };
+		52C04ED11DE47BDB00008763 /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../../../../max-sdk-base/c74support/max-includes/common/commonsyms.c"; sourceTree = "<group>"; };
 		52C04ED71DE47D6A00008763 /* libomax.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libomax.a; path = ../../../../libomax/libomax.a; sourceTree = "<group>"; };
 		52C04ED91DE47D7600008763 /* libo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libo.a; path = ../../../../libo/libo.a; sourceTree = "<group>"; };
 		52E5F14512BAD25F009F7160 /* timewarp~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "timewarp~.cpp"; sourceTree = "<group>"; };
@@ -129,13 +129,14 @@
 			};
 			buildConfigurationList = 0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "timewarp~" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 1;
 			knownRegions = (
-				English,
 				Japanese,
 				French,
 				German,
+				en,
+				Base,
 			);
 			mainGroup = 089C166AFE841209C02AAC07 /* maximum */;
 			projectDirPath = "";
@@ -182,22 +183,23 @@
 		0FF6670C096B494E00E9E0B4 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				C74SUPPORT = "$(SRCROOT)/../../../../max-sdk/source/c74support";
+				ARCHS = "$(ARCHS_STANDARD)";
+				C74SUPPORT = "$(SRCROOT)/../../../../max-sdk-base/c74support";
 				C74_SYM_LINKER_FLAGS = "@$(C74SUPPORT)/max-includes/c74_linker_flags.txt";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
 				FRAMEWORK_SEARCH_PATHS = (
-					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/max-includes\"",
-					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../../../../max-sdk-base/c74support/max-includes\"",
+					"\"$(SRCROOT)/../../../../max-sdk-base/c74support/msp-includes\"",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_FAST_MATH = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_NO_COMMON_BLOCKS = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(C74SUPPORT)/max-includes/macho-prefix.pch";
@@ -213,20 +215,20 @@
 					"\"$(SRCROOT)/../../../../libomax\"",
 					"\"$(SRCROOT)/../../../include\"",
 					"\"$(SRCROOT)/../../../utility-library/version\"",
-					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/max-includes\"",
-					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/msp-includes\"",
-					"\"$(SRCROOT)/../../../../../../../Downloads/boost_1_69_0\"",
+					"\"$(SRCROOT)/../../../../max-sdk-base/c74support/max-includes\"",
+					"\"$(SRCROOT)/../../../../max-sdk-base/c74support/msp-includes\"",
+					/usr/local/include,
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = ../../externals;
 				LIBRARY_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../../../../libo\"",
 					"\"$(SRCROOT)/../../../../libomax\"",
-					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/max-includes\"",
-					"\"$(SRCROOT)/../../../../max-sdk/source/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../../../../max-sdk-base/c74support/max-includes\"",
+					"\"$(SRCROOT)/../../../../max-sdk-base/c74support/msp-includes\"",
 				);
 				LIBRARY_STYLE = Bundle;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-lmx",
@@ -239,7 +241,7 @@
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
 				USER_HEADER_SEARCH_PATHS = "";
-				VALID_ARCHS = x86_64;
+				VALID_ARCHS = "x86_64 arm64";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -253,14 +255,16 @@
 		0FF66710096B494E00E9E0B4 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				FRAMEWORK_SEARCH_PATHS = (
-					"\"$(SRCROOT)/../../../../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../../../../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../../../../max-sdk-base/c74support/max-includes\"",
+					"\"$(SRCROOT)/../../../../max-sdk-base/c74support/msp-includes\"",
 				);
 				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/../../../../max6-sdk/c74support/max-includes\"",
-					"\"$(SRCROOT)/../../../../max6-sdk/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../../../../max-sdk-base/c74support/max-includes\"",
+					"\"$(SRCROOT)/../../../../max-sdk-base/c74support/msp-includes\"",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				SDKROOT = macosx;
 			};
 			name = Deployment;

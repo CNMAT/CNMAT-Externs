@@ -13,8 +13,14 @@
 			buildPhases = (
 			);
 			dependencies = (
-				52E957391B40786100D1D7E2 /* PBXTargetDependency */,
+				95594933274B6B690059B956 /* PBXTargetDependency */,
+				95594935274B6BFB0059B956 /* PBXTargetDependency */,
+				A8FD9BEF279B713300DE60AB /* PBXTargetDependency */,
+				A8FD9BE9279B4AA000DE60AB /* PBXTargetDependency */,
+				A88E1DFA278DF5B700DFC848 /* PBXTargetDependency */,
 				52E957371B406BE700D1D7E2 /* PBXTargetDependency */,
+				9578D97E275681C000913739 /* PBXTargetDependency */,
+				52E44BAA15F28BD300C91B67 /* PBXTargetDependency */,
 				5219622716E6C70700EA7DDF /* PBXTargetDependency */,
 				5219622916E6C70700EA7DDF /* PBXTargetDependency */,
 				5219622B16E6C70700EA7DDF /* PBXTargetDependency */,
@@ -23,7 +29,6 @@
 				52E44BA215F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BA415F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BA815F28BD300C91B67 /* PBXTargetDependency */,
-				52E44BAA15F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BB015F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BB215F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BB415F28BD300C91B67 /* PBXTargetDependency */,
@@ -46,7 +51,6 @@
 				52E4491415F1EA8000C91B67 /* PBXTargetDependency */,
 				52E4491615F1EA8000C91B67 /* PBXTargetDependency */,
 				52E447EF15F1897C00C91B67 /* PBXTargetDependency */,
-				52E447F515F1897C00C91B67 /* PBXTargetDependency */,
 				52E447F915F1897C00C91B67 /* PBXTargetDependency */,
 				52F10AE115F072C6008FC371 /* PBXTargetDependency */,
 				52E44BB815F28BD300C91B67 /* PBXTargetDependency */,
@@ -55,7 +59,6 @@
 				52E44BBE15F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BC015F28BD300C91B67 /* PBXTargetDependency */,
 				52E44BC215F28BD300C91B67 /* PBXTargetDependency */,
-				52E44BAC15F28BD300C91B67 /* PBXTargetDependency */,
 				5219622D16E6C70700EA7DDF /* PBXTargetDependency */,
 				5219622516E6C70700EA7DDF /* PBXTargetDependency */,
 				52E44B9E15F28BD300C91B67 /* PBXTargetDependency */,
@@ -70,9 +73,9 @@
 			buildPhases = (
 			);
 			dependencies = (
+				A886559627A1C2E6009D2C2A /* PBXTargetDependency */,
 				A4BA997824E45188006FD002 /* PBXTargetDependency */,
 				A4BA998424E45188006FD002 /* PBXTargetDependency */,
-				A4BA998E24E45188006FD002 /* PBXTargetDependency */,
 				A4BA99B424E45188006FD002 /* PBXTargetDependency */,
 				A4BA99BE24E45188006FD002 /* PBXTargetDependency */,
 				A4BA99C424E45188006FD002 /* PBXTargetDependency */,
@@ -101,7 +104,6 @@
 		118DF69919D2165C00AD8C6C /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
 		118DF69A19D2165C00AD8C6C /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
 		118DF6A919D216CE00AD8C6C /* firbank~.16band-512pt.wav in Resources */ = {isa = PBXBuildFile; fileRef = 118DF6A219D216CE00AD8C6C /* firbank~.16band-512pt.wav */; };
-		118DF6AA19D216CE00AD8C6C /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 118DF6A319D216CE00AD8C6C /* Info.plist */; };
 		118DF6AB19D216CE00AD8C6C /* partconv~-objinfo.txt in Resources */ = {isa = PBXBuildFile; fileRef = 118DF6A419D216CE00AD8C6C /* partconv~-objinfo.txt */; };
 		118DF6AC19D216CE00AD8C6C /* partconv~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 118DF6A519D216CE00AD8C6C /* partconv~.cpp */; };
 		118DF6AD19D216CE00AD8C6C /* partconv~.help.maxpat in Resources */ = {isa = PBXBuildFile; fileRef = 118DF6A619D216CE00AD8C6C /* partconv~.help.maxpat */; };
@@ -568,7 +570,6 @@
 		A4E832EC19E8642800C55B20 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
 		A4E832ED19E8642800C55B20 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
 		A4E832F719E8650200C55B20 /* cambio~.c in Sources */ = {isa = PBXBuildFile; fileRef = A4E832F419E8650200C55B20 /* cambio~.c */; };
-		A4E832F919E8650200C55B20 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A4E832F619E8650200C55B20 /* Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -627,13 +628,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 52E4476715F1889300C91B67;
 			remoteInfo = "accumulate~";
-		};
-		52E447F415F1897C00C91B67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 52E447B015F1891100C91B67;
-			remoteInfo = bench;
 		};
 		52E447F815F1897C00C91B67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -732,13 +726,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 52E44A1715F2881400C91B67;
 			remoteInfo = "poly.send~";
-		};
-		52E44BAB15F28BD300C91B67 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 52E44A2615F2881B00C91B67;
-			remoteInfo = printit;
 		};
 		52E44BAF15F28BD300C91B67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -887,19 +874,33 @@
 			remoteGlobalIDString = A4E832E419E8642800C55B20;
 			remoteInfo = "cambio~";
 		};
-		52E957381B40786100D1D7E2 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 52E447BE15F1891500C91B67;
-			remoteInfo = "bench~";
-		};
 		52F10AE015F072C6008FC371 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 52F10ACE15F071FA008FC371;
 			remoteInfo = "2threshattack~";
+		};
+		95594932274B6B690059B956 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52E4489E15F1E9BC00C91B67;
+			remoteInfo = "harmonics~";
+		};
+		95594934274B6BFB0059B956 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52E4488015F1E9B200C91B67;
+			remoteInfo = "firbank~";
+		};
+		9578D97D275681C000913739 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52E44A2615F2881B00C91B67;
+			remoteInfo = printit;
 		};
 		A4BA997924E45188006FD002 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -914,13 +915,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 52E4488015F1E9B200C91B67;
 			remoteInfo = "firbank~";
-		};
-		A4BA998F24E45188006FD002 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 52E44A3515F2882100C91B67;
-			remoteInfo = randdist;
 		};
 		A4BA99B524E45188006FD002 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -942,6 +936,34 @@
 			proxyType = 1;
 			remoteGlobalIDString = 52F10AF215F13D86008FC371;
 			remoteInfo = bessel;
+		};
+		A886559527A1C2E6009D2C2A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52E44A3515F2882100C91B67;
+			remoteInfo = randdist;
+		};
+		A88E1DF9278DF5B700DFC848 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52E447BE15F1891500C91B67;
+			remoteInfo = "bench~";
+		};
+		A8FD9BE8279B4AA000DE60AB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52E4479415F1890800C91B67;
+			remoteInfo = "analyzer~";
+		};
+		A8FD9BEE279B713300DE60AB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 52E447B015F1891100C91B67;
+			remoteInfo = bench;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -1223,7 +1245,7 @@
 		52E44B5115F2888700C91B67 /* vsnapshot~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vsnapshot~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E44B6015F2888E00C91B67 /* waveguide~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "waveguide~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E44B6F15F2889400C91B67 /* xydisplay.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = xydisplay.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
-		52E44C7C15F4835400C91B67 /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../max-sdk/source/c74support/max-includes/common/commonsyms.c"; sourceTree = "<group>"; };
+		52E44C7C15F4835400C91B67 /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../max-sdk-base/c74support/max-includes/common/commonsyms.c"; sourceTree = "<group>"; };
 		52F10AA515F07157008FC371 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		52F10AC815F071DE008FC371 /* 2threshattack~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "2threshattack~.c"; sourceTree = "<group>"; };
 		52F10ACA15F071DE008FC371 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1291,6 +1313,7 @@
 		A4ADD8491FCFE07C00A59C42 /* xydisplay.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = xydisplay.maxhelp; path = help/xydisplay.maxhelp; sourceTree = SOURCE_ROOT; };
 		A4E832F419E8650200C55B20 /* cambio~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "cambio~.c"; sourceTree = "<group>"; };
 		A4E832F619E8650200C55B20 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A810DCC72787727C00090EB4 /* current_version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = current_version.h; path = include/current_version.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2524,8 +2547,8 @@
 			children = (
 				52E4495815F2879500C91B67 /* dirichlet_v_gelman.maxpat */,
 				52E4495915F2879500C91B67 /* Info.plist */,
-				52E4495A15F2879500C91B67 /* libranddist.c */,
 				52E4495B15F2879500C91B67 /* libranddist.h */,
+				52E4495A15F2879500C91B67 /* libranddist.c */,
 				52E4495C15F2879500C91B67 /* randdist.c */,
 				A4ADD8321FCFDF6500A59C42 /* randdist.maxhelp */,
 			);
@@ -2798,6 +2821,7 @@
 		52F10A9715F07157008FC371 = {
 			isa = PBXGroup;
 			children = (
+				A810DCC72787727C00090EB4 /* current_version.h */,
 				52E44C7C15F4835400C91B67 /* commonsyms.c */,
 				52F10AC715F071DE008FC371 /* 2threshattack~ */,
 				52E4476215F1888200C91B67 /* accumulate~ */,
@@ -4036,16 +4060,16 @@
 		52F10A9915F07157008FC371 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 1320;
 				ORGANIZATIONNAME = CNMAT;
 			};
 			buildConfigurationList = 52F10A9C15F07157008FC371 /* Build configuration list for PBXProject "CNMAT-Externs" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
+				Base,
 			);
 			mainGroup = 52F10A9715F07157008FC371;
 			productRefGroup = 52F10AA315F07157008FC371 /* Products */;
@@ -4137,7 +4161,6 @@
 				118DF6AE19D216CE00AD8C6C /* partconv~.help.pat in Resources */,
 				118DF6A919D216CE00AD8C6C /* firbank~.16band-512pt.wav in Resources */,
 				118DF6AB19D216CE00AD8C6C /* partconv~-objinfo.txt in Resources */,
-				118DF6AA19D216CE00AD8C6C /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4544,7 +4567,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A4E832F919E8650200C55B20 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5231,11 +5253,6 @@
 			target = 52E4476715F1889300C91B67 /* accumulate~ */;
 			targetProxy = 52E447EE15F1897C00C91B67 /* PBXContainerItemProxy */;
 		};
-		52E447F515F1897C00C91B67 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 52E447B015F1891100C91B67 /* bench */;
-			targetProxy = 52E447F415F1897C00C91B67 /* PBXContainerItemProxy */;
-		};
 		52E447F915F1897C00C91B67 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 52E447CC15F1891800C91B67 /* bpf */;
@@ -5305,11 +5322,6 @@
 			isa = PBXTargetDependency;
 			target = 52E44A1715F2881400C91B67 /* poly.send~ */;
 			targetProxy = 52E44BA915F28BD300C91B67 /* PBXContainerItemProxy */;
-		};
-		52E44BAC15F28BD300C91B67 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 52E44A2615F2881B00C91B67 /* printit */;
-			targetProxy = 52E44BAB15F28BD300C91B67 /* PBXContainerItemProxy */;
 		};
 		52E44BB015F28BD300C91B67 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5416,15 +5428,25 @@
 			target = A4E832E419E8642800C55B20 /* cambio~ */;
 			targetProxy = 52E957361B406BE700D1D7E2 /* PBXContainerItemProxy */;
 		};
-		52E957391B40786100D1D7E2 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 52E447BE15F1891500C91B67 /* bench~ */;
-			targetProxy = 52E957381B40786100D1D7E2 /* PBXContainerItemProxy */;
-		};
 		52F10AE115F072C6008FC371 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 52F10ACE15F071FA008FC371 /* 2threshattack~ */;
 			targetProxy = 52F10AE015F072C6008FC371 /* PBXContainerItemProxy */;
+		};
+		95594933274B6B690059B956 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52E4489E15F1E9BC00C91B67 /* harmonics~ */;
+			targetProxy = 95594932274B6B690059B956 /* PBXContainerItemProxy */;
+		};
+		95594935274B6BFB0059B956 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52E4488015F1E9B200C91B67 /* firbank~ */;
+			targetProxy = 95594934274B6BFB0059B956 /* PBXContainerItemProxy */;
+		};
+		9578D97E275681C000913739 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52E44A2615F2881B00C91B67 /* printit */;
+			targetProxy = 9578D97D275681C000913739 /* PBXContainerItemProxy */;
 		};
 		A4BA997824E45188006FD002 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5435,11 +5457,6 @@
 			isa = PBXTargetDependency;
 			target = 52E4488015F1E9B200C91B67 /* firbank~ */;
 			targetProxy = A4BA998524E45188006FD002 /* PBXContainerItemProxy */;
-		};
-		A4BA998E24E45188006FD002 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 52E44A3515F2882100C91B67 /* randdist */;
-			targetProxy = A4BA998F24E45188006FD002 /* PBXContainerItemProxy */;
 		};
 		A4BA99B424E45188006FD002 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5456,13 +5473,32 @@
 			target = 52F10AF215F13D86008FC371 /* bessel */;
 			targetProxy = A4BA99C524E45188006FD002 /* PBXContainerItemProxy */;
 		};
+		A886559627A1C2E6009D2C2A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52E44A3515F2882100C91B67 /* randdist */;
+			targetProxy = A886559527A1C2E6009D2C2A /* PBXContainerItemProxy */;
+		};
+		A88E1DFA278DF5B700DFC848 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52E447BE15F1891500C91B67 /* bench~ */;
+			targetProxy = A88E1DF9278DF5B700DFC848 /* PBXContainerItemProxy */;
+		};
+		A8FD9BE9279B4AA000DE60AB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52E4479415F1890800C91B67 /* analyzer~ */;
+			targetProxy = A8FD9BE8279B4AA000DE60AB /* PBXContainerItemProxy */;
+		};
+		A8FD9BEF279B713300DE60AB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 52E447B015F1891100C91B67 /* bench */;
+			targetProxy = A8FD9BEE279B713300DE60AB /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		116F876D1F9A5B5A0062EE91 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5483,7 +5519,6 @@
 		116F876E1F9A5B5A0062EE91 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5504,7 +5539,6 @@
 		118DF69D19D2165C00AD8C6C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5520,8 +5554,9 @@
 					"$(inherited)",
 					"-DNO_TRANSLATION_SUPPORT",
 				);
-				OTHER_LDFLAGS = "@../max-sdk/source/c74support/max-includes/c74_linker_flags.txt";
+				OTHER_LDFLAGS = "@../max-sdk-base/c74support/max-includes/c74_linker_flags.txt";
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.partconv~";
 				PRODUCT_NAME = "partconv~";
 				SDKROOT = "";
 				VALID_ARCHS = "$(inherited)";
@@ -5532,7 +5567,6 @@
 		118DF69E19D2165C00AD8C6C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5548,8 +5582,9 @@
 					"$(inherited)",
 					"-DNO_TRANSLATION_SUPPORT",
 				);
-				OTHER_LDFLAGS = "@../max-sdk/source/c74support/max-includes/c74_linker_flags.txt";
+				OTHER_LDFLAGS = "@../max-sdk-base/c74support/max-includes/c74_linker_flags.txt";
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.partconv~";
 				PRODUCT_NAME = "partconv~";
 				SDKROOT = "";
 				VALID_ARCHS = "$(inherited)";
@@ -5656,7 +5691,6 @@
 		11C1B49B18A84AA900822EFF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5677,7 +5711,6 @@
 		11C1B49C18A84AA900822EFF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5698,7 +5731,6 @@
 		521961B116E6C0ED00EA7DDF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5711,6 +5743,7 @@
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.list-accum";
 				PRODUCT_NAME = "list-accum";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -5720,7 +5753,6 @@
 		521961B216E6C0ED00EA7DDF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5733,6 +5765,7 @@
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.list-accum";
 				PRODUCT_NAME = "list-accum";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -5742,7 +5775,6 @@
 		521961C616E6C5EC00EA7DDF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5755,6 +5787,7 @@
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cnmat.OSC-route";
 				PRODUCT_NAME = "OSC-route";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -5764,7 +5797,6 @@
 		521961C716E6C5EC00EA7DDF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5777,6 +5809,7 @@
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cnmat.OSC-route";
 				PRODUCT_NAME = "OSC-route";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -5786,7 +5819,6 @@
 		521961D716E6C5F900EA7DDF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5799,6 +5831,7 @@
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = cnmat.berkeley.edu.migrator;
 				PRODUCT_NAME = migrator;
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -5808,7 +5841,6 @@
 		521961D816E6C5F900EA7DDF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5821,6 +5853,7 @@
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = cnmat.berkeley.edu.migrator;
 				PRODUCT_NAME = migrator;
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -5830,7 +5863,6 @@
 		521961E816E6C5FF00EA7DDF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5843,6 +5875,7 @@
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cnmat.berkeley.trampoline;
 				PRODUCT_NAME = trampoline;
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -5852,7 +5885,6 @@
 		521961E916E6C5FF00EA7DDF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5865,6 +5897,7 @@
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cnmat.berkeley.trampoline;
 				PRODUCT_NAME = trampoline;
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -5874,7 +5907,6 @@
 		521961F916E6C60500EA7DDF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5887,6 +5919,7 @@
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cnmat.berkeley.thread.which;
 				PRODUCT_NAME = thread.which;
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -5896,7 +5929,6 @@
 		521961FA16E6C60500EA7DDF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5909,6 +5941,7 @@
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cnmat.berkeley.thread.which;
 				PRODUCT_NAME = thread.which;
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -5918,7 +5951,6 @@
 		5219620A16E6C60D00EA7DDF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5931,6 +5963,7 @@
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.berkeley.cnmat.OpenSoundControl;
 				PRODUCT_NAME = OpenSoundControl;
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -5940,7 +5973,6 @@
 		5219620B16E6C60D00EA7DDF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5953,6 +5985,7 @@
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.berkeley.cnmat.OpenSoundControl;
 				PRODUCT_NAME = OpenSoundControl;
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -5962,7 +5995,6 @@
 		5219621B16E6C61400EA7DDF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5975,6 +6007,7 @@
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cnmat.res-transform";
 				PRODUCT_NAME = "res-transform";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -5984,7 +6017,6 @@
 		5219621C16E6C61400EA7DDF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -5997,6 +6029,7 @@
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cnmat.res-transform";
 				PRODUCT_NAME = "res-transform";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6006,10 +6039,6 @@
 		529DD9D517A2472A00E1F789 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					x86_64,
-					i386,
-				);
 				CLANG_X86_VECTOR_INSTRUCTIONS = default;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -6029,6 +6058,7 @@
 					"-DNO_TRANSLATION_SUPPORT",
 				);
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.cnmat.basicresonators~";
 				PRODUCT_NAME = "basicresonators~";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6038,10 +6068,6 @@
 		529DD9D617A2472A00E1F789 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					x86_64,
-					i386,
-				);
 				CLANG_X86_VECTOR_INSTRUCTIONS = default;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -6061,6 +6087,7 @@
 					"-DNO_TRANSLATION_SUPPORT",
 				);
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.cnmat.basicresonators~";
 				PRODUCT_NAME = "basicresonators~";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6070,7 +6097,6 @@
 		52E4477115F1889300C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6083,6 +6109,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.accumulate~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6092,7 +6119,6 @@
 		52E4477215F1889300C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6105,6 +6131,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.accumulate~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6130,8 +6157,9 @@
 					"$(inherited)",
 					"-DNO_TRANSLATION_SUPPORT",
 				);
-				OTHER_LDFLAGS = "@../max-sdk/source/c74support/max-includes/c74_linker_flags.txt";
+				OTHER_LDFLAGS = "@../max-sdk-base/c74support/max-includes/c74_linker_flags.txt";
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.analyzer~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = "";
 				VALID_ARCHS = "$(inherited)";
@@ -6158,8 +6186,9 @@
 					"$(inherited)",
 					"-DNO_TRANSLATION_SUPPORT",
 				);
-				OTHER_LDFLAGS = "@../max-sdk/source/c74support/max-includes/c74_linker_flags.txt";
+				OTHER_LDFLAGS = "@../max-sdk-base/c74support/max-includes/c74_linker_flags.txt";
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\" \"$(SRCROOT)/../libo/libo.a\"";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.analyzer~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = "";
 				VALID_ARCHS = "$(inherited)";
@@ -6170,7 +6199,6 @@
 		52E447AD15F1890E00C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_LINK_WITH_DYNAMIC_LIBRARIES = YES;
@@ -6185,6 +6213,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cnmat.berkeley.bdist;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6194,7 +6223,6 @@
 		52E447AE15F1890E00C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_LINK_WITH_DYNAMIC_LIBRARIES = YES;
@@ -6209,6 +6237,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cnmat.berkeley.bdist;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6218,7 +6247,6 @@
 		52E447BB15F1891100C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6231,6 +6259,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cnmat.berkeley.bench;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6240,7 +6269,6 @@
 		52E447BC15F1891100C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6253,6 +6281,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cnmat.berkeley.bench;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6262,7 +6291,6 @@
 		52E447C915F1891500C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6275,6 +6303,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.cnmat.berkeley.bench~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6284,7 +6313,6 @@
 		52E447CA15F1891500C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6297,6 +6325,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.cnmat.berkeley.bench~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6306,22 +6335,22 @@
 		52E447D715F1891800C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../../../Downloads/MaxSDK-6.1.0/c74support/msp-includes/x64\"",
+					"\"$(SRCROOT)/../../max-sdk-base/c74support/msp-includes/x64\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GENERATE_MASTER_OBJECT_FILE = YES;
+				GENERATE_MASTER_OBJECT_FILE = NO;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cnmat.berkeley.bpf;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6331,22 +6360,22 @@
 		52E447D815F1891800C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../../../Downloads/MaxSDK-6.1.0/c74support/msp-includes/x64\"",
+					"\"$(SRCROOT)/../../max-sdk-base/c74support/msp-includes/x64\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GENERATE_MASTER_OBJECT_FILE = YES;
+				GENERATE_MASTER_OBJECT_FILE = NO;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cnmat.berkeley.bpf;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6356,7 +6385,6 @@
 		52E447E515F1891E00C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_ALTIVEC_EXTENSIONS = Yes;
@@ -6370,6 +6398,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.cnmat.brightness~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6379,7 +6408,6 @@
 		52E447E615F1891E00C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_ALTIVEC_EXTENSIONS = Yes;
@@ -6393,6 +6421,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.cnmat.brightness~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6402,7 +6431,6 @@
 		52E4485F15F1E99000C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6415,6 +6443,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.cnmat.berkeley.cnmatrix~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6424,7 +6453,6 @@
 		52E4486015F1E99000C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6437,6 +6465,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.cnmat.berkeley.cnmatrix~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6446,7 +6475,6 @@
 		52E4486E15F1E99B00C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6459,6 +6487,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cycling74.decaying-sinusoids~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6468,7 +6497,6 @@
 		52E4486F15F1E99B00C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6481,6 +6509,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cycling74.decaying-sinusoids~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6490,7 +6519,6 @@
 		52E4487D15F1E9AD00C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6503,6 +6531,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.berkeley.cnmat.deinterleave;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6512,7 +6541,6 @@
 		52E4487E15F1E9AD00C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6525,6 +6553,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.berkeley.cnmat.deinterleave;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6534,7 +6563,6 @@
 		52E4488C15F1E9B200C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6550,6 +6578,7 @@
 				);
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\"";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.firbank~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6559,7 +6588,6 @@
 		52E4488D15F1E9B200C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6575,6 +6603,7 @@
 				);
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../fftw/.libs/libfftw3.a\" \"$(SRCROOT)/../fftw/.libs/libfftw3f.a\"";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.firbank~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6584,7 +6613,6 @@
 		52E4489B15F1E9B700C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6597,6 +6625,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cnmat.berkeley.gridpanel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6606,7 +6635,6 @@
 		52E4489C15F1E9B700C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6619,6 +6647,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cnmat.berkeley.gridpanel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6628,7 +6657,6 @@
 		52E448AA15F1E9BC00C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6641,6 +6669,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cnmat.harmonics~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6650,7 +6679,6 @@
 		52E448AB15F1E9BC00C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6663,6 +6691,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cnmat.harmonics~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6672,7 +6701,6 @@
 		52E448B915F1E9C100C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6685,6 +6713,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.berkeley.cnmat.interleave;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6694,7 +6723,6 @@
 		52E448BA15F1E9C100C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6707,6 +6735,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.berkeley.cnmat.interleave;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6716,7 +6745,6 @@
 		52E448C815F1E9C600C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6729,6 +6757,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.berkeley.cnmat.lcm;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6738,7 +6767,6 @@
 		52E448C915F1E9C600C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6751,6 +6779,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.berkeley.cnmat.lcm;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6760,7 +6789,6 @@
 		52E448D715F1E9C900C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6773,6 +6801,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.list-interpolate";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6782,7 +6811,6 @@
 		52E448D815F1E9C900C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6795,6 +6823,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.list-interpolate";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6804,7 +6833,6 @@
 		52E448F815F1E9DD00C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_ALTIVEC_EXTENSIONS = Yes;
@@ -6818,6 +6846,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.cnmat.loudness~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6827,7 +6856,6 @@
 		52E448F915F1E9DD00C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_ALTIVEC_EXTENSIONS = Yes;
@@ -6841,6 +6869,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.cnmat.loudness~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6850,7 +6879,6 @@
 		52E449C915F287ED00C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6863,6 +6891,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.OSC-schedule";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6872,7 +6901,6 @@
 		52E449CA15F287ED00C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6885,6 +6913,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.OSC-schedule";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6894,7 +6923,6 @@
 		52E449D815F287F500C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6907,6 +6935,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.OSC-timetag";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6916,7 +6945,6 @@
 		52E449D915F287F500C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6929,6 +6957,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.OSC-timetag";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6938,7 +6967,6 @@
 		52E449E715F287FB00C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6951,6 +6979,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cnmat.oscillators~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6960,7 +6989,6 @@
 		52E449E815F287FB00C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6973,6 +7001,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cnmat.oscillators~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -6982,7 +7011,6 @@
 		52E449F615F2880400C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6995,6 +7023,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.peqbank~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7004,7 +7033,6 @@
 		52E449F715F2880400C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7017,6 +7045,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.peqbank~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7026,7 +7055,6 @@
 		52E44A0515F2880900C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7039,6 +7067,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.cnmat.pitch~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7048,7 +7077,6 @@
 		52E44A0615F2880900C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7061,6 +7089,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.cnmat.pitch~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7070,7 +7099,6 @@
 		52E44A1415F2880E00C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7083,6 +7111,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.cnmat.berkeley.poly.bus~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7092,7 +7121,6 @@
 		52E44A1515F2880E00C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7105,6 +7133,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.cnmat.berkeley.poly.bus~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7114,7 +7143,6 @@
 		52E44A2315F2881400C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7127,6 +7155,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.cnmat.berkeley.poly.send~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7136,7 +7165,6 @@
 		52E44A2415F2881400C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7149,6 +7177,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.cnmat.berkeley.poly.send~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7158,11 +7187,17 @@
 		52E44A3215F2881B00C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = "";
+				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				"GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS[arch=*]" = "";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				HEADER_SEARCH_PATHS = "$(inherited)";
@@ -7171,6 +7206,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.berkeley.cnmat.printit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7180,11 +7216,12 @@
 		52E44A3315F2881B00C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				HEADER_SEARCH_PATHS = "$(inherited)";
@@ -7193,6 +7230,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.berkeley.cnmat.printit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7202,7 +7240,8 @@
 		52E44A4115F2882100C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7213,8 +7252,12 @@
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = "@../max-sdk-base/c74support/max-includes/c74_linker_flags.txt";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
+				PRODUCT_BUNDLE_IDENTIFIER = com.cnmat.randdist;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7224,7 +7267,8 @@
 		52E44A4215F2882100C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7235,8 +7279,11 @@
 				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				OTHER_CFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = "@../max-sdk-base/c74support/max-includes/c74_linker_flags.txt";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
+				PRODUCT_BUNDLE_IDENTIFIER = com.cnmat.randdist;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7246,7 +7293,6 @@
 		52E44A5015F2882500C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7259,6 +7305,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cnmat.berkeley.rbfi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7268,7 +7315,6 @@
 		52E44A5115F2882500C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7281,6 +7327,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cnmat.berkeley.rbfi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7290,7 +7337,6 @@
 		52E44A5F15F2882900C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7303,6 +7349,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cnmat.berkeley.resdisplay;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7312,7 +7359,6 @@
 		52E44A6015F2882900C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7325,6 +7371,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cnmat.berkeley.resdisplay;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7334,7 +7381,6 @@
 		52E44A6E15F2882E00C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7347,6 +7393,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.cnmat.resonators;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7356,7 +7403,6 @@
 		52E44A6F15F2882E00C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7369,6 +7415,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.cnmat.resonators;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7378,7 +7425,6 @@
 		52E44A7D15F2883500C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7391,6 +7437,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.cycling74.roughness;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7400,7 +7447,6 @@
 		52E44A7E15F2883500C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7413,6 +7459,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.cycling74.roughness;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7422,7 +7469,6 @@
 		52E44A8C15F2883B00C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7435,6 +7481,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cnmat.SDIF-buffer";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7444,7 +7491,6 @@
 		52E44A8D15F2883B00C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7457,6 +7503,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cnmat.SDIF-buffer";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7466,7 +7513,6 @@
 		52E44A9B15F2884200C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7479,6 +7525,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.SDIF-fileinfo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7488,7 +7535,6 @@
 		52E44A9C15F2884200C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7501,6 +7547,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.SDIF-fileinfo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7510,7 +7557,6 @@
 		52E44AAA15F2884A00C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7523,6 +7569,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.SDIF-info";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7532,7 +7579,6 @@
 		52E44AAB15F2884A00C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7545,6 +7591,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.SDIF-info";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7554,7 +7601,6 @@
 		52E44AB915F2884F00C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7567,6 +7613,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.SDIF-listpoke";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7576,7 +7623,6 @@
 		52E44ABA15F2884F00C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7589,6 +7635,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.SDIF-listpoke";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7598,7 +7645,6 @@
 		52E44AC815F2885600C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7612,6 +7658,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.SDIF-ranges";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7621,7 +7668,6 @@
 		52E44AC915F2885600C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7635,6 +7681,7 @@
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.SDIF-ranges";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7644,7 +7691,6 @@
 		52E44AD715F2885D00C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7657,6 +7703,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cnmat.SDIF-tuples";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7666,7 +7713,6 @@
 		52E44AD815F2885D00C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7679,6 +7725,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cnmat.SDIF-tuples";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7688,7 +7735,6 @@
 		52E44AE615F2886200C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7701,6 +7747,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cnmat.sinusoids~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7710,7 +7757,6 @@
 		52E44AE715F2886200C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7723,6 +7769,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cnmat.sinusoids~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7732,7 +7779,6 @@
 		52E44AF515F2886800C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7745,6 +7791,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.berkeley.cnmat.slipOSC;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7754,7 +7801,6 @@
 		52E44AF615F2886800C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7767,6 +7813,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.berkeley.cnmat.slipOSC;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7776,7 +7823,6 @@
 		52E44B0415F2886E00C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7789,6 +7835,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.berkeley.cnmat.sphY;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7798,7 +7845,6 @@
 		52E44B0515F2886E00C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7811,6 +7857,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.berkeley.cnmat.sphY;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7820,7 +7867,6 @@
 		52E44B1315F2887200C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7833,6 +7879,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.berkeley.cnmat.thread.fork;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7842,7 +7889,6 @@
 		52E44B1415F2887200C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7855,6 +7901,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.berkeley.cnmat.thread.fork;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7864,7 +7911,6 @@
 		52E44B2215F2887600C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7877,6 +7923,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.berkeley.cnmat.thread.join;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7886,7 +7933,6 @@
 		52E44B2315F2887600C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7899,6 +7945,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.berkeley.cnmat.thread.join;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7908,7 +7955,6 @@
 		52E44B3115F2887C00C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7921,6 +7967,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.cnmat.threefates;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7930,7 +7977,6 @@
 		52E44B3215F2887C00C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7943,6 +7989,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.cnmat.threefates;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7952,7 +7999,6 @@
 		52E44B4015F2888100C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7965,6 +8011,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.trend-report";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7974,7 +8021,6 @@
 		52E44B4115F2888100C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -7987,6 +8033,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.trend-report";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -7996,7 +8043,6 @@
 		52E44B4F15F2888700C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -8009,6 +8055,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cycling74.vsnapshot~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -8018,7 +8065,6 @@
 		52E44B5015F2888700C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -8031,6 +8077,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cycling74.vsnapshot~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -8040,7 +8087,6 @@
 		52E44B5E15F2888E00C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -8053,6 +8099,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cnmat.waveguide~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -8062,7 +8109,6 @@
 		52E44B5F15F2888E00C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -8075,6 +8121,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cnmat.waveguide~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -8084,7 +8131,6 @@
 		52E44B6D15F2889400C91B67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -8097,6 +8143,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cnmat.berkeley.xydisplay;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -8106,7 +8153,6 @@
 		52E44B6E15F2889400C91B67 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -8119,6 +8165,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cnmat.berkeley.xydisplay;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -8130,36 +8177,61 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = "";
 				DSTROOT = "$(PROJECT_DIR)/build";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					/System/Library/Frameworks,
-					"\"$(SRCROOT)/../max-sdk/source/c74support/jit-includes\"",
-					"\"$(SRCROOT)/../max-sdk/source/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max-sdk-base/c74support/jit-includes\"",
+					"\"$(SRCROOT)/../max-sdk-base/c74support/msp-includes\"",
 				);
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREFIX_HEADER = "../max-sdk/source/c74support/max-includes/macho-prefix.pch";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_NO_COMMON_BLOCKS = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREFIX_HEADER = "../max-sdk-base/c74support/max-includes/macho-prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_UNROLL_LOOPS = YES;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_VERSION = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/../max-sdk/source/c74support/jit-includes\"",
-					"\"$(SRCROOT)/../max-sdk/source/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max-sdk/source/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max-sdk-base/c74support/jit-includes\"",
+					"\"$(SRCROOT)/../max-sdk-base/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max-sdk-base/c74support/msp-includes\"",
 					"\"$(SRCROOT)/../fftw/api\"",
 					"\"$(SRCROOT)/../libomax\"",
 					"\"$(SRCROOT)/../libo\"",
@@ -8168,6 +8240,7 @@
 					"\"$(SRCROOT)/include\"",
 					"\"$(SRCROOT)/../CNMAT-OSC/OSC-Kit\"",
 					"\"$(SRCROOT)/../CNMAT-OSC/libOSC\"",
+					"\"/usr/local/include\"",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/src/$(TARGET_NAME)/Info.plist";
 				LIBRARY_SEARCH_PATHS = (
@@ -8177,14 +8250,14 @@
 					"\"$(SRCROOT)/../gsl/.libs\"",
 				);
 				MACH_O_TYPE = mh_bundle;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "@../max-sdk/source/c74support/max-includes/c74_linker_flags.txt";
+				OTHER_LDFLAGS = "@../max-sdk-base/c74support/max-includes/c74_linker_flags.txt";
 				PRELINK_LIBS = "";
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../gsl\"";
-				VALID_ARCHS = "i386 x86_64";
+				VALID_ARCHS = "x86_64 arm64";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Debug;
@@ -8194,32 +8267,55 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
+				CURRENT_PROJECT_VERSION = "";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DSTROOT = "$(PROJECT_DIR)/build";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					/System/Library/Frameworks,
-					"\"$(SRCROOT)/../max-sdk/source/c74support/jit-includes\"",
-					"\"$(SRCROOT)/../max-sdk/source/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max-sdk-base/c74support/jit-includes\"",
+					"\"$(SRCROOT)/../max-sdk-base/c74support/msp-includes\"",
 				);
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_PREFIX_HEADER = "../max-sdk/source/c74support/max-includes/macho-prefix.pch";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_NO_COMMON_BLOCKS = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREFIX_HEADER = "../max-sdk-base/c74support/max-includes/macho-prefix.pch";
 				GCC_UNROLL_LOOPS = YES;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_VERSION = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/../max-sdk/source/c74support/jit-includes\"",
-					"\"$(SRCROOT)/../max-sdk/source/c74support/max-includes\"",
-					"\"$(SRCROOT)/../max-sdk/source/c74support/msp-includes\"",
+					"\"$(SRCROOT)/../max-sdk-base/c74support/jit-includes\"",
+					"\"$(SRCROOT)/../max-sdk-base/c74support/max-includes\"",
+					"\"$(SRCROOT)/../max-sdk-base/c74support/msp-includes\"",
 					"\"$(SRCROOT)/../fftw/api\"",
 					"\"$(SRCROOT)/../libomax\"",
 					"\"$(SRCROOT)/../libo\"",
@@ -8228,6 +8324,7 @@
 					"\"$(SRCROOT)/include\"",
 					"\"$(SRCROOT)/../CNMAT-OSC/OSC-Kit\"",
 					"\"$(SRCROOT)/../CNMAT-OSC/libOSC\"",
+					"\"/usr/local/include\"",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/src/$(TARGET_NAME)/Info.plist";
 				LIBRARY_SEARCH_PATHS = (
@@ -8237,13 +8334,13 @@
 					"\"$(SRCROOT)/../gsl/.libs\"",
 				);
 				MACH_O_TYPE = mh_bundle;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "@../max-sdk/source/c74support/max-includes/c74_linker_flags.txt";
+				OTHER_LDFLAGS = "@../max-sdk-base/c74support/max-includes/c74_linker_flags.txt";
 				PRELINK_LIBS = "";
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../gsl\"";
-				VALID_ARCHS = "i386 x86_64";
+				VALID_ARCHS = "x86_64 arm64";
 				WRAPPER_EXTENSION = mxo;
 			};
 			name = Release;
@@ -8251,7 +8348,6 @@
 		52F10AD915F071FA008FC371 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -8265,6 +8361,7 @@
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.2threshattack~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -8274,7 +8371,6 @@
 		52F10ADA15F071FA008FC371 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -8288,6 +8384,7 @@
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.berkeley.cnmat.2threshattack~";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -8297,27 +8394,40 @@
 		52F10ADE15F072B2008FC371 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					/System/Library/Frameworks,
+					"\"$(SRCROOT)/../max-sdk-base/c74support/jit-includes\"",
+					"\"$(SRCROOT)/../max-sdk-base/c74support/msp-includes\"",
+				);
 				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = "@../max-sdk-base/c74support/max-includes/c74_linker_flags.txt";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				VALID_ARCHS = x86_64;
+				VALID_ARCHS = "x86_64 arm64";
 			};
 			name = Debug;
 		};
 		52F10ADF15F072B2008FC371 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					/System/Library/Frameworks,
+					"\"$(SRCROOT)/../max-sdk-base/c74support/jit-includes\"",
+					"\"$(SRCROOT)/../max-sdk-base/c74support/msp-includes\"",
+				);
 				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = "@../max-sdk-base/c74support/max-includes/c74_linker_flags.txt";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				VALID_ARCHS = x86_64;
+				VALID_ARCHS = "x86_64 arm64";
 			};
 			name = Release;
 		};
 		52F10AFC15F13D86008FC371 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -8330,6 +8440,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
+				PRODUCT_BUNDLE_IDENTIFIER = com.cycling74.bessel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -8339,7 +8450,6 @@
 		52F10AFD15F13D86008FC371 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -8352,6 +8462,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "$(inherited)";
 				PRELINK_LIBS = "\"$(SRCROOT)/../gsl/.libs/libgsl.a\"";
+				PRODUCT_BUNDLE_IDENTIFIER = com.cycling74.bessel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "$(inherited)";
 				WRAPPER_EXTENSION = mxo;
@@ -8361,11 +8472,14 @@
 		A4BA99DF24E45188006FD002 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COPY_PHASE_STRIP = NO;
 				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "CNMAT-Externs copy-Info.plist";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "@../max-sdk-base/c74support/max-includes/c74_linker_flags.txt";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				VALID_ARCHS = x86_64;
+				VALID_ARCHS = "x86_64 arm64";
 			};
 			name = Debug;
 		};
@@ -8375,28 +8489,30 @@
 				GCC_VERSION = "";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "CNMAT-Externs copy-Info.plist";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "@../max-sdk-base/c74support/max-includes/c74_linker_flags.txt";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				VALID_ARCHS = x86_64;
+				VALID_ARCHS = "x86_64 arm64";
 			};
 			name = Release;
 		};
 		A4E832F019E8642800C55B20 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "$(INHERITED)";
+				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cnmat.cambio~";
 				PRODUCT_NAME = "cambio~";
 				SYMROOT = ./build;
 				VALID_ARCHS = "$(inherited)";
@@ -8407,20 +8523,20 @@
 		A4E832F119E8642800C55B20 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(inherited)";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(inherited)";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "$(INHERITED)";
+				INFOPLIST_FILE = "$(inherited)";
 				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../fftw/.libs\"",
 				);
 				OTHER_CFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.cnmat.cambio~";
 				PRODUCT_NAME = "cambio~";
 				SYMROOT = ./build;
 				VALID_ARCHS = "$(inherited)";

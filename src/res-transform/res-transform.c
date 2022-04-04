@@ -365,7 +365,7 @@ static void computeeverything(fobj *x)
 			transformedresonances.g *= exp(x->time*-x->k1*(1.0+ 20.0*x->k2*(transformedresonances.f-x->fpivot)/50000.0));
 		
 		if(i>x->partialmax-1 || i<x->partialmin
-		 ||transformedresonances.g < x->mingain && transformedresonances.g > x->maxgain
+		 ||(transformedresonances.g < x->mingain && transformedresonances.g > x->maxgain)
 			|| transformedresonances.f<x->fmin || transformedresonances.f>x->fmax)
 			transformedresonances.g = 0.0;
 		

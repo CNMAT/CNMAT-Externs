@@ -330,7 +330,7 @@ void SDIFranges_GetColumnRanges(SDIFranges *x, t_symbol *matrixTypeSym) {
     
     if (resolveBufferAndMatrixType(x, matrixTypeSym, matrixType)) {
 		if (doGetMaxNumColumns(x, matrixType, &numCols)) {
-			t_atom *outputArgs = (Atom *) getbytes(numCols * sizeof(t_atom));
+			t_atom *outputArgs = (t_atom *) getbytes(numCols * sizeof(t_atom));
 			sdif_float64 *mins = (sdif_float64 *) getbytes16(numCols * sizeof(sdif_float64));
 			sdif_float64 *maxes = (sdif_float64 *) getbytes16(numCols * sizeof(sdif_float64));
 			

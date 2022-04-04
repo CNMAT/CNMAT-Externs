@@ -123,21 +123,21 @@ int main(void)
 	class_addmethod(SDIFinfo_class, (method)SDIFinfo_tellmeeverything, "tellmeeverything", 0);
 	
   //  initialize SDIF libraries
-	if (r = SDIF_Init()) {
+    if ((r = SDIF_Init())) {
 		ouchstring("%s: Couldn't initialize SDIF library! %s", 
 		           NAME,
 		           SDIF_GetErrorString(r));
     return 0;
 	}
 	
-	if (r = SDIFmem_Init(my_getbytes, my_freebytes)) {
+    if ((r = SDIFmem_Init(my_getbytes, my_freebytes))) {
 		post("¥ %s: Couldn't initialize SDIF memory utilities! %s", 
 		     NAME,
 		     SDIF_GetErrorString(r));
     return 0;
 	}
 		
-	if (r = SDIFbuf_Init()) {
+    if ((r = SDIFbuf_Init())) {
 		post("¥ %s: Couldn't initialize SDIF buffer utilities! %s", 
 		     NAME,
 		     SDIF_GetErrorString(r));
@@ -163,7 +163,7 @@ int main(void)
 
 void *SDIFinfo_new(t_symbol *dummy, short argc, t_atom *argv) {
 	SDIFinfo *x;
-	int i;
+	//int i;
 	
 	// post("SDIFinfo_new: %s, %ld args", s->s_name, (long) argc);
 	
@@ -282,7 +282,7 @@ static void SDIFinfo_bang(SDIFinfo *x) {
 	outlet_anything(x->t_out, ps_streamID, 1, outputArgs);
 	
 	/* /frameType */
-	if(f = SDIFbuf_GetFirstFrame(x->t_buf))
+    if((f = SDIFbuf_GetFirstFrame(x->t_buf)))
 	{
 		//post("Frame %p, type %c%c%c%c", f, f->header.frameType[0], f->header.frameType[1], f->header.frameType[2], f->header.frameType[3]);
   	SDIF_Copy4Bytes(frameTypeString, f->header.frameType);
