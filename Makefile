@@ -34,7 +34,7 @@ win64: CFLAGS += -DWIN_VERSION -DWIN_EXT_VERSION -U__STRICT_ANSI__ -U__ANSI_SOUR
 win64: LDFLAGS = -shared -static-libgcc -Wl,-Bstatic -lpthread # -Wl,--verbose
 win64: INCLUDES = -I/usr/x86_64-w64-mingw32/sys-root/mingw/include -I$(MAX_INCLUDES) -Iinclude -I$(MSP_INCLUDES) -Ilib -Ilib/Jehan-lib  -I$(JIT_INCLUDES) -I../CNMAT-OSC/OSC-Kit -I../CNMAT-OSC/libOSC -I../CNMAT-SDIF/lib -Isrc/SDIF-Buffer -Iutility-library/search-path -I../libo -I../libomax
 win64: LIBS = -L$(JIT_INCLUDES) -lx64/jitlib -L$(MAX_INCLUDES) -lx64/MaxAPI -L$(MSP_INCLUDES) -lx64/MaxAudio -lm -L/usr/x86_64-w64-mingw32/sys-root/mingw/lib
-win64: ODOT_LIBS = -L../libo/libs/x86_64 -l:libo.a -L../libomax/libs/x86_64 -l:libomax.a
+win64: ODOT_LIBS = -L../libo -l:libo.a -L../libomax -l:libomax.a
 win64: MAX_JAVA_JAR = "C:\Program Files\Cycling '74\Max 7\resources\packages\max-mxj\java-classes\lib\max.jar"
 # note: javac on windows requires windows style paths
 
