@@ -51,7 +51,7 @@ VERSION 1.0.2: Added protection for re-entrancy in overdrive mode
 // To get ntohl() on Windows
 // #include <asm/byteorder.h>
 // #include </usr/include/asm/byteorder.h>
-#include </usr/include/w32api/winsock2.h>
+#include <winsock2.h>
 #endif
 
 t_class *sOSC_class;

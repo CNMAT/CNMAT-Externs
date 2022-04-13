@@ -6,7 +6,7 @@
 
 #ifdef WIN_VERSION
 // To get ntohl() on Windows
-#include </usr/include/w32api/winsock2.h>
+#include <winsock2.h>
 #endif
 
 
