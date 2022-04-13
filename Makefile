@@ -25,7 +25,7 @@ win: LDFLAGS = -shared -static-libgcc -Wl,-Bstatic -lpthread
 win: INCLUDES = -I/usr/i686-w64-mingw32/sys-root/mingw/include -I$(MAX_INCLUDES) -Iinclude -I$(MSP_INCLUDES) -Ilib -Ilib/Jehan-lib -I$(JIT_INCLUDES) -I../CNMAT-OSC/OSC-Kit -I../CNMAT-OSC/libOSC -I../fftw -I../fftw/api -I../CNMAT-SDIF/lib -Isrc/SDIF-Buffer -Iutility-library/search-path -I../libo -I../libomax
 win: LIBS = -L$(MAX_INCLUDES) -lMaxAPI -L$(MSP_INCLUDES) -lMaxAudio -L$(JIT_INCLUDES) -ljitlib -lm -L/usr/i686-w64-mingw32/sys-root/mingw/lib
 win: ODOT_LIBS = -L../libo/libs/i686 -l:libo.a -L../libomax/libs/i686 -l:libomax.a
-win: MAX_JAVA_JAR = "C:\Program Files (x86)\Cycling '74\Max 7\resources\packages\max-mxj\java-classes\lib\max.jar"
+win: MAX_JAVA_JAR = "C:\Program Files (x86)\Cycling '74\Max 8\resources\packages\max-mxj\java-classes\lib\max.jar"
 # note: javac on windows requires windows style paths
 
 win64: CC = x86_64-w64-mingw32-gcc
@@ -35,7 +35,7 @@ win64: LDFLAGS = -shared -static-libgcc -Wl,-Bstatic -lpthread # -Wl,--verbose
 win64: INCLUDES = -I/usr/x86_64-w64-mingw32/sys-root/mingw/include -I$(MAX_INCLUDES) -Iinclude -I$(MSP_INCLUDES) -Ilib -Ilib/Jehan-lib  -I$(JIT_INCLUDES) -I../CNMAT-OSC/OSC-Kit -I../CNMAT-OSC/libOSC -I../CNMAT-SDIF/lib -Isrc/SDIF-Buffer -Iutility-library/search-path -I../libo -I../libomax
 win64: LIBS = -L$(JIT_INCLUDES) -lx64/jitlib -L$(MAX_INCLUDES) -lx64/MaxAPI -L$(MSP_INCLUDES) -lx64/MaxAudio -lm -L/usr/x86_64-w64-mingw32/sys-root/mingw/lib
 win64: ODOT_LIBS = -L../libo -l:libo.a -L../libomax -l:libomax.a
-win64: MAX_JAVA_JAR = "C:\Program Files\Cycling '74\Max 7\resources\packages\max-mxj\java-classes\lib\max.jar"
+win64: MAX_JAVA_JAR = "C:\Program Files\Cycling '74\Max 8\resources\packages\max-mxj\java-classes\lib\max.jar"
 # note: javac on windows requires windows style paths
 
 JAVA_EXT = class
@@ -64,7 +64,7 @@ MACOBJECTS: $(CURRENT_VERSION_FILE)
 SIMPLEOBJECTNAMES = cambio~ bench bench~ thread.join thread.fork cnmatrix~ 2threshattack~ accumulate~ bpf decaying-sinusoids~ deinterleave gridpanel interleave lcm list-accum list-interpolate migrator oscillators~ peqbank~ poly.bus~ poly.send~ rbfi res-transform resdisplay resonators~ sinusoids~ slipOSC threefates trampoline trend-report vsnapshot~ thread.which xydisplay waveguide~  #granubuf~
 SIMPLEOBJECTS = $(foreach f, $(SIMPLEOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
 
-MULTIPLEFILEOBJECTNAMES = harmonics~ randdist
+MULTIPLEFILEOBJECTNAMES = harmonics~ #randdist
 MULTIPLEFILEOBJECTS = $(foreach f, $(MULTIPLEFILEOBJECTNAMES), $(BUILDDIR)/$(f).$(EXT))
 
 GSLOBJECTNAMES = bdist bessel
