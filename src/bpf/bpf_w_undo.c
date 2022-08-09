@@ -400,7 +400,7 @@ void bpf_paint(t_bpf *x, t_object *patcherview){
 
 void bpf_dsp(t_bpf *x, t_signal **sp, short *count){
 	if(count[0]){
-		dsp_add(bpf_perform, 3, x, sp[0]->s_n, sp[0]->s_vec);
+		dsp_add64(bpf_perform, 3, x, sp[0]->s_n, sp[0]->s_vec);
 	}
 }
 
