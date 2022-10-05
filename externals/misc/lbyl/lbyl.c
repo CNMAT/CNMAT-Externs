@@ -79,7 +79,7 @@ typedef struct LBYL
 
 void *class;
 
-void *LBYL_new(Symbol *s, float tolerance, long quota);
+void *LBYL_new(t_symbol *s, float tolerance, long quota);
 void LBYL_tolerance(LBYL *x, double t);
 void LBYL_quota(LBYL *x, long q);
 void LBYL_tellmeeverything(LBYL *x);
@@ -94,7 +94,7 @@ static float PastInput(LBYL *x, int ago);
 
 
 
-void main(fptr *f) {
+void main(void) {
 	version(0);
 	setup((t_messlist **)&class, (method)LBYL_new, 0L, (short)sizeof(LBYL), 0L, 
 		  A_DEFFLOAT, A_DEFLONG, 0);
@@ -108,7 +108,7 @@ void main(fptr *f) {
 }
 
 
-void *LBYL_new(Symbol *s, float tolerance, long quota) {
+void *LBYL_new(t_symbol *s, float tolerance, long quota) {
 	LBYL *x;
 	
 	x = (LBYL *)newobject(class);
