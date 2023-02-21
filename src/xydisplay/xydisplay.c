@@ -296,7 +296,10 @@ void xy_float(t_xy *x, double f){
 					y1 = xy_scale(next->pt.y, x->ymin, x->ymax, r.height, 0);
 				}
 				x->interp.x = ((x2 - x1) * (f - floor(f))) + x1;
-				x->interp.y = (((y2 - y1) / (x2 - x1)) * (x->interp.x - x1)) + y1;
+                //the following line caused NaN if two successive points shared the same x-coordinate
+                //x->interp.y = (((y2 - y1) / (x2 - x1)) * (x->interp.x - x1)) + y1;
+                x->interp.y = ((y2 - y1) * (f - floor(f))) + y1;
+
 				x->highlight_line = i + 1;
 			}
 			t_atom out[2];
