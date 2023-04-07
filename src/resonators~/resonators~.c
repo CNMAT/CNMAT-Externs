@@ -149,6 +149,8 @@ typedef struct
 	int interpolating;
 	// int doubling;
 	void *outlet1;
+    long argc;
+    t_atom *argv;
 } resbank;
 typedef resbank t_resonators;
 
@@ -180,6 +182,7 @@ void resonators_dsp64(t_resonators *x, t_object *dsp64, short *count, double sam
 void resonators_float(t_resonators *x, double f);
 void resonators_int(t_resonators *x, long n);
 void resonators_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv);
+void resonators_dolist(t_resonators *x, t_symbol *s, short argc, t_atom *argv);
 void resonators_clear(t_resonators *x);
 void resonators_assist(t_resonators *x, void *b, long m, long a, char *s);
 void *resonators_new(t_symbol *s, short argc, t_atom *argv);
@@ -1793,7 +1796,10 @@ void resonators_dsp(t_resonators *x, t_signal **sp, short *connect)
 void resonators_dsp64(t_resonators *x, t_object *dsp64, short *connect, double samplerate, long maxvectorsize, long flags)
 {
     resonators_clear(x);
-    
+    // recalcluate in case the sample rate has changed
+    x->samplerate = samplerate;
+    x->sampleinterval = 1.0 / x->samplerate;
+    resonators_dolist(x, NULL, x->argc, x->argv);
     // always assume x->doubling in 64-bit version:
     if ((x->b_connected = connect[1]))
     {
@@ -1926,7 +1932,7 @@ void outputgain_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv)
 	}
 	}
 	}
-void resonators_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv)
+void resonators_dolist(t_resonators *x, t_symbol *s, short argc, t_atom *argv)
 {
 	int i;
 	// does this overlap stuff work? why dont we buffer a1prime and fastr? 
@@ -2043,6 +2049,24 @@ void resonators_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv)
 //		post("nres %d x->nres %d", nres, x->nres);
 }
 
+void resonators_list(t_resonators *x, t_symbol *s, short argc, t_atom *argv)
+{
+    if(x->argc < argc)
+    {
+        if(x->argv)
+        {
+            x->argv = (t_atom *)sysmem_resizeptr(x->argv, argc * sizeof(t_atom));
+        }
+        else
+        {
+            x->argv = (t_atom *)sysmem_newptr(argc * sizeof(t_atom));
+        }
+    }
+    x->argc = argc;
+    memcpy(x->argv, argv, argc * sizeof(t_atom));
+    resonators_dolist(x, s, argc, argv);
+}
+
 void resonators_assist(t_resonators *x, void *b, long m, long a, char *s)
 {
        if (m == ASSIST_OUTLET)
@@ -2096,7 +2120,8 @@ void *resonators_new(t_symbol *s, short argc, t_atom *argv)
 	if(!x){
 		return NULL;
 	}
-
+    x->argv = NULL;
+    x->argc = 0;
 		x->samplerate =  sys_getsr();
 		if(x->samplerate<=0.0)
 			x->samplerate = 44100.0;
@@ -2172,6 +2197,10 @@ void resonators_free(t_resonators *x) {
   dsp_free(&(x->b_obj));
   //sysmem_freeptr(x->base);
   sysmem_freeptr(x->dbase);
+  if(x->argv)
+  {
+      sysmem_freeptr(x->argv);
+  }
 }
 
 int main(void){
