@@ -245,8 +245,8 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"\\\"$(SRCROOT)/../../../../max-sdk-base/c74support/max-includes\\\"",
-					"\\\"$(SRCROOT)/../../../../max-sdk-base/c74support/msp-includes\\\"",
+					"\\\\\\\"$(SRCROOT)/../../../../max-sdk-base/c74support/max-includes\\\\\\\"",
+					"\\\\\\\"$(SRCROOT)/../../../../max-sdk-base/c74support/msp-includes\\\\\\\"",
 				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/../../../../max-sdk-base/c74support/max-includes/macho-prefix.pch";
