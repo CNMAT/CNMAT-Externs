@@ -1389,7 +1389,7 @@ void te_dsp(t_te *x, t_signal **sp, short *count){
 				name5->s_thing = NULL;
 			}
 		}
-		dsp_add(te_perform, 8, x, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec);
+		dsp_add (te_perform, 8, x, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec);
 	}
 }
 
