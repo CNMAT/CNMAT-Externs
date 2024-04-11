@@ -49,6 +49,7 @@ Version history:
 // #define DEBUG	
 #include "version.h"
 #include "ext.h"
+#include "ext_obex.h"
 #include "version.c"
 
 
@@ -63,15 +64,15 @@ typedef struct LBYL
 	
 	int numSeen;		/* Total #inputs seen */
 
-	float ringbuffer[RINGBUF_SIZE];			/* Previously-seen values */
+	double ringbuffer[RINGBUF_SIZE];			/* Previously-seen values */
 	int ringWritePos;				/* Next position that will be written to */
 	
-	float lastBeforeSpuriousJump;
+	double lastBeforeSpuriousJump;
 	int jumped;				/* Have we jumped recently, or do we think we might be in a steady region? */
-	float lastOutput;
+	double lastOutput;
 
 	// User parameters
-	float tolerance;	/* If successive values are within this close of each other, it's not a jump */
+	double tolerance;	/* If successive values are within this close of each other, it's not a jump */
 	int quota;			/* Number of values that must be seen in new range to believe a jump */
 	
 } LBYL;
@@ -79,40 +80,55 @@ typedef struct LBYL
 
 void *class;
 
-void *LBYL_new(t_symbol *s, float tolerance, long quota);
+void *LBYL_new(t_symbol *s, double tolerance, long quota);
+void LBYL_free(LBYL *x);
 void LBYL_tolerance(LBYL *x, double t);
 void LBYL_quota(LBYL *x, long q);
 void LBYL_tellmeeverything(LBYL *x);
-static int Near(float x, float y, float tolerance);
-void LBYL_float(LBYL *x, double d);
+static int Near(double x, double y, double tolerance);
+void LBYL_double(LBYL *x, double d);
 void LBYL_int(LBYL *x, int i);
-static float processInput(LBYL *x, float f, int *rejected, int *despair);
+static double processInput(LBYL *x, double f, int *rejected, int *despair);
 void Reset(LBYL *x);
-static void NewInput(LBYL *x, float f);
+static void NewInput(LBYL *x, double f);
 static int NumRemembered(LBYL *x);
-static float PastInput(LBYL *x, int ago);
+static double PastInput(LBYL *x, int ago);
 
+//static t_class *lbyl_class;
 
-
-void main(void) {
+C74_EXPORT void ext_main(void *r) {
 	version(0);
-	setup((t_messlist **)&class, (method)LBYL_new, 0L, (short)sizeof(LBYL), 0L, 
-		  A_DEFFLOAT, A_DEFLONG, 0);
-        addmess((method) version, "version", 0);
-	addfloat((method) LBYL_float);
-	addint((method) LBYL_int);
-	addmess((method) LBYL_tellmeeverything, "tellmeeverything", 0);
-	addmess((method) LBYL_tolerance, "tolerance", A_FLOAT, 0);
-	addmess((method) LBYL_quota, "quota", A_LONG, 0);
-	addmess((method) Reset, "reset", 0);
+    
+    // *** ORIGINAL CODE NOW DEPRECATED *** -- JWagner2024
+    //    setup((t_messlist **)&class, (method)LBYL_new, 0L, (short)sizeof(LBYL), 0L,
+    //          A_DEFFLOAT, A_DEFLONG, 0);
+    //    addmess((method) version, "version", 0);
+    //    addfloat((method) LBYL_float);
+    //    addint((method) LBYL_int);
+    //    addmess((method) LBYL_tellmeeverything, "tellmeeverything", 0);
+    //    addmess((method) LBYL_tolerance, "tolerance", A_FLOAT, 0);
+    //    addmess((method) LBYL_quota, "quota", A_LONG, 0);
+    //    addmess((method) Reset, "reset", 0);
+    
+    t_class *c = class_new("lbyl", (method)LBYL_new, (method)LBYL_free, (short)sizeof(LBYL), 0L, A_DEFFLOAT, A_DEFLONG, 0);
+    class_addmethod(c, (method) version, "version", A_SYM, 0);
+    class_addmethod(c, (method) LBYL_double, "float", A_FLOAT, 0);
+    class_addmethod(c, (method) LBYL_int, "int", A_LONG, 0);
+    class_addmethod(c, (method) LBYL_tellmeeverything, "tellmeeverything", A_DEFSYM, 0);
+    class_addmethod(c, (method) LBYL_tolerance, "tolerance", A_FLOAT, 0);
+    class_addmethod(c, (method) LBYL_quota, "quota", A_LONG, 0);
+    class_addmethod(c, (method) Reset, "reset", 0);
+    class_register(CLASS_BOX, c);
+    class = c;
 }
 
 
-void *LBYL_new(t_symbol *s, float tolerance, long quota) {
-	LBYL *x;
+void *LBYL_new(t_symbol *s, double tolerance, long quota) {
+	LBYL *x = NULL;
 	
-	x = (LBYL *)newobject(class);
-	x->reject_outlet = listout(x);
+//	x = (LBYL *)newobject(class);
+    x = object_alloc(class);
+    x->reject_outlet = listout(x);
 	x->outlet = listout(x);
 	x->nonbogus_outlet = listout(x);	
 	
@@ -138,7 +154,7 @@ void LBYL_tolerance(LBYL *x, double t) {
 	if (t < 0.0) {
 		error("lbyl: tolerance must be nonnegative");
 	} else {
-		x->tolerance = (float) t;
+		x->tolerance = (double) t;
 	}
 }
 
@@ -174,14 +190,14 @@ void LBYL_tellmeeverything(LBYL *x) {
 
 #define fabs(x) (((x) < 0.0f) ? (-(x)) : (x))
 
-static int Near(float x, float y, float tolerance) {
+static int Near(double x, double y, double tolerance) {
 	return (fabs(x-y) <= tolerance);
 }
 
-void LBYL_float(LBYL *x, double d) {
-	float f = (float) d;
+void LBYL_double(LBYL *x, double d) {
+	double f = (double) d;
 	int rejected = 0, despair = 0;
-	float output = processInput(x, f, &rejected, &despair);
+	double output = processInput(x, f, &rejected, &despair);
 	
 	if (rejected) {
 		 outlet_float(x->reject_outlet, f);
@@ -192,15 +208,15 @@ void LBYL_float(LBYL *x, double d) {
 	
 	if (!despair) {
 		outlet_float(x->nonbogus_outlet, output);
-	}	
+	}
 }
 
 
 void LBYL_int(LBYL *x, int i) {
-	LBYL_float(x, (float) i);
+	LBYL_double(x, (double) i);
 }
 
-static float processInput(LBYL *x, float f, int *rejected, int *despair) {
+static double processInput(LBYL *x, double f, int *rejected, int *despair) {
 	int i;
 
 	NewInput(x, f);
@@ -295,7 +311,7 @@ void Reset(LBYL *x) {
 	x->ringWritePos = 0;
 }
 
-static void NewInput(LBYL *x, float f) {
+static void NewInput(LBYL *x, double f) {
 	x->ringbuffer[x->ringWritePos] = f;
 	
 	++(x->ringWritePos);
@@ -309,7 +325,7 @@ static int NumRemembered(LBYL *x) {
 	return RINGBUF_SIZE;
 }
 
-static float PastInput(LBYL *x, int ago) {
+static double PastInput(LBYL *x, int ago) {
 	/* ago=0 means the most recent input */
 	int index;
 
@@ -328,5 +344,10 @@ static float PastInput(LBYL *x, int ago) {
 	}
 	
 	return x->ringbuffer[index];
+}
+
+void LBYL_free(LBYL *x)
+{
+    ;
 }
 	

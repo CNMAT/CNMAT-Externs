@@ -9,15 +9,103 @@
 /* Begin PBXBuildFile section */
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		A8869DF428EDEB3900A90CAE /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = A8869DF328EDEB3900A90CAE /* commonsyms.c */; };
-		BE1CC30C0A81338D0050AA91 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE1CC30B0A81338D0050AA91 /* MaxAPI.framework */; };
 		BE88C47C0A82D02400AB33B6 /* lbyl.c in Sources */ = {isa = PBXBuildFile; fileRef = BE88C47B0A82D02400AB33B6 /* lbyl.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
-		8D01CCD20486CAD60068D4B7 /* lbyl */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = lbyl; path = "../../../../../../../../Documents/GitHub/CNMAT-Externs/externals/misc/lbyl"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D01CCD20486CAD60068D4B7 /* lbyl.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = lbyl.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		9549A95F2BC7D3960077B263 /* basic_c_strings.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = basic_c_strings.c; sourceTree = "<group>"; };
+		9549A9602BC7D3960077B263 /* commonsyms_max4.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = commonsyms_max4.c; sourceTree = "<group>"; };
+		9549A9612BC7D3960077B263 /* commonsyms_max4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = commonsyms_max4.h; sourceTree = "<group>"; };
+		9549A9622BC7D3960077B263 /* commonsyms.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = commonsyms.c; sourceTree = "<group>"; };
+		9549A9632BC7D3960077B263 /* dllmain_win.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = dllmain_win.c; sourceTree = "<group>"; };
+		9549A9642BC7D3960077B263 /* dummy.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = dummy.cpp; sourceTree = "<group>"; };
+		9549A9652BC7D3960077B263 /* ext_byteorder.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ext_byteorder.c; sourceTree = "<group>"; };
+		9549A9662BC7D3960077B263 /* jpatcher_syms.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = jpatcher_syms.c; sourceTree = "<group>"; };
+		9549A9672BC7D3960077B263 /* verinfo_win.rc */ = {isa = PBXFileReference; lastKnownFileType = text; path = verinfo_win.rc; sourceTree = "<group>"; };
+		9549A9692BC7D3960077B263 /* MaxAPI.lib */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = MaxAPI.lib; sourceTree = "<group>"; };
+		9549A96B2BC7D3960077B263 /* c74_linker_flags.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = c74_linker_flags.txt; sourceTree = "<group>"; };
+		9549A96C2BC7D3960077B263 /* commonsyms.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = commonsyms.h; sourceTree = "<group>"; };
+		9549A96D2BC7D3960077B263 /* ext_anim.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_anim.h; sourceTree = "<group>"; };
+		9549A96E2BC7D3960077B263 /* ext_assist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_assist.h; sourceTree = "<group>"; };
+		9549A96F2BC7D3960077B263 /* ext_atomarray.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_atomarray.h; sourceTree = "<group>"; };
+		9549A9702BC7D3960077B263 /* ext_atombuf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_atombuf.h; sourceTree = "<group>"; };
+		9549A9712BC7D3960077B263 /* ext_atomic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_atomic.h; sourceTree = "<group>"; };
+		9549A9722BC7D3960077B263 /* ext_backgroundtask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_backgroundtask.h; sourceTree = "<group>"; };
+		9549A9732BC7D3960077B263 /* ext_boxstyle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_boxstyle.h; sourceTree = "<group>"; };
+		9549A9742BC7D3960077B263 /* ext_byteorder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_byteorder.h; sourceTree = "<group>"; };
+		9549A9752BC7D3960077B263 /* ext_charset.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_charset.h; sourceTree = "<group>"; };
+		9549A9762BC7D3960077B263 /* ext_colors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_colors.h; sourceTree = "<group>"; };
+		9549A9772BC7D3960077B263 /* ext_common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_common.h; sourceTree = "<group>"; };
+		9549A9782BC7D3960077B263 /* ext_critical.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_critical.h; sourceTree = "<group>"; };
+		9549A9792BC7D3960077B263 /* ext_database.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_database.h; sourceTree = "<group>"; };
+		9549A97A2BC7D3960077B263 /* ext_default.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_default.h; sourceTree = "<group>"; };
+		9549A97B2BC7D3960077B263 /* ext_dictionary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_dictionary.h; sourceTree = "<group>"; };
+		9549A97C2BC7D3960077B263 /* ext_dictobj.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_dictobj.h; sourceTree = "<group>"; };
+		9549A97D2BC7D3960077B263 /* ext_drag.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_drag.h; sourceTree = "<group>"; };
+		9549A97E2BC7D3960077B263 /* ext_dynamiccolor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_dynamiccolor.h; sourceTree = "<group>"; };
+		9549A97F2BC7D3960077B263 /* ext_event.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_event.h; sourceTree = "<group>"; };
+		9549A9802BC7D3960077B263 /* ext_expr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_expr.h; sourceTree = "<group>"; };
+		9549A9812BC7D3960077B263 /* ext_fun.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_fun.h; sourceTree = "<group>"; };
+		9549A9822BC7D3960077B263 /* ext_globalsymbol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_globalsymbol.h; sourceTree = "<group>"; };
+		9549A9832BC7D3960077B263 /* ext_hashtab.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_hashtab.h; sourceTree = "<group>"; };
+		9549A9842BC7D3960077B263 /* ext_infer_system.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_infer_system.h; sourceTree = "<group>"; };
+		9549A9852BC7D3960077B263 /* ext_itm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_itm.h; sourceTree = "<group>"; };
+		9549A9862BC7D3960077B263 /* ext_linklist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_linklist.h; sourceTree = "<group>"; };
+		9549A9872BC7D3960077B263 /* ext_maxtypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_maxtypes.h; sourceTree = "<group>"; };
+		9549A9882BC7D3960077B263 /* ext_menu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_menu.h; sourceTree = "<group>"; };
+		9549A9892BC7D3960077B263 /* ext_mess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_mess.h; sourceTree = "<group>"; };
+		9549A98A2BC7D3960077B263 /* ext_midi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_midi.h; sourceTree = "<group>"; };
+		9549A98B2BC7D3960077B263 /* ext_numc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_numc.h; sourceTree = "<group>"; };
+		9549A98C2BC7D3960077B263 /* ext_obex_util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_obex_util.h; sourceTree = "<group>"; };
+		9549A98D2BC7D3960077B263 /* ext_obex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_obex.h; sourceTree = "<group>"; };
+		9549A98E2BC7D3960077B263 /* ext_obstring.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_obstring.h; sourceTree = "<group>"; };
+		9549A98F2BC7D3960077B263 /* ext_oms.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_oms.h; sourceTree = "<group>"; };
+		9549A9902BC7D3960077B263 /* ext_packages.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_packages.h; sourceTree = "<group>"; };
+		9549A9912BC7D3960077B263 /* ext_parameter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_parameter.h; sourceTree = "<group>"; };
+		9549A9922BC7D3960077B263 /* ext_path.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_path.h; sourceTree = "<group>"; };
+		9549A9932BC7D3960077B263 /* ext_post.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_post.h; sourceTree = "<group>"; };
+		9549A9942BC7D3960077B263 /* ext_preferences.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_preferences.h; sourceTree = "<group>"; };
+		9549A9952BC7D3960077B263 /* ext_prefix_includes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_prefix_includes.h; sourceTree = "<group>"; };
+		9549A9962BC7D3960077B263 /* ext_prefix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_prefix.h; sourceTree = "<group>"; };
+		9549A9972BC7D3960077B263 /* ext_preprocessor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_preprocessor.h; sourceTree = "<group>"; };
+		9549A9982BC7D3960077B263 /* ext_proto_win.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_proto_win.h; sourceTree = "<group>"; };
+		9549A9992BC7D3960077B263 /* ext_proto.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_proto.h; sourceTree = "<group>"; };
+		9549A99A2BC7D3960077B263 /* ext_quickmap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_quickmap.h; sourceTree = "<group>"; };
+		9549A99B2BC7D3960077B263 /* ext_sndfile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_sndfile.h; sourceTree = "<group>"; };
+		9549A99C2BC7D3960077B263 /* ext_strings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_strings.h; sourceTree = "<group>"; };
+		9549A99D2BC7D3960077B263 /* ext_support.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_support.h; sourceTree = "<group>"; };
+		9549A99E2BC7D3960077B263 /* ext_symobject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_symobject.h; sourceTree = "<group>"; };
+		9549A99F2BC7D3960077B263 /* ext_sysfile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_sysfile.h; sourceTree = "<group>"; };
+		9549A9A02BC7D3960077B263 /* ext_sysmem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_sysmem.h; sourceTree = "<group>"; };
+		9549A9A12BC7D3960077B263 /* ext_sysmidi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_sysmidi.h; sourceTree = "<group>"; };
+		9549A9A22BC7D3960077B263 /* ext_sysparallel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_sysparallel.h; sourceTree = "<group>"; };
+		9549A9A32BC7D3960077B263 /* ext_sysprocess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_sysprocess.h; sourceTree = "<group>"; };
+		9549A9A42BC7D3960077B263 /* ext_syssem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_syssem.h; sourceTree = "<group>"; };
+		9549A9A52BC7D3960077B263 /* ext_sysshmem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_sysshmem.h; sourceTree = "<group>"; };
+		9549A9A62BC7D3960077B263 /* ext_systhread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_systhread.h; sourceTree = "<group>"; };
+		9549A9A72BC7D3960077B263 /* ext_systime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_systime.h; sourceTree = "<group>"; };
+		9549A9A82BC7D3960077B263 /* ext_time.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_time.h; sourceTree = "<group>"; };
+		9549A9A92BC7D3960077B263 /* ext_timeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_timeline.h; sourceTree = "<group>"; };
+		9549A9AA2BC7D3960077B263 /* ext_track.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_track.h; sourceTree = "<group>"; };
+		9549A9AB2BC7D3960077B263 /* ext_typelist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_typelist.h; sourceTree = "<group>"; };
+		9549A9AC2BC7D3960077B263 /* ext_user.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_user.h; sourceTree = "<group>"; };
+		9549A9AD2BC7D3960077B263 /* ext_wind.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_wind.h; sourceTree = "<group>"; };
+		9549A9AE2BC7D3960077B263 /* ext_xmltree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext_xmltree.h; sourceTree = "<group>"; };
+		9549A9AF2BC7D3960077B263 /* ext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ext.h; sourceTree = "<group>"; };
+		9549A9B02BC7D3960077B263 /* indexmap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = indexmap.h; sourceTree = "<group>"; };
+		9549A9B12BC7D3960077B263 /* jdataview.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jdataview.h; sourceTree = "<group>"; };
+		9549A9B22BC7D3960077B263 /* jgraphics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jgraphics.h; sourceTree = "<group>"; };
+		9549A9B32BC7D3960077B263 /* jpatcher_api.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jpatcher_api.h; sourceTree = "<group>"; };
+		9549A9B42BC7D3960077B263 /* jpatcher_syms.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jpatcher_syms.h; sourceTree = "<group>"; };
+		9549A9B52BC7D3960077B263 /* jpatcher_utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jpatcher_utils.h; sourceTree = "<group>"; };
+		9549A9B62BC7D3960077B263 /* macho-prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "macho-prefix.pch"; sourceTree = "<group>"; };
+		9549A9B72BC7D3960077B263 /* max_keydefs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = max_keydefs.h; sourceTree = "<group>"; };
+		9549A9B82BC7D3960077B263 /* max_types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = max_types.h; sourceTree = "<group>"; };
+		9549A9B92BC7D3960077B263 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MaxAPI.framework; sourceTree = "<group>"; };
+		9549A9BC2BC7E1440077B263 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../../../max-sdk-base/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = "<group>"; };
 		A8869DF328EDEB3900A90CAE /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../../../../max-sdk-base/c74support/max-includes/common/commonsyms.c"; sourceTree = "<group>"; };
-		BE1CC30B0A81338D0050AA91 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../../../max-sdk-base/c74support/max-includes/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
 		BE88C47B0A82D02400AB33B6 /* lbyl.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = lbyl.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -27,7 +115,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
-				BE1CC30C0A81338D0050AA91 /* MaxAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,6 +129,7 @@
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
 				19C28FB4FE9D528D11CA2CBB /* Products */,
+				9549A95E2BC7D3960077B263 /* Frameworks */,
 			);
 			name = maximum;
 			sourceTree = "<group>";
@@ -49,7 +137,6 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				BE1CC30B0A81338D0050AA91 /* MaxAPI.framework */,
 				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
 			);
 			name = "External Frameworks and Libraries";
@@ -73,9 +160,131 @@
 		19C28FB4FE9D528D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D01CCD20486CAD60068D4B7 /* lbyl */,
+				8D01CCD20486CAD60068D4B7 /* lbyl.mxo */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		9549A95E2BC7D3960077B263 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9549A9BC2BC7E1440077B263 /* MaxAudioAPI.framework */,
+				9549A9BA2BC7D3960077B263 /* max-includes */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9549A9682BC7D3960077B263 /* common */ = {
+			isa = PBXGroup;
+			children = (
+				9549A95F2BC7D3960077B263 /* basic_c_strings.c */,
+				9549A9602BC7D3960077B263 /* commonsyms_max4.c */,
+				9549A9612BC7D3960077B263 /* commonsyms_max4.h */,
+				9549A9622BC7D3960077B263 /* commonsyms.c */,
+				9549A9632BC7D3960077B263 /* dllmain_win.c */,
+				9549A9642BC7D3960077B263 /* dummy.cpp */,
+				9549A9652BC7D3960077B263 /* ext_byteorder.c */,
+				9549A9662BC7D3960077B263 /* jpatcher_syms.c */,
+				9549A9672BC7D3960077B263 /* verinfo_win.rc */,
+			);
+			path = common;
+			sourceTree = "<group>";
+		};
+		9549A96A2BC7D3960077B263 /* x64 */ = {
+			isa = PBXGroup;
+			children = (
+				9549A9692BC7D3960077B263 /* MaxAPI.lib */,
+			);
+			path = x64;
+			sourceTree = "<group>";
+		};
+		9549A9BA2BC7D3960077B263 /* max-includes */ = {
+			isa = PBXGroup;
+			children = (
+				9549A9682BC7D3960077B263 /* common */,
+				9549A96A2BC7D3960077B263 /* x64 */,
+				9549A96B2BC7D3960077B263 /* c74_linker_flags.txt */,
+				9549A96C2BC7D3960077B263 /* commonsyms.h */,
+				9549A96D2BC7D3960077B263 /* ext_anim.h */,
+				9549A96E2BC7D3960077B263 /* ext_assist.h */,
+				9549A96F2BC7D3960077B263 /* ext_atomarray.h */,
+				9549A9702BC7D3960077B263 /* ext_atombuf.h */,
+				9549A9712BC7D3960077B263 /* ext_atomic.h */,
+				9549A9722BC7D3960077B263 /* ext_backgroundtask.h */,
+				9549A9732BC7D3960077B263 /* ext_boxstyle.h */,
+				9549A9742BC7D3960077B263 /* ext_byteorder.h */,
+				9549A9752BC7D3960077B263 /* ext_charset.h */,
+				9549A9762BC7D3960077B263 /* ext_colors.h */,
+				9549A9772BC7D3960077B263 /* ext_common.h */,
+				9549A9782BC7D3960077B263 /* ext_critical.h */,
+				9549A9792BC7D3960077B263 /* ext_database.h */,
+				9549A97A2BC7D3960077B263 /* ext_default.h */,
+				9549A97B2BC7D3960077B263 /* ext_dictionary.h */,
+				9549A97C2BC7D3960077B263 /* ext_dictobj.h */,
+				9549A97D2BC7D3960077B263 /* ext_drag.h */,
+				9549A97E2BC7D3960077B263 /* ext_dynamiccolor.h */,
+				9549A97F2BC7D3960077B263 /* ext_event.h */,
+				9549A9802BC7D3960077B263 /* ext_expr.h */,
+				9549A9812BC7D3960077B263 /* ext_fun.h */,
+				9549A9822BC7D3960077B263 /* ext_globalsymbol.h */,
+				9549A9832BC7D3960077B263 /* ext_hashtab.h */,
+				9549A9842BC7D3960077B263 /* ext_infer_system.h */,
+				9549A9852BC7D3960077B263 /* ext_itm.h */,
+				9549A9862BC7D3960077B263 /* ext_linklist.h */,
+				9549A9872BC7D3960077B263 /* ext_maxtypes.h */,
+				9549A9882BC7D3960077B263 /* ext_menu.h */,
+				9549A9892BC7D3960077B263 /* ext_mess.h */,
+				9549A98A2BC7D3960077B263 /* ext_midi.h */,
+				9549A98B2BC7D3960077B263 /* ext_numc.h */,
+				9549A98C2BC7D3960077B263 /* ext_obex_util.h */,
+				9549A98D2BC7D3960077B263 /* ext_obex.h */,
+				9549A98E2BC7D3960077B263 /* ext_obstring.h */,
+				9549A98F2BC7D3960077B263 /* ext_oms.h */,
+				9549A9902BC7D3960077B263 /* ext_packages.h */,
+				9549A9912BC7D3960077B263 /* ext_parameter.h */,
+				9549A9922BC7D3960077B263 /* ext_path.h */,
+				9549A9932BC7D3960077B263 /* ext_post.h */,
+				9549A9942BC7D3960077B263 /* ext_preferences.h */,
+				9549A9952BC7D3960077B263 /* ext_prefix_includes.h */,
+				9549A9962BC7D3960077B263 /* ext_prefix.h */,
+				9549A9972BC7D3960077B263 /* ext_preprocessor.h */,
+				9549A9982BC7D3960077B263 /* ext_proto_win.h */,
+				9549A9992BC7D3960077B263 /* ext_proto.h */,
+				9549A99A2BC7D3960077B263 /* ext_quickmap.h */,
+				9549A99B2BC7D3960077B263 /* ext_sndfile.h */,
+				9549A99C2BC7D3960077B263 /* ext_strings.h */,
+				9549A99D2BC7D3960077B263 /* ext_support.h */,
+				9549A99E2BC7D3960077B263 /* ext_symobject.h */,
+				9549A99F2BC7D3960077B263 /* ext_sysfile.h */,
+				9549A9A02BC7D3960077B263 /* ext_sysmem.h */,
+				9549A9A12BC7D3960077B263 /* ext_sysmidi.h */,
+				9549A9A22BC7D3960077B263 /* ext_sysparallel.h */,
+				9549A9A32BC7D3960077B263 /* ext_sysprocess.h */,
+				9549A9A42BC7D3960077B263 /* ext_syssem.h */,
+				9549A9A52BC7D3960077B263 /* ext_sysshmem.h */,
+				9549A9A62BC7D3960077B263 /* ext_systhread.h */,
+				9549A9A72BC7D3960077B263 /* ext_systime.h */,
+				9549A9A82BC7D3960077B263 /* ext_time.h */,
+				9549A9A92BC7D3960077B263 /* ext_timeline.h */,
+				9549A9AA2BC7D3960077B263 /* ext_track.h */,
+				9549A9AB2BC7D3960077B263 /* ext_typelist.h */,
+				9549A9AC2BC7D3960077B263 /* ext_user.h */,
+				9549A9AD2BC7D3960077B263 /* ext_wind.h */,
+				9549A9AE2BC7D3960077B263 /* ext_xmltree.h */,
+				9549A9AF2BC7D3960077B263 /* ext.h */,
+				9549A9B02BC7D3960077B263 /* indexmap.h */,
+				9549A9B12BC7D3960077B263 /* jdataview.h */,
+				9549A9B22BC7D3960077B263 /* jgraphics.h */,
+				9549A9B32BC7D3960077B263 /* jpatcher_api.h */,
+				9549A9B42BC7D3960077B263 /* jpatcher_syms.h */,
+				9549A9B52BC7D3960077B263 /* jpatcher_utils.h */,
+				9549A9B62BC7D3960077B263 /* macho-prefix.pch */,
+				9549A9B72BC7D3960077B263 /* max_keydefs.h */,
+				9549A9B82BC7D3960077B263 /* max_types.h */,
+				9549A9B92BC7D3960077B263 /* MaxAPI.framework */,
+			);
+			name = "max-includes";
+			path = "../../../../max-sdk-base/c74support/max-includes";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -108,7 +317,7 @@
 			name = lbyl;
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MaxExternal;
-			productReference = 8D01CCD20486CAD60068D4B7 /* lbyl */;
+			productReference = 8D01CCD20486CAD60068D4B7 /* lbyl.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -117,6 +326,7 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastUpgradeCheck = 1310;
 			};
 			buildConfigurationList = 0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "lbyl" */;
 			compatibilityVersion = "Xcode 2.4";
@@ -171,18 +381,21 @@
 		0FF6670B096B494E00E9E0B4 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					"\"x86_64 arm64\"",
+				);
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
 				FRAMEWORK_SEARCH_PATHS = (
 					/Library/Frameworks,
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"\"$(SRCROOT)/../../../../max-sdk-base/c74support/max-includes\"",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "/Users/cnmatm1macmini/Documents/GitHub/max-sdk-base/c74support/max-includes/MaxAPI.framework";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "";
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -199,11 +412,25 @@
 				LIBRARY_STYLE = Bundle;
 				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = (
+					"$(C74_SYM_LINKER_FLAGS)",
+					"'-Wl,-U,_class_addmethod'",
+					"'-Wl,-U,_class_new'",
+					"'-Wl,-U,_class_register'",
+					"'-Wl,-U,_common_symbols_gettable'",
+					"'-Wl,-U,_error'",
+					"'-Wl,-U,_gensym'",
+					"'-Wl,-U,_listout'",
+					"'-Wl,-U,_object_alloc'",
+					"'-Wl,-U,_outlet_float'",
+					"'-Wl,-U,_post'",
+				);
 				OTHER_REZFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.berkeley.cnmat.lbyl;
 				PRODUCT_NAME = lbyl;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../../../max-sdk-base/c74support/max-includes\" \"$(SRCROOT)/../../../../max-sdk-base/c74support/msp-includes\"";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -217,17 +444,19 @@
 		0FF6670C096B494E00E9E0B4 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					"\"x86_64 arm64\"",
+				);
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
 				FRAMEWORK_SEARCH_PATHS = (
 					/Library/Frameworks,
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"\"$(SRCROOT)/../../../../max-sdk-base/c74support/max-includes\"",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "/Users/cnmatm1macmini/Documents/GitHub/max-sdk-base/c74support/max-includes/MaxAPI.framework";
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "";
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -242,11 +471,25 @@
 				LIBRARY_SEARCH_PATHS = "";
 				LIBRARY_STYLE = Bundle;
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = (
+					"$(C74_SYM_LINKER_FLAGS)",
+					"'-Wl,-U,_class_addmethod'",
+					"'-Wl,-U,_class_new'",
+					"'-Wl,-U,_class_register'",
+					"'-Wl,-U,_common_symbols_gettable'",
+					"'-Wl,-U,_error'",
+					"'-Wl,-U,_gensym'",
+					"'-Wl,-U,_listout'",
+					"'-Wl,-U,_object_alloc'",
+					"'-Wl,-U,_outlet_float'",
+					"'-Wl,-U,_post'",
+				);
 				OTHER_REZFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.berkeley.cnmat.lbyl;
 				PRODUCT_NAME = lbyl;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../../../max-sdk-base/c74support/max-includes\" \"$(SRCROOT)/../../../../max-sdk-base/c74support/msp-includes\"";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -260,14 +503,18 @@
 		0FF6670D096B494E00E9E0B4 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					"\"x86_64 arm64\"",
+				);
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
 				FRAMEWORK_SEARCH_PATHS = (
 					/Library/Frameworks,
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"\"$(SRCROOT)/../../../../max-sdk-base/c74support/max-includes\"",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "/Users/cnmatm1macmini/Documents/GitHub/max-sdk-base/c74support/max-includes/MaxAPI.framework";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "";
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -282,10 +529,24 @@
 				LIBRARY_SEARCH_PATHS = "";
 				LIBRARY_STYLE = Bundle;
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = (
+					"$(C74_SYM_LINKER_FLAGS)",
+					"'-Wl,-U,_class_addmethod'",
+					"'-Wl,-U,_class_new'",
+					"'-Wl,-U,_class_register'",
+					"'-Wl,-U,_common_symbols_gettable'",
+					"'-Wl,-U,_error'",
+					"'-Wl,-U,_gensym'",
+					"'-Wl,-U,_listout'",
+					"'-Wl,-U,_object_alloc'",
+					"'-Wl,-U,_outlet_float'",
+					"'-Wl,-U,_post'",
+				);
 				OTHER_REZFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.berkeley.cnmat.lbyl;
 				PRODUCT_NAME = lbyl;
 				SECTORDER_FLAGS = "";
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../../../max-sdk-base/c74support/max-includes\" \"$(SRCROOT)/../../../../max-sdk-base/c74support/msp-includes\"";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -298,6 +559,42 @@
 		0FF6670F096B494E00E9E0B4 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LD_QUOTE_LINKER_ARGUMENTS_FOR_COMPILER_DRIVER = NO;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"\\\"-lmx\\ -v\\\"",
+					"\\'-WI,\\ -U,_addfloat\\'",
+					"-bundle",
+					MaxAudioAPI,
+					"-framework",
+				);
 				SDKROOT = macosx;
 			};
 			name = Development;
@@ -305,6 +602,40 @@
 		0FF66710096B494E00E9E0B4 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LD_QUOTE_LINKER_ARGUMENTS_FOR_COMPILER_DRIVER = NO;
+				OTHER_LDFLAGS = (
+					"\\\"-lmx\\ -v\\\"",
+					"\\'-WI,\\ -U,_addfloat\\'",
+					"-bundle",
+					MaxAudioAPI,
+					"-framework",
+				);
 				SDKROOT = macosx;
 			};
 			name = Deployment;
@@ -312,6 +643,40 @@
 		0FF66711096B494E00E9E0B4 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LD_QUOTE_LINKER_ARGUMENTS_FOR_COMPILER_DRIVER = NO;
+				OTHER_LDFLAGS = (
+					"\\\"-lmx\\ -v\\\"",
+					"\\'-WI,\\ -U,_addfloat\\'",
+					"-bundle",
+					MaxAudioAPI,
+					"-framework",
+				);
 				SDKROOT = macosx;
 			};
 			name = Default;
