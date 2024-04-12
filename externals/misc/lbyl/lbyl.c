@@ -36,6 +36,7 @@ VERSION 0.0: First version  1/3/3
 VERSION 0.1: Renamed LBYL
 VERSION 0.2:  Added outlets for "non-bogus" and "rejected"
 VERSION 0.2.1:  Force Package Info Generation
+VERSION 0.2.2:  Removed MaxAPI.framework dependence; updated for Max 8.6.1; JWagner, 4/2024
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 Version history:  	           
@@ -62,39 +63,39 @@ typedef struct LBYL
 	void *outlet;
 	void *reject_outlet;
 	
-	int numSeen;		/* Total #inputs seen */
+	t_atom_long numSeen;		/* Total #inputs seen */
 
 	double ringbuffer[RINGBUF_SIZE];			/* Previously-seen values */
-	int ringWritePos;				/* Next position that will be written to */
+	t_atom_long ringWritePos;				/* Next position that will be written to */
 	
 	double lastBeforeSpuriousJump;
-	int jumped;				/* Have we jumped recently, or do we think we might be in a steady region? */
+	t_atom_long jumped;				/* Have we jumped recently, or do we think we might be in a steady region? */
 	double lastOutput;
 
 	// User parameters
 	double tolerance;	/* If successive values are within this close of each other, it's not a jump */
-	int quota;			/* Number of values that must be seen in new range to believe a jump */
+	t_atom_long quota;			/* Number of values that must be seen in new range to believe a jump */
 	
 } LBYL;
 
 
-void *class;
+//void *class;
 
-void *LBYL_new(t_symbol *s, double tolerance, long quota);
+void *LBYL_new(t_symbol *s, long argc, t_atom *argv);
 void LBYL_free(LBYL *x);
 void LBYL_tolerance(LBYL *x, double t);
-void LBYL_quota(LBYL *x, long q);
+void LBYL_quota(LBYL *x, t_atom_long q);
 void LBYL_tellmeeverything(LBYL *x);
-static int Near(double x, double y, double tolerance);
+static t_atom_long Near(double x, double y, double tolerance);
 void LBYL_double(LBYL *x, double d);
-void LBYL_int(LBYL *x, int i);
-static double processInput(LBYL *x, double f, int *rejected, int *despair);
+void LBYL_int(LBYL *x, t_atom_long i);
+static double processInput(LBYL *x, double f, t_atom_long *rejected, t_atom_long *despair);
 void Reset(LBYL *x);
 static void NewInput(LBYL *x, double f);
-static int NumRemembered(LBYL *x);
-static double PastInput(LBYL *x, int ago);
+static t_atom_long NumRemembered(LBYL *x);
+static double PastInput(LBYL *x, t_atom_long ago);
 
-//static t_class *lbyl_class;
+void *lbyl_class;
 
 C74_EXPORT void ext_main(void *r) {
 	version(0);
@@ -110,7 +111,7 @@ C74_EXPORT void ext_main(void *r) {
     //    addmess((method) LBYL_quota, "quota", A_LONG, 0);
     //    addmess((method) Reset, "reset", 0);
     
-    t_class *c = class_new("lbyl", (method)LBYL_new, (method)LBYL_free, (short)sizeof(LBYL), 0L, A_DEFFLOAT, A_DEFLONG, 0);
+    t_class *c = class_new("lbyl", (method)LBYL_new, (method)LBYL_free, (long)sizeof(LBYL), 0L, A_GIMME, 0);
     class_addmethod(c, (method) version, "version", A_SYM, 0);
     class_addmethod(c, (method) LBYL_double, "float", A_FLOAT, 0);
     class_addmethod(c, (method) LBYL_int, "int", A_LONG, 0);
@@ -119,18 +120,50 @@ C74_EXPORT void ext_main(void *r) {
     class_addmethod(c, (method) LBYL_quota, "quota", A_LONG, 0);
     class_addmethod(c, (method) Reset, "reset", 0);
     class_register(CLASS_BOX, c);
-    class = c;
+    lbyl_class = c;
 }
 
 
-void *LBYL_new(t_symbol *s, double tolerance, long quota) {
+void *LBYL_new(t_symbol *s, long argc, t_atom *argv) {
+    double tolerance;
+    t_atom_long quota;
 	LBYL *x = NULL;
+    
+    switch (argc){
+        case 1:
+            if(argv->a_type == A_FLOAT){
+                tolerance = atom_getfloat(argv);
+            }else{
+                tolerance = 5.0;
+            }
+            quota =2;
+            break;
+        case 2:
+            if(argv->a_type == A_FLOAT){
+                tolerance = atom_getfloat(argv);
+            }else{
+                tolerance = 5.0;
+            }
+            if((argv+1)->a_type == A_LONG){
+                quota = atom_getlong(argv+1);
+            }else{
+                quota = 2;
+            }
+            break;
+        default:
+            tolerance = 5.0;
+            quota = 2;
+            
+    }
+        
+    
+    
 	
 //	x = (LBYL *)newobject(class);
-    x = object_alloc(class);
+    x = object_alloc(lbyl_class);
     x->reject_outlet = listout(x);
 	x->outlet = listout(x);
-	x->nonbogus_outlet = listout(x);	
+	x->nonbogus_outlet = listout(x);
 	
 	if (tolerance == 0.0) {
 		x->tolerance = 5.0f;
@@ -138,11 +171,12 @@ void *LBYL_new(t_symbol *s, double tolerance, long quota) {
 		x->tolerance = tolerance;
 	}
 
-	if (quota == 0) {
-		x->quota = 2;
-	} else {
+	if (quota < RINGBUF_SIZE) {
 		x->quota = quota;
-	}
+    }else{
+        x->quota = 2;
+    }
+//    LBYL_quota(x, quota);
 
 	x->lastBeforeSpuriousJump = -999.0f;
 	x->jumped = 1;
@@ -158,7 +192,7 @@ void LBYL_tolerance(LBYL *x, double t) {
 	}
 }
 
-void LBYL_quota(LBYL *x, long q) {
+void LBYL_quota(LBYL *x, t_atom_long q) {
 	if (q < 1) {
 		error("lbyl: quota must be positive.");
 	} else if (q > RINGBUF_SIZE) {
@@ -170,7 +204,7 @@ void LBYL_quota(LBYL *x, long q) {
 }			  
 
 void LBYL_tellmeeverything(LBYL *x) {
-	int numToPrint, i;
+	t_atom_long numToPrint, i;
 
 	version(x);
 	post("  Tolerance: %f", x->tolerance);
@@ -190,13 +224,13 @@ void LBYL_tellmeeverything(LBYL *x) {
 
 #define fabs(x) (((x) < 0.0f) ? (-(x)) : (x))
 
-static int Near(double x, double y, double tolerance) {
+static t_atom_long Near(double x, double y, double tolerance) {
 	return (fabs(x-y) <= tolerance);
 }
 
 void LBYL_double(LBYL *x, double d) {
 	double f = (double) d;
-	int rejected = 0, despair = 0;
+	t_atom_long rejected = 0, despair = 0;
 	double output = processInput(x, f, &rejected, &despair);
 	
 	if (rejected) {
@@ -212,11 +246,11 @@ void LBYL_double(LBYL *x, double d) {
 }
 
 
-void LBYL_int(LBYL *x, int i) {
+void LBYL_int(LBYL *x, t_atom_long i) {
 	LBYL_double(x, (double) i);
 }
 
-static double processInput(LBYL *x, double f, int *rejected, int *despair) {
+static double processInput(LBYL *x, double f, t_atom_long *rejected, t_atom_long *despair) {
 	int i;
 
 	NewInput(x, f);
@@ -320,14 +354,14 @@ static void NewInput(LBYL *x, double f) {
 	++(x->numSeen);
 }
 
-static int NumRemembered(LBYL *x) {
-	if (x->numSeen < RINGBUF_SIZE) return x->numSeen;
-	return RINGBUF_SIZE;
+static t_atom_long NumRemembered(LBYL *x) {
+	if (x->numSeen < (t_atom_long)RINGBUF_SIZE) return x->numSeen;
+	return (t_atom_long)RINGBUF_SIZE;
 }
 
-static double PastInput(LBYL *x, int ago) {
+static double PastInput(LBYL *x, t_atom_long ago) {
 	/* ago=0 means the most recent input */
-	int index;
+	t_atom_long index;
 
 	if (ago >= NumRemembered(x)) {
 		error("lbyl: logic error: bad arg %ld to PastInput", ago);

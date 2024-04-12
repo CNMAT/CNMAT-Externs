@@ -103,7 +103,6 @@
 		9549A9B62BC7D3960077B263 /* macho-prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "macho-prefix.pch"; sourceTree = "<group>"; };
 		9549A9B72BC7D3960077B263 /* max_keydefs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = max_keydefs.h; sourceTree = "<group>"; };
 		9549A9B82BC7D3960077B263 /* max_types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = max_types.h; sourceTree = "<group>"; };
-		9549A9B92BC7D3960077B263 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MaxAPI.framework; sourceTree = "<group>"; };
 		9549A9BC2BC7E1440077B263 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../../../max-sdk-base/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = "<group>"; };
 		A8869DF328EDEB3900A90CAE /* commonsyms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = commonsyms.c; path = "../../../../max-sdk-base/c74support/max-includes/common/commonsyms.c"; sourceTree = "<group>"; };
 		BE88C47B0A82D02400AB33B6 /* lbyl.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = lbyl.c; sourceTree = "<group>"; };
@@ -281,7 +280,6 @@
 				9549A9B62BC7D3960077B263 /* macho-prefix.pch */,
 				9549A9B72BC7D3960077B263 /* max_keydefs.h */,
 				9549A9B82BC7D3960077B263 /* max_types.h */,
-				9549A9B92BC7D3960077B263 /* MaxAPI.framework */,
 			);
 			name = "max-includes";
 			path = "../../../../max-sdk-base/c74support/max-includes";
@@ -419,10 +417,12 @@
 					"'-Wl,-U,_class_register'",
 					"'-Wl,-U,_common_symbols_gettable'",
 					"'-Wl,-U,_error'",
+					"'-Wl,-U,_atom_getfloat'",
 					"'-Wl,-U,_gensym'",
 					"'-Wl,-U,_listout'",
 					"'-Wl,-U,_object_alloc'",
 					"'-Wl,-U,_outlet_float'",
+					"'-Wl,-U,_atom_getlong'",
 					"'-Wl,-U,_post'",
 				);
 				OTHER_REZFLAGS = "";
@@ -478,10 +478,12 @@
 					"'-Wl,-U,_class_register'",
 					"'-Wl,-U,_common_symbols_gettable'",
 					"'-Wl,-U,_error'",
+					"'-Wl,-U,_atom_getfloat'",
 					"'-Wl,-U,_gensym'",
 					"'-Wl,-U,_listout'",
 					"'-Wl,-U,_object_alloc'",
 					"'-Wl,-U,_outlet_float'",
+					"'-Wl,-U,_atom_getlong'",
 					"'-Wl,-U,_post'",
 				);
 				OTHER_REZFLAGS = "";
@@ -536,10 +538,12 @@
 					"'-Wl,-U,_class_register'",
 					"'-Wl,-U,_common_symbols_gettable'",
 					"'-Wl,-U,_error'",
+					"'-Wl,-U,_atom_getfloat'",
 					"'-Wl,-U,_gensym'",
 					"'-Wl,-U,_listout'",
 					"'-Wl,-U,_object_alloc'",
 					"'-Wl,-U,_outlet_float'",
+					"'-Wl,-U,_atom_getlong'",
 					"'-Wl,-U,_post'",
 				);
 				OTHER_REZFLAGS = "";
