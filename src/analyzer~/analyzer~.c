@@ -53,6 +53,7 @@
   version 1.4.3: the hop size is now calculated when the dsp chain is compiled - JM
   version 1.4.4: changed the clock free method, but think there might be a different bug in the free method.
   version 1.4.5: addex obex include for object_free -mzed
+  version 1.4.6: fixed incorrect fixed floating point values, converted to doubles by removing trailing 'f', changed remaining t_float to double, fixed pitch detection
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  
 */
@@ -102,7 +103,7 @@
 #define DEFAULT_FS 44100
 #define DB_REF 96
 #define SFM_MAX 60
-//#define TWOPI 6.28318530717952646f
+//#define TWOPI 6.28318530717952646
 #define FOURPI 12.56637061435917292
 #define THREEPI 9.424777960769379
 #define DEFBUFSIZE 1024		// Default signal buffer size
@@ -128,7 +129,7 @@
 #define MINBW 0.03			// consider BW >= 0.03 FFT bins
 #define GLISS 0.7			// Pitch glissando
 #define BINAMPCOEFF 30.0	// Don't know how to describe this
-#define DBFUDGE 30.8f		// Don't know how to describe this
+#define DBFUDGE 30.8		// Don't know how to describe this
 #define BPEROOVERLOG2 69.24936196 // BINSPEROCT/log(2)
 #define FACTORTOBINS 275.00292191 // 4/(pow(2.0,1/48.0)-1)
 #define BINGUARD 10			// extra bins to throw in front
@@ -155,7 +156,7 @@ static long pitch_intpartialonset[] = {
 	0, 48, 76, 96, 111, 124, 135, 144, 152, 159, 166, 172, 178, 183, 188, 192
 };
 
-#define NPARTIALONSET ((long)(sizeof(pitch_partialonset)/sizeof(t_float)))
+#define NPARTIALONSET ((long)(sizeof(pitch_partialonset)/sizeof(double)))
 
 t_class *analyzer_class;
 
@@ -650,7 +651,7 @@ void analyzer_reattack(t_analyzer *x, t_floatarg attacktime, t_floatarg attackth
 	if (attackthresh <= 0) attackthresh = 1000;
 	x->x_attacktime = attacktime;
 	x->x_attackthresh = attackthresh;
-	x->x_attackbins = (long) (x->x_Fs * 0.001f * attacktime) / (x->BufSize - x->x_overlap);
+	x->x_attackbins = (long) (x->x_Fs * 0.001 * attacktime) / (x->BufSize - x->x_overlap);
 	if (x->x_attackbins >= HISTORY) x->x_attackbins = HISTORY - 1;
 }
 
@@ -659,7 +660,7 @@ void analyzer_vibrato(t_analyzer *x, t_floatarg vibtime, t_floatarg vibdepth) {
 	if (vibdepth <= 0) vibdepth = 1000;
 	x->x_vibtime = vibtime;
 	x->x_vibdepth = vibdepth;
-	x->x_vibbins = (long) (x->x_Fs * 0.001f * vibtime) / (x->BufSize - x->x_overlap);
+	x->x_vibbins = (long) (x->x_Fs * 0.001 * vibtime) / (x->BufSize - x->x_overlap);
 	if (x->x_vibbins >= HISTORY) x->x_vibbins = HISTORY - 1;
 	if (x->x_vibbins < 1) x->x_vibbins = 1;
 }
@@ -718,11 +719,11 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
 	pitch_getit(x);
 
 	double barkList[NUMBAND];
-					
+				
 	// Output Band energy (find brightness #1)
 	for (i=0; i<NUMBAND; i++) {
 		cpt = x->BufSizeBark[i];
-		bark = 0.0f;
+		bark = 0.0;
 		while (cpt > 0) {
 			bark += x->BufPower[index];
 			cpt--;
@@ -765,7 +766,7 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
 			barkList[i] = 10 * log10(bark / DB_REF);
 		}
  	}
-
+	
 	// loudness
 	if (x->x_loud == 0) {
 		for (i=1; i<x->x_FFTSizeOver2; i++) {
@@ -783,7 +784,7 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
 			x->x_loudness = -DB_REF;
 		}
 	}
-	 		 		
+	
  	// for Noisiness
  	prod = pow(prod,invNumBand);
  	sum  = invNumBand * sum;
@@ -797,11 +798,12 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
  	if (SFM > 0) {
 		SFM = 10*log10(prod/sum);
 	} else {
-		SFM = 0.0f;
+		SFM = 0.0;
 	}
 	
 	// Tonality factor or Peakiness
 	x->x_noisiness = MINF((SFM/-SFM_MAX),1); // minimum
+
 
 	// for Brightness
 	if (x->x_bright == 0) {
@@ -816,10 +818,10 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
 			sumSpectrum += x->BufPower[i];
 		}
 	
-		if (sumSpectrum <= 0.0f) x->x_brightness = 0.0f;
+		if (sumSpectrum <= 0.0) x->x_brightness = 0.0;
 		else x->x_brightness = (bright * FsOverFFTSize) / sumSpectrum;
 	} else {
-		if (sumSpectrum <= 0.0f) x->x_brightness = 0.0f;
+		if (sumSpectrum <= 0.0) x->x_brightness = 0.0;
 		else x->x_brightness = (bright * FsOverBarkSize) / sumSpectrum;
 	}		
 
@@ -1124,14 +1126,14 @@ void pitch_getit(t_analyzer *x)
 		if (height<h1 || height<h2 || h1*coeff<POWERTHRES*total_power || h2*coeff<POWERTHRES*total_power) continue; // Go to next
 
 		// Use an informal phase vocoder to estimate the frequency
-		pfreq = ((fp1[-4] - fp1[4]) * (2.0f * fp1[0] - fp1[4] - fp1[-4]) +
-			 (fp1[-3] - fp1[5]) * (2.0f * fp1[1] - fp1[5] - fp1[-3])) / (2.0 * height);
+		pfreq = ((fp1[-4] - fp1[4]) * (2.0 * fp1[0] - fp1[4] - fp1[-4]) +
+			 (fp1[-3] - fp1[5]) * (2.0 * fp1[1] - fp1[5] - fp1[-3])) / (2.0 * height);
 		    
 		// Do this for the two adjacent bins too
-		f1 = ((fp1[-6] - fp1[2]) * (2.0f * fp1[-2] - fp1[2] - fp1[-6]) +
-		      (fp1[-5] - fp1[3]) * (2.0f * fp1[-1] - fp1[3] - fp1[-5])) / (2.0 * h1) - 1;
-		f2 = ((fp1[-2] - fp1[6]) * (2.0f * fp1[2] - fp1[6] - fp1[-2]) +
-		      (fp1[-1] - fp1[7]) * (2.0f * fp1[3] - fp1[7] - fp1[-1])) / (2.0 * h2) + 1;
+		f1 = ((fp1[-6] - fp1[2]) * (2.0 * fp1[-2] - fp1[2] - fp1[-6]) +
+		      (fp1[-5] - fp1[3]) * (2.0 * fp1[-1] - fp1[3] - fp1[-5])) / (2.0 * h1) - 1;
+		f2 = ((fp1[-2] - fp1[6]) * (2.0 * fp1[2] - fp1[6] - fp1[-2]) +
+		      (fp1[-1] - fp1[7]) * (2.0 * fp1[3] - fp1[7] - fp1[-1])) / (2.0 * h2) + 1;
 
 		// get sample mean and variance of the three
 		m = 0.333333 * (pfreq + f1 + f2);
@@ -2040,6 +2042,15 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
         x->x_npeakout = x->x_npeakanal;
     }
     
+    // first set fftsize, buffersize and hopsize in that order.
+    analyzer_fftsize_do_set(x, x->FFTSize);
+    analyzer_buffersize_do_set(x, x->BufSize);
+    analyzer_hopsize_do_set(x, x->x_hop);
+    
+    // then process the rest of the attrs
+    // (this will reprocess the fft, buffer and hop size, but it shouldn't change anything)
+    attr_dictionary_process(x, attrs);
+    object_free(attrs);
     
     /*
      object_post((t_object *)x, "--- Analyzer~ ---");
@@ -2052,17 +2063,7 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
      object_post((t_object *)x, "	Number of peaks to search = %d",x->x_npeakanal);
      object_post((t_object *)x, "	Number of peaks to output = %d",x->x_npeakout);
      */
-    
-    // first set fftsize, buffersize and hopsize in that order.
-    analyzer_fftsize_do_set(x, x->FFTSize);
-    analyzer_buffersize_do_set(x, x->BufSize);
-    analyzer_hopsize_do_set(x, x->x_hop);
-    
-    // then process the rest of the attrs
-    // (this will reprocess the fft, buffer and hop size, but it shouldn't change anything)
-    attr_dictionary_process(x, attrs);
-    object_free(attrs);
-    
+	 
     // Make an outlet for OSC out
     x->x_oscout = outlet_new((t_object *)x, "FullPacket");
     
