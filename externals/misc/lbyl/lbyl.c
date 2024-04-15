@@ -28,8 +28,8 @@ University of California, Berkeley.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: lbyl ("Look Before You Leap")
 DESCRIPTION: Echo an input stream of numbers to the output, but "don't believe" large jumps in the value unless the output stays at that value for a while.
-AUTHORS: Matt Wright
-COPYRIGHT_YEARS: 2002,3,4,5,6
+AUTHORS: Matt Wright, rev. by Jeremy Wagner 2024.
+COPYRIGHT_YEARS: 2002,3,4,5,6, 2024
 DRUPAL_NODE: /patch/4067
 SVN_REVISION: $LastChangedRevision$
 VERSION 0.0: First version  1/3/3
@@ -83,6 +83,7 @@ typedef struct LBYL
 
 void *LBYL_new(t_symbol *s, long argc, t_atom *argv);
 void LBYL_free(LBYL *x);
+void LBYL_assist(LBYL *x, void *b, long m, long a, char *s);
 void LBYL_tolerance(LBYL *x, double t);
 void LBYL_quota(LBYL *x, t_atom_long q);
 void LBYL_tellmeeverything(LBYL *x);
@@ -119,8 +120,10 @@ C74_EXPORT void ext_main(void *r) {
     class_addmethod(c, (method) LBYL_tolerance, "tolerance", A_FLOAT, 0);
     class_addmethod(c, (method) LBYL_quota, "quota", A_LONG, 0);
     class_addmethod(c, (method) Reset, "reset", 0);
+    class_addmethod(c, (method) LBYL_assist, "assist", A_CANT, 0);
     class_register(CLASS_BOX, c);
     lbyl_class = c;
+    
 }
 
 
@@ -155,10 +158,6 @@ void *LBYL_new(t_symbol *s, long argc, t_atom *argv) {
             quota = 2;
             
     }
-        
-    
-    
-	
 //	x = (LBYL *)newobject(class);
     x = object_alloc(lbyl_class);
     x->reject_outlet = listout(x);
@@ -182,6 +181,24 @@ void *LBYL_new(t_symbol *s, long argc, t_atom *argv) {
 	x->jumped = 1;
 	Reset(x);
 	return (x);
+}
+
+void LBYL_assist(LBYL *x, void *b, long m, long a, char *s)
+{
+    if(m == 1){
+        sprintf(s, "Input (float, int, list)");
+    }else if (m == 2) {
+        switch(a){
+            case 0:
+                sprintf(s, "Non-Bogus Values (atom)");
+                break;
+            case 1:
+                sprintf(s, "Denoised Values (atom)");
+                break;
+            case 2:
+                sprintf(s, "Rejected Values (atom)");
+        }
+    }
 }
 
 void LBYL_tolerance(LBYL *x, double t) {
