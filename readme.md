@@ -26,7 +26,7 @@ git clone https://github.com/Cycling74/max-sdk
 
 Download FFTW [here](http://fftw.org/download.html), and extract the package into our folder.
 
-Then, cd into the fftw directory.  Since we are still supporting i386 processors, you need to configure `fftw` to build a universal version. To configure for i386 and x86_64:
+Then, cd into the fftw directory.  Since we are still supporting x86_64 processors, you need to configure `fftw` to build a universal version. To configure for arm64 and x86_64:
 
 1. `./configure CC="gcc -arch arm64 -arch x86_64" CXX="g++ -arch arm64 -arch x86_64" CPP="gcc -E" CXXCPP="g++ -E"`
 
@@ -39,13 +39,13 @@ This is the (default) double precision version. However, there are some files th
 
 5. Finally, rename the folder to `fftw`
 
-*Note: starting with Xcode 10, the standard Mac command-line tools no longer support 32bit (i386) processors, so you may need to remove  `-arch i386` from the configuration flags above if you want to build a 64bit only version with Xcode 10.*
+*Note: starting with Xcode 10, the standard Mac command-line tools no longer support 32bit (i386) processors, so we have removed `-arch i386` from the configuration flags above.*
 
 ### 3. GSL
 
 Download GSL [here](http://gnu.mirror.constant.com/gsl/).  Find the package you're interested in (latest stable release), and extract the package into our folder.
 
-Configuring GSL is the same situation as FFTW:  configure for both i386 and x86_64:
+Configuring GSL is the same situation as FFTW:  configure for both arm64 and x86_64:
 
 1. `./configure CC="gcc -arch arm64 -arch x86_64" CPP="gcc -E" CXXCPP="g++ -E"`
 
@@ -53,7 +53,8 @@ Configuring GSL is the same situation as FFTW:  configure for both i386 and x86_
 
 3. Finally, rename the folder to `gsl`
 
-*Note: starting with Xcode 10, the standard Mac command-line tools no longer support 32bit (i386) processors, so you may need to remove  `-arch i386` from the configuration flags above if you want to build a 64bit only version with Xcode 10.*
+*Note: starting with Xcode 10, the standard Mac command-line tools no longer support 32bit (i386) processors, so we have removed `-arch i386` from the configuration flags above.* 
+
 
 *Note also: it is possible that the `libgsl.a` file is now compiled into the `/gsl/.libs` folder. Currently, you may need to copy this file into the main `/gsl` folder for the Makefile script to build correctly. The default project path settings may need to be updated in the near future.*
 
