@@ -28,7 +28,7 @@ University of California, Berkeley.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: lbyl ("Look Before You Leap")
 DESCRIPTION: Echo an input stream of numbers to the output, but "don't believe" large jumps in the value unless the output stays at that value for a while.
-AUTHORS: Matt Wright, rev. by Jeremy Wagner 2024.
+AUTHORS: Matt Wright, rev. by Jeremy Wagner 2024
 COPYRIGHT_YEARS: 2002,3,4,5,6, 2024
 DRUPAL_NODE: /patch/4067
 SVN_REVISION: $LastChangedRevision$

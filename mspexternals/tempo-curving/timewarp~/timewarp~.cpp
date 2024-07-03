@@ -254,10 +254,10 @@ typedef struct _te{
 	double time_min, time_max;
 	double freq_min, freq_max;
 	double error_span, error_offset; // these are the defaults that will be used when a new point is created
-	int show_beat_correction;
+	int64_t show_beat_correction;
 	int show_tempo_correction;
-	int show_x_axis, show_y_axis;
-	int show_major_x_grid, show_minor_x_grid, show_major_y_grid, show_minor_y_grid;
+	int64_t show_x_axis, show_y_axis;
+	int64_t show_major_x_grid, show_minor_x_grid, show_major_y_grid, show_minor_y_grid;
 	int show_beats;
 	long show_beat_numbers;
 	float major_grid_width_sec, major_grid_height_bps;
@@ -280,7 +280,7 @@ typedef struct _te{
 	int snap_to_grid;
 	t_jsurface *surface;
 	t_object *pv;
-	int draw_mouse, draw_voice_legend;
+	int64_t draw_mouse, draw_voice_legend;
 	float fs;
 	t_rect sel_box;
 	unsigned long sel_box_selected;
@@ -288,8 +288,8 @@ typedef struct _te{
 	int *beatnumbuf; // temp array for storing indexes where beats are drawn
 	int beatnumbuflen;
 	int beatnumbufpos;
-	int highlight_every_n;
-	int reset_highlight_at_controlpoints;
+	long highlight_every_n;
+	long reset_highlight_at_controlpoints;
 	int apply_selection_box_to_all_functions_by_default;
 	void *update_position_clock;
 	float position_update_rate_ms;
@@ -1295,7 +1295,7 @@ void te_perform64(t_te *x, t_object *dsp64, double **ins, long numins, double **
 	double *out_pointnum = outs[3];//(t_float *)w[7];
 	double *out_beatnum = outs[4];//(t_float *)w[8];
 
-	int n = vectorsize;//(int)w[2];
+	int n = (int)vectorsize;//(int)w[2];
 
 	memcpy(out_phase_wrapped, x->ptrs[x->currentFunction * 5], n * sizeof(double));
 	memcpy(out_phase, x->ptrs[x->currentFunction * 5 + 1], n * sizeof(double));
@@ -1313,36 +1313,36 @@ void te_dsp64(t_te *x, t_object *dsp64, short *count, double samplerate, long ma
 	x->fs = samplerate;
 	if(count[0]){
 		for(j = 0; j < x->numFunctions; j++){
-			if(name1 = te_mangleName(x->name, 0, j)){
+            if((name1 = te_mangleName(x->name, 0, j))){
 				name1->s_thing = (t_object *)(x->ptrs[j * 5]);
 			}
-			if(name2 = te_mangleName(x->name, 1, j)){
+            if((name2 = te_mangleName(x->name, 1, j))){
 				name2->s_thing = (t_object *)(x->ptrs[(j * 5) + 1]);
 			}
-			if(name3 = te_mangleName(x->name, 2, j)){
+            if((name3 = te_mangleName(x->name, 2, j))){
 				name3->s_thing = (t_object *)(x->ptrs[(j * 5) + 2]);
 			}
-			if(name4 = te_mangleName(x->name, 3, j)){
+            if((name4 = te_mangleName(x->name, 3, j))){
 				name4->s_thing = (t_object *)(x->ptrs[(j * 5) + 3]);
 			}
-			if(name5 = te_mangleName(x->name, 4, j)){
+            if((name5 = te_mangleName(x->name, 4, j))){
 				name5->s_thing = (t_object *)(x->ptrs[(j * 5) + 4]);
 			}
 		}
 		for(j = x->numFunctions; j < MAX_NUM_FUNCTIONS; j++){
-			if(name1 = te_mangleName(x->name, 0, j)){
+            if((name1 = te_mangleName(x->name, 0, j))){
 				name1->s_thing = NULL;
 			}
-			if(name2 = te_mangleName(x->name, 1, j)){
+            if((name2 = te_mangleName(x->name, 1, j))){
 				name2->s_thing = NULL;
 			}
-			if(name3 = te_mangleName(x->name, 2, j)){
+            if((name3 = te_mangleName(x->name, 2, j))){
 				name3->s_thing = NULL;
 			}
-			if(name4 = te_mangleName(x->name, 3, j)){
+            if((name4 = te_mangleName(x->name, 3, j))){
 				name4->s_thing = NULL;
 			}
-			if(name5 = te_mangleName(x->name, 4, j)){
+            if((name5 = te_mangleName(x->name, 4, j))){
 				name5->s_thing = NULL;
 			}
 		}
@@ -1356,36 +1356,36 @@ void te_dsp(t_te *x, t_signal **sp, short *count){
 	x->fs = sp[0]->s_sr;
 	if(count[0]){
 		for(j = 0; j < x->numFunctions; j++){
-			if(name1 = te_mangleName(x->name, 0, j)){
+            if((name1 = te_mangleName(x->name, 0, j))){
 				name1->s_thing = (t_object *)(x->ptrs[j * 5]);
 			}
-			if(name2 = te_mangleName(x->name, 1, j)){
+            if((name2 = te_mangleName(x->name, 1, j))){
 				name2->s_thing = (t_object *)(x->ptrs[(j * 5) + 1]);
 			}
-			if(name3 = te_mangleName(x->name, 2, j)){
+            if((name3 = te_mangleName(x->name, 2, j))){
 				name3->s_thing = (t_object *)(x->ptrs[(j * 5) + 2]);
 			}
-			if(name4 = te_mangleName(x->name, 3, j)){
+            if((name4 = te_mangleName(x->name, 3, j))){
 				name4->s_thing = (t_object *)(x->ptrs[(j * 5) + 3]);
 			}
-			if(name5 = te_mangleName(x->name, 4, j)){
+            if((name5 = te_mangleName(x->name, 4, j))){
 				name5->s_thing = (t_object *)(x->ptrs[(j * 5) + 4]);
 			}
 		}
 		for(j = x->numFunctions; j < MAX_NUM_FUNCTIONS; j++){
-			if(name1 = te_mangleName(x->name, 0, j)){
+			if((name1 = te_mangleName(x->name, 0, j))){
 				name1->s_thing = NULL;
 			}
-			if(name2 = te_mangleName(x->name, 1, j)){
+			if((name2 = te_mangleName(x->name, 1, j))){
 				name2->s_thing = NULL;
 			}
-			if(name3 = te_mangleName(x->name, 2, j)){
+            if((name3 = te_mangleName(x->name, 2, j))){
 				name3->s_thing = NULL;
 			}
-			if(name4 = te_mangleName(x->name, 3, j)){
+            if((name4 = te_mangleName(x->name, 3, j))){
 				name4->s_thing = NULL;
 			}
-			if(name5 = te_mangleName(x->name, 4, j)){
+            if((name5 = te_mangleName(x->name, 4, j))){
 				name5->s_thing = NULL;
 			}
 		}
@@ -1409,7 +1409,7 @@ void te_workerproc(t_sysparallel_worker *worker){
 	double *in = (double *)w[3];
 
 	int numfunctions = x->numFunctions;
-	int id = worker->id;
+	int id = (int)(worker->id);
 	int i;
 	int muted[MAX_NUM_FUNCTIONS];
 	memcpy(muted, x->muteFunctions, MAX_NUM_FUNCTIONS * sizeof(int));
@@ -2177,7 +2177,7 @@ void te_list(t_te *x, t_symbol *msg, short argc, t_atom *argv){
 				return;
 			}
 			t_atom *ptr = argv;
-			x->selected = te_allocAndInsertPoint(x, (t_pt){atom_getfloat(argv + 1), atom_getfloat(argv + 2)}, atom_getlong(argv));
+			x->selected = te_allocAndInsertPoint(x, (t_pt){atom_getfloat(argv + 1), atom_getfloat(argv + 2)}, (int)atom_getlong(argv));
 			ptr += 3;
 			x->selected->d_freq = x->selected->coords.y;
 			x->selected->a_phase = x->selected->d_phase = 0.;
@@ -2227,12 +2227,12 @@ void te_list(t_te *x, t_symbol *msg, short argc, t_atom *argv){
 			}
 			t_point *p = x->functions[x->currentFunction];
 			int i;
-			int row = atom_getlong(&(argv[1]));
+			int row = (int)atom_getlong(&(argv[1]));
 			if(row == 0){ // header
 				return;
 			}
 			row--; // decrement the row--the 0th point is on row 1 due to the header
-			int col = atom_getlong(&(argv[0]));
+			int col = (int)atom_getlong(&(argv[0]));
 			double val = atom_getfloat(&(argv[2]));
 			for(i = 0; p; i++){
 				if(i == row){
@@ -2837,7 +2837,7 @@ void te_mousedown(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 	if(x->lockFunctions[x->currentFunction]){
 		return;
 	}
-	x->mousestate = modifiers;
+	x->mousestate = (int)modifiers;
 	if(x->hideFunctions[x->currentFunction]){
 		return;
 	}
@@ -2920,7 +2920,7 @@ void te_mousedown(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 	case 0x94:{
 		// control.  
 		// delete a point if one was clicked
-		if(x->selected = te_select(x, pt)){
+        if((x->selected = te_select(x, pt))){
 			te_removePoint(x, x->selected, x->currentFunction);
 			x->selected = NULL;
 			break;
@@ -3610,7 +3610,7 @@ void te_setFunction(t_te *x, long f){
 	}
 	te_clearSelected(x);
 	te_critical_enter(x->lock, __LINE__);
-	x->currentFunction = f;
+	x->currentFunction = int(f);
 	te_critical_exit(x->lock, __LINE__);
 	te_dumpCellblock(x);
 	te_invalidateAllFunctions(x);
@@ -4263,17 +4263,17 @@ void te_outputBeatOSC(t_te *x, long function, long point, long beat, float time,
 	t_osc_bndl_u *nested_bndl = osc_bundle_u_alloc();
 	t_osc_msg_u *function_msg = osc_message_u_alloc();
 	osc_message_u_setAddress(function_msg, "/function");
-	osc_message_u_appendInt32(function_msg, function);
+	osc_message_u_appendInt32(function_msg, (int32_t)function);
 	osc_bundle_u_addMsg(nested_bndl, function_msg);
 
 	t_osc_msg_u *point_msg = osc_message_u_alloc();
 	osc_message_u_setAddress(point_msg, "/point");
-	osc_message_u_appendInt32(point_msg, point);
+	osc_message_u_appendInt32(point_msg, (int32_t)point);
 	osc_bundle_u_addMsg(nested_bndl, point_msg);
 
 	t_osc_msg_u *beat_msg = osc_message_u_alloc();
 	osc_message_u_setAddress(beat_msg, "/beat");
-	osc_message_u_appendInt32(beat_msg, beat);
+	osc_message_u_appendInt32(beat_msg, (int32_t)beat);
 	osc_bundle_u_addMsg(nested_bndl, beat_msg);
 
 	t_osc_msg_u *time_msg = osc_message_u_alloc();
@@ -4403,27 +4403,27 @@ void te_outputSubdivOSC(t_te *x, long function, long point, long beat, long subd
 	t_osc_msg_u *function_msg = osc_message_u_alloc();
 
 	osc_message_u_setAddress(function_msg, "/function");
-	osc_message_u_appendInt32(function_msg, function);
+	osc_message_u_appendInt32(function_msg, (int32_t)function);
 	osc_bundle_u_addMsg(nested_bndl, function_msg);
 
 	t_osc_msg_u *point_msg = osc_message_u_alloc();
 	osc_message_u_setAddress(point_msg, "/point");
-	osc_message_u_appendInt32(point_msg, point);
+	osc_message_u_appendInt32(point_msg, (int32_t)point);
 	osc_bundle_u_addMsg(nested_bndl, point_msg);
 
 	t_osc_msg_u *beat_msg = osc_message_u_alloc();
 	osc_message_u_setAddress(beat_msg, "/beat");
-	osc_message_u_appendInt32(beat_msg, beat);
+	osc_message_u_appendInt32(beat_msg, (int32_t)beat);
 	osc_bundle_u_addMsg(nested_bndl, beat_msg);
 
 	t_osc_msg_u *subdivtype_msg = osc_message_u_alloc();
 	osc_message_u_setAddress(subdivtype_msg, "/subdivtype");
-	osc_message_u_appendInt32(subdivtype_msg, subdivtype);
+	osc_message_u_appendInt32(subdivtype_msg, (int32_t)subdivtype);
 	osc_bundle_u_addMsg(nested_bndl, subdivtype_msg);
 
 	t_osc_msg_u *subdiv_msg = osc_message_u_alloc();
 	osc_message_u_setAddress(subdiv_msg, "/subdiv");
-	osc_message_u_appendInt32(subdiv_msg, subdiv);
+	osc_message_u_appendInt32(subdiv_msg, (int32_t)subdiv);
 	osc_bundle_u_addMsg(nested_bndl, subdiv_msg);
 
 	t_osc_msg_u *time_msg = osc_message_u_alloc();
@@ -4577,7 +4577,7 @@ void te_dumpBeatsForFunction(t_te *x,
 		return;
 	}
 	t_plan plan;
-	te_makePlan(x, x->time_min, function, &plan);
+	te_makePlan(x, x->time_min, (int)function, &plan);
 	//double prev_phase = .9999;
 	double prev_phase[numsubdivs + 1];
 	double subdivs[numsubdivs + 1];
@@ -4603,8 +4603,8 @@ void te_dumpBeatsForFunction(t_te *x,
 	time_min = ceil(time_min * 44100.) / 44100.;
 	time_max = floor(time_max * 44100.) / 44100.;
 	for(t = time_min; t <= time_max; t += (1. / (44100. / 64.))){
-		if(!te_isPlanValid(x, t, &plan, function)){
-			te_makePlan(x, t, function, &plan);
+		if(!te_isPlanValid(x, t, &plan, (int)function)){
+			te_makePlan(x, t, (int)function, &plan);
 		}
 		for(i = 0; i < numsubdivs + 1; i++){
 			p = te_computeCorrectedPhase(t, &plan) * subdivs[i];
@@ -4646,7 +4646,7 @@ void te_dumpBeatsForFunction(t_te *x,
 						beat = (long)(p / subdivs[i]);
 						time = tt;
 						tempo = te_computeCorrectedTempo(tt, &plan) * subdivs[i];
-						phase = te_computeCorrectedUnwrappedMonotonicPhase(x, tt, function, &plan);
+						phase = te_computeCorrectedUnwrappedMonotonicPhase(x, tt, (int)function, &plan);
 						if(i > 0){
 							// subdiv
 							long subdivtype, subdiv;
@@ -4985,7 +4985,7 @@ void te_clearRange(t_te *x, t_symbol *msg, int argc, t_atom *argv){
 	t_atom *ptr = argv;
 	if(argc > 2){
 		if(atom_gettype(ptr) == A_LONG){
-			function = atom_getlong(ptr++);
+			function = (int)(atom_getlong(ptr++));
 		}else if(atom_getsym(ptr) == gensym("*")){
 			te_clearRangeForAllFunctions(x, atom_getfloat(ptr + 1), atom_getfloat(ptr + 2));
 			return;
@@ -5070,7 +5070,7 @@ void te_hideFunction(t_te *x, t_symbol *msg, short argc, t_atom *argv){
 		error("tempo_editor: two arguments required: function number, on/off");
 		return;
 	}
-	x->hideFunctions[function] = b;
+	x->hideFunctions[function] = (int)b;
 	jbox_invalidate_layer((t_object *)x, x->pv, l_function_layers[function]);
 	jbox_redraw((t_jbox *)x);
 }
@@ -5087,7 +5087,7 @@ void te_muteFunction(t_te *x, t_symbol *msg, short argc, t_atom *argv){
 		error("tempo_editor: two arguments required: function number, on/off");
 		return;
 	}
-	x->muteFunctions[function] = b;
+	x->muteFunctions[function] = (int)b;
 	jbox_invalidate_layer((t_object *)x, x->pv, l_legend);
 	jbox_invalidate_layer((t_object *)x, x->pv, l_function_layers[function]);
 	jbox_redraw((t_jbox *)x);
@@ -5105,7 +5105,7 @@ void te_lockFunction(t_te *x, t_symbol *msg, short argc, t_atom *argv){
 		error("tempo_editor: two arguments required: function number, on/off");
 		return;
 	}
-	x->lockFunctions[function] = b;
+	x->lockFunctions[function] = (int)b;
 	jbox_invalidate_layer((t_object *)x, x->pv, l_legend);
 	jbox_redraw((t_jbox *)x);
 }
@@ -5212,7 +5212,7 @@ void te_scaleToFit(t_te *x, t_symbol *msg, int argc, t_atom *argv){
 			if(havestar){
 				//weird...
 			}else{
-				functions[numfunctions++] = atom_getlong(argv + i);
+				functions[numfunctions++] = (int)(atom_getlong(argv + i));
 			}
 			break;
 		case A_SYM:
@@ -5313,7 +5313,7 @@ void te_addToFunction(t_te *x, t_symbol *msg, short argc, t_atom *argv){
 	int func = x->currentFunction;
 	if(argc == 3){
 		offset = 1;
-		func = atom_getlong(argv);
+		func = (int)(atom_getlong(argv));
 	}
 	float xx = atom_getfloat(argv + offset++);
 	float yy = atom_getfloat(argv + offset++);
@@ -5375,7 +5375,7 @@ void te_setFunctionColor(t_te *x, t_symbol *msg, int argc, t_atom *argv){
 	int function = x->currentFunction;
 	t_atom *ptr = argv;
 	if(atom_gettype(ptr) == A_LONG){
-		function = atom_getlong(ptr++);
+		function = (int)(atom_getlong(ptr++));
 	}
 	t_jrgba color;
 	color.red = atom_getfloat(ptr++);
@@ -5728,10 +5728,10 @@ int main(void){
 	CLASS_ATTR_SYM(c, "name", 0, t_te, name);
 	CLASS_ATTR_SAVE(c, "name", 0);
 	CLASS_ATTR_LONG(c, "showtempocorrection", 0, t_te, show_tempo_correction);
-	//CLASS_ATTR_SAVE(c, "showtempocorrection", 0);
+	CLASS_ATTR_SAVE(c, "showtempocorrection", 0);
 	CLASS_ATTR_PAINT(c, "showtempocorrection", 0);
 	CLASS_ATTR_LONG(c, "showbeatcorrection", 0, t_te, show_beat_correction);
-	//CLASS_ATTR_SAVE(c, "showbeatcorrection", 0);
+	CLASS_ATTR_SAVE(c, "showbeatcorrection", 0);
 	CLASS_ATTR_PAINT(c, "showbeatcorrection", 0);
 	CLASS_ATTR_LONG(c, "show_xaxis", 0, t_te, show_x_axis);
 	CLASS_ATTR_SAVE(c, "show_xaxis", 0);
@@ -5930,7 +5930,7 @@ void *te_new(t_symbol *s, long argc, t_atom *argv){
 		//      | JBOX_TEXTFIELD 
 		; 
 
- 	if(x = (t_te *)object_alloc(te_class)){ 
+    if((x = (t_te *)object_alloc(te_class))){ 
 
  		jbox_new((t_jbox *)x, boxflags, argc, argv); 
  		x->box.z_box.b_firstin = (t_object *)x; 
@@ -6086,7 +6086,7 @@ t_max_err te_functions_set(t_te *x, t_object *attr, long argc, t_atom *argv){
 	t_atom *ptr = argv;
 	x->numFunctions = 0;
 	while(ptr - argv < argc){
-		int npoints = atom_getlong(ptr++);
+		int npoints = (int)(atom_getlong(ptr++));
 		//printf("npoints = %d\n", npoints);
 		if(npoints == 0){
 			continue;
@@ -6104,7 +6104,7 @@ t_max_err te_functions_set(t_te *x, t_object *attr, long argc, t_atom *argv){
 			x->selected->beta = atom_getfloat(ptr++);
 			x->selected->error_alpha = atom_getfloat(ptr++);
 			x->selected->error_beta = atom_getfloat(ptr++);
-			x->selected->whichPoint = atom_getlong(ptr++);
+			x->selected->whichPoint = (int)(atom_getlong(ptr++));
 			//te_postpoint(x->selected, printf);
 		}
 	}
@@ -6118,7 +6118,7 @@ t_max_err te_functions_set(t_te *x, t_object *attr, long argc, t_atom *argv){
 t_max_err te_functionColorsGet(t_te *x, t_object *attr, long *argc, t_atom **argv){
 	char alloc;
 	t_max_err ret;
-	if(ret = atom_alloc_array(MAX_NUM_FUNCTIONS * 4, argc, argv, &alloc)){
+    if((ret = atom_alloc_array(MAX_NUM_FUNCTIONS * 4, argc, argv, &alloc))){
 		return ret;
 	}
 	int i;
