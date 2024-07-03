@@ -150,7 +150,7 @@ void thread_join_assist (thread_join *x, void *box, long msg, long arg, char *ds
 }
 
 void thread_join_anything(thread_join *x, t_symbol* s, int argc, t_atom* argv) {
-    schedule_defer(x, thread_join_outlet_anything, 0, s, argc, argv);
+    schedule_defer(x, (method)thread_join_outlet_anything, 0, s, argc, argv);
 }
 
 void thread_join_outlet_anything(thread_join *x, t_symbol* s, int argc, t_atom* argv) {
@@ -158,7 +158,7 @@ void thread_join_outlet_anything(thread_join *x, t_symbol* s, int argc, t_atom* 
 }
 
 void thread_join_bang(thread_join* x) {
-    schedule_defer(x, thread_join_outlet_bang, 0, ps_bang, 0, NULL);
+    schedule_defer(x, (method)thread_join_outlet_bang, 0, ps_bang, 0, NULL);
 }
 
 void thread_join_outlet_bang(thread_join *x, t_symbol* s, int argc, t_atom* argv) {
@@ -168,7 +168,7 @@ void thread_join_outlet_bang(thread_join *x, t_symbol* s, int argc, t_atom* argv
 void thread_join_float(thread_join* x, double f) {
     t_atom a;
     atom_setfloat(&a, f);
-    schedule_defer(x, thread_join_outlet_float, 0, ps_float, 1, &a);
+    schedule_defer(x, (method)thread_join_outlet_float, 0, ps_float, 1, &a);
 }
 
 void thread_join_outlet_float(thread_join *x, t_symbol* s, int argc, t_atom* argv) {
@@ -178,7 +178,7 @@ void thread_join_outlet_float(thread_join *x, t_symbol* s, int argc, t_atom* arg
 void thread_join_int(thread_join* x, int i) {
     t_atom a;
     atom_setlong(&a, i);
-    schedule_defer(x, thread_join_outlet_int, 0, ps_int, 1, &a);
+    schedule_defer(x, (method)thread_join_outlet_int, 0, ps_int, 1, &a);
 }
 
 void thread_join_outlet_int(thread_join *x, t_symbol* s, int argc, t_atom* argv) {

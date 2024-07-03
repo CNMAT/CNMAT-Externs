@@ -13,8 +13,8 @@
 			buildPhases = (
 			);
 			dependencies = (
+				95A539952C35BD0C00D22063 /* PBXTargetDependency */,
 				9551A2472BCD894C0055B298 /* PBXTargetDependency */,
-				9551A2452BCB090D0055B298 /* PBXTargetDependency */,
 				95594933274B6B690059B956 /* PBXTargetDependency */,
 				A8FD9BEF279B713300DE60AB /* PBXTargetDependency */,
 				A88E1DFA278DF5B700DFC848 /* PBXTargetDependency */,
@@ -572,7 +572,6 @@
 		95C7C0082C334FCE00EF6556 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF18CE163B5C5B00F94922 /* CoreServices.framework */; };
 		95C7C0092C334FCE00EF6556 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52ADE2361733042E00074C0C /* MaxAudioAPI.framework */; };
 		95C7C00F2C334FF400EF6556 /* analyzer2~.c in Sources */ = {isa = PBXBuildFile; fileRef = 95C7BFA02C33309800EF6556 /* analyzer2~.c */; };
-		95C7C0152C33534A00EF6556 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 95C7C0132C3351D200EF6556 /* Info.plist */; };
 		A4E832E619E8642800C55B20 /* commonsyms.c in Sources */ = {isa = PBXBuildFile; fileRef = 52E44C7C15F4835400C91B67 /* commonsyms.c */; };
 		A4E832E919E8642800C55B20 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F10AA515F07157008FC371 /* CoreFoundation.framework */; };
 		A4E832EA19E8642800C55B20 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52FF186B163B5C3800F94922 /* Accelerate.framework */; };
@@ -884,13 +883,6 @@
 			remoteGlobalIDString = 52F10ACE15F071FA008FC371;
 			remoteInfo = "2threshattack~";
 		};
-		9551A2442BCB090D0055B298 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 52E4479415F1890800C91B67;
-			remoteInfo = "analyzer~";
-		};
 		9551A2462BCD894C0055B298 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
@@ -911,6 +903,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 52E44A2615F2881B00C91B67;
 			remoteInfo = printit;
+		};
+		95A539942C35BD0C00D22063 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 52F10A9915F07157008FC371 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 95C7BFFE2C334FCE00EF6556;
+			remoteInfo = "analyzer2~";
 		};
 		A4BA997924E45188006FD002 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1260,14 +1259,14 @@
 		52FF186B163B5C3800F94922 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = ../../../../../System/Library/Frameworks/Accelerate.framework; sourceTree = "<group>"; };
 		52FF189D163B5C4B00F94922 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = ../../../../../System/Library/Frameworks/Carbon.framework; sourceTree = "<group>"; };
 		52FF18CE163B5C5B00F94922 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = ../../../../../System/Library/Frameworks/CoreServices.framework; sourceTree = "<group>"; };
-		95A5398D2C35B5F500D22063 /* _kiss_fft_guts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _kiss_fft_guts.h; sourceTree = "<group>"; };
-		95A5398E2C35B60500D22063 /* kiss_fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kiss_fft.h; sourceTree = "<group>"; };
-		95A5398F2C35B60500D22063 /* kiss_fft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kiss_fft.c; sourceTree = "<group>"; };
-		95A539932C35B65C00D22063 /* kiss_fft_log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kiss_fft_log.h; sourceTree = "<group>"; };
-		95C7BF9F2C33309800EF6556 /* analyzer2~.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "analyzer2~.h"; sourceTree = "<group>"; };
-		95C7BFA02C33309800EF6556 /* analyzer2~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "analyzer2~.c"; sourceTree = "<group>"; };
+		95A5398D2C35B5F500D22063 /* _kiss_fft_guts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _kiss_fft_guts.h; path = "../src/analyzer2~/_kiss_fft_guts.h"; sourceTree = "<group>"; };
+		95A5398E2C35B60500D22063 /* kiss_fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = kiss_fft.h; path = "../src/analyzer2~/kiss_fft.h"; sourceTree = "<group>"; };
+		95A5398F2C35B60500D22063 /* kiss_fft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = kiss_fft.c; path = "../src/analyzer2~/kiss_fft.c"; sourceTree = "<group>"; };
+		95A539932C35B65C00D22063 /* kiss_fft_log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = kiss_fft_log.h; path = "../src/analyzer2~/kiss_fft_log.h"; sourceTree = "<group>"; };
+		95C7BF9F2C33309800EF6556 /* analyzer2~.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "analyzer2~.h"; path = "../src/analyzer2~/analyzer2~.h"; sourceTree = "<group>"; };
+		95C7BFA02C33309800EF6556 /* analyzer2~.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "analyzer2~.c"; path = "../src/analyzer2~/analyzer2~.c"; sourceTree = "<group>"; };
 		95C7C00E2C334FCE00EF6556 /* analyzer2~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "analyzer2~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		95C7C0132C3351D200EF6556 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		95C7C0132C3351D200EF6556 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = "../src/analyzer2~/Info.plist"; sourceTree = "<group>"; };
 		A4542BC61FC6837300330E3F /* 2threshattack~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "2threshattack~.maxhelp"; path = "help/2threshattack~.maxhelp"; sourceTree = SOURCE_ROOT; };
 		A4542BC71FC6838000330E3F /* accumulate~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "accumulate~.maxhelp"; path = "help/accumulate~.maxhelp"; sourceTree = SOURCE_ROOT; };
 		A4542BC81FC6838E00330E3F /* analyzer~.maxhelp */ = {isa = PBXFileReference; lastKnownFileType = text; name = "analyzer~.maxhelp"; path = "help/analyzer~.maxhelp"; sourceTree = SOURCE_ROOT; };
@@ -4625,7 +4624,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				95C7C0152C33534A00EF6556 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5506,11 +5504,6 @@
 			target = 52F10ACE15F071FA008FC371 /* 2threshattack~ */;
 			targetProxy = 52F10AE015F072C6008FC371 /* PBXContainerItemProxy */;
 		};
-		9551A2452BCB090D0055B298 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 52E4479415F1890800C91B67 /* analyzer~ */;
-			targetProxy = 9551A2442BCB090D0055B298 /* PBXContainerItemProxy */;
-		};
 		9551A2472BCD894C0055B298 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 52E44B1615F2887600C91B67 /* thread.join */;
@@ -5525,6 +5518,11 @@
 			isa = PBXTargetDependency;
 			target = 52E44A2615F2881B00C91B67 /* printit */;
 			targetProxy = 9578D97D275681C000913739 /* PBXContainerItemProxy */;
+		};
+		95A539952C35BD0C00D22063 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 95C7BFFE2C334FCE00EF6556 /* analyzer2~ */;
+			targetProxy = 95A539942C35BD0C00D22063 /* PBXContainerItemProxy */;
 		};
 		A4BA997824E45188006FD002 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -8796,7 +8794,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "$(SRCROOT)/analyzer2~/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/src/analyzer2~/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
@@ -8827,7 +8825,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "$(SRCROOT)/analyzer2~/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/src/analyzer2~/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
