@@ -52,7 +52,7 @@ extern "C" {
 # define kiss_fft_scalar __m128
 # ifndef KISS_FFT_MALLOC
 #  define KISS_FFT_MALLOC(nbytes) _mm_malloc(nbytes,16)
-#  define KISS_FFT_ALIGN_CHECK(ptr) 
+#  define KISS_FFT_ALIGN_CHECK(ptr)
 #  define KISS_FFT_ALIGN_SIZE_UP(size) ((size + 15UL) & ~0xFUL)
 # endif
 # ifndef KISS_FFT_FREE
@@ -74,7 +74,7 @@ extern "C" {
 #include <stdint.h>
 # if (FIXED_POINT == 32)
 #  define kiss_fft_scalar int32_t
-# else	
+# else
 #  define kiss_fft_scalar int16_t
 # endif
 #else
@@ -91,9 +91,9 @@ typedef struct {
 
 typedef struct kiss_fft_state* kiss_fft_cfg;
 
-/* 
+/*
  *  kiss_fft_alloc
- *  
+ *
  *  Initialize a FFT (or IFFT) algorithm's cfg/state buffer.
  *
  *  typical usage:      kiss_fft_cfg mycfg=kiss_fft_alloc(1024,0,NULL,NULL);
@@ -103,14 +103,14 @@ typedef struct kiss_fft_state* kiss_fft_cfg;
  *
  *  If lenmem is NULL, then kiss_fft_alloc will allocate a cfg buffer using malloc.
  *  The returned value should be free()d when done to avoid memory leaks.
- *  
+ *
  *  The state can be placed in a user supplied buffer 'mem':
  *  If lenmem is not NULL and mem is not NULL and *lenmem is large enough,
  *      then the function places the cfg in mem and the size used in *lenmem
  *      and returns mem.
- *  
+ *
  *  If lenmem is not NULL and ( mem is NULL or *lenmem is not large enough),
- *      then the function returns NULL and places the minimum cfg 
+ *      then the function returns NULL and places the minimum cfg
  *      buffer size in *lenmem.
  * */
 
@@ -133,16 +133,16 @@ void KISS_FFT_API kiss_fft(kiss_fft_cfg cfg,const kiss_fft_cpx *fin,kiss_fft_cpx
  * */
 void KISS_FFT_API kiss_fft_stride(kiss_fft_cfg cfg,const kiss_fft_cpx *fin,kiss_fft_cpx *fout,int fin_stride);
 
-/* If kiss_fft_alloc allocated a buffer, it is one contiguous 
+/* If kiss_fft_alloc allocated a buffer, it is one contiguous
    buffer and can be simply free()d when no longer needed*/
 #define kiss_fft_free KISS_FFT_FREE
 
 /*
- Cleans up some memory that gets managed internally. Not necessary to call, but it might clean up 
+ Cleans up some memory that gets managed internally. Not necessary to call, but it might clean up
  your compiler output to call this before you exit.
 */
 void KISS_FFT_API kiss_fft_cleanup(void);
-	
+    
 
 /*
  * Returns the smallest integer k, such that k>=n and k has only "fast" factors (2,3,5)
@@ -154,7 +154,7 @@ int KISS_FFT_API kiss_fft_next_fast_size(int n);
         (kiss_fft_next_fast_size( ((n)+1)>>1)<<1)
 
 #ifdef __cplusplus
-} 
+}
 #endif
 
 #endif

@@ -81,8 +81,8 @@
 #include <stdint.h>
 //#include "fftw3.h"
 //#include "fft.h"
-#define kiss_fft_scalar double
-#include "../../kissfft/kiss_fft.h"
+#define kiss_fft_scalar float
+#include "../../../kissfft/kiss_fft.h"
 
 #define OSC 1
 #ifdef OSC
@@ -710,9 +710,11 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
     // this function is only ever called by the scheduler (via schedule_delay() in the perform
     // routine), so we don't need to enter a critical section to mess with the data stored
     // in our struct
-//    memset(x->BufFFT_in, '\0', FFTSize * sizeof(kiss_fft_cpx)); // takes care of zero padding
+    //memset(x->BufFFT_in, '\0', FFTSize * sizeof(kiss_fft_cpx)); // takes care of zero padding
+    x->BufFFT_in = (kiss_fft_cpx*)KISS_FFT_MALLOC(FFTSize * sizeof(kiss_fft_cpx));
     for(int i=0;i<FFTSize;i++){
-        x->BufFFT_in[i].r = x->BufFFT_in[i].i = 0;
+        x->BufFFT_in[i].r = 0;
+        x->BufFFT_in[i].i = 0;
     }
     if(window_index == Recta){
         for(int i = 0; i < argc; i++){
@@ -722,10 +724,11 @@ void analyzer_tick(t_analyzer *x, t_symbol *msg, int argc, t_atom *argv)
         for(int i = 0; i < argc; i++){
             //x->BufFFT_in[i] = atom_getfloat(argv + i) * x->windows[window][i];
             x->BufFFT_in[i].r = atom_getfloat(argv + i) * window[i];
+            x->BufFFT_in[i].i = 0;
         }
     }
 //    fftw_execute(fft_plan);
-    kiss_fft(x->fft_cfg, x->BufFFT_in, x->BufFFT_out);
+    kiss_fft(fft_cfg, x->BufFFT_in, x->BufFFT_out);
 
 //    double *BufFFT = x->BufFFT_out;
     // Squared Absolute
@@ -1136,55 +1139,55 @@ void pitch_getit(t_analyzer *x)
     for (i=MINBIN, fp1=spec+MINBIN, fp2=powSpec+MINBIN; (i<n-3) && (npeak<npeaktot); i++, fp1++, fp2++) {
         double height = fp2[0], h1 = fp2[-1], h2 = fp2[1]; // Bin power and adjacents
         double totalfreq, pfreq, f1, f2, m, var, stdev;
-    
+        
         // Get worried if you see this
         if (fp1+7 >= spec+x->FFTSize) {
             object_post((t_object *)x, "*** fp1 %p, fp1+7 %p, spec %p, spec+FFTsize %p", fp1, fp1+7, spec, spec+x->FFTSize);
         }
-    
+        
         if (height<h1 || height<h2 || h1*coeff<POWERTHRES*total_power || h2*coeff<POWERTHRES*total_power) continue; // Go to next
-
+        
         // Use an informal phase vocoder to estimate the frequency
         pfreq = ((fp1[-2].r - fp1[2].r) * (2.0f * fp1[0].r - fp1[2].r - fp1[-2].r) +
-             (fp1[-2].i - fp1[2].i) * (2.0f * fp1[0].i - fp1[2].i - fp1[-2].i)) / (2.0 * height);
-            
+                 (fp1[-2].i - fp1[2].i) * (2.0f * fp1[0].i - fp1[2].i - fp1[-2].i)) / (2.0 * height);
+        
         // Do this for the two adjacent bins too
         f1 = ((fp1[-3].r - fp1[1].r) * (2.0f * fp1[-1].r - fp1[1].r - fp1[-3].r) +
               (fp1[-3].i - fp1[1].i) * (2.0f * fp1[-1].i - fp1[1].i - fp1[-3].i)) / (2.0 * h1) - 1;
         f2 = ((fp1[-1].r - fp1[3].r) * (2.0f * fp1[1].r - fp1[3].r - fp1[-1].r) +
               (fp1[-1].i - fp1[3].i) * (2.0f * fp1[1].i - fp1[3].i - fp1[-1].i)) / (2.0 * h2) + 1;
-
+        
         // get sample mean and variance of the three
         m = 0.333333 * (pfreq + f1 + f2);
         var = 0.5 * ((pfreq-m)*(pfreq-m) + (f1-m)*(f1-m) + (f2-m)*(f2-m));
-
+        
         totalfreq = i + m;
         
         // BAD HACK TO BE CHANGED IN NEXT VERSION !!!!
         if (coeff > 1) {
             switch ((long)coeff) {
-            case 2:
-                mult = 0.005;
-                break;
-            case 4:
-                mult = 0.125;
-                break;
-            case 8:
-                mult = 0.2;
-                break;
-            case 16:
-                mult = 0.25; // weird values found by trying to get npeak around 6-7
-                break;
-            default:
-                mult = 0.25;
+                case 2:
+                    mult = 0.005;
+                    break;
+                case 4:
+                    mult = 0.125;
+                    break;
+                case 8:
+                    mult = 0.2;
+                    break;
+                case 16:
+                    mult = 0.25; // weird values found by trying to get npeak around 6-7
+                    break;
+                default:
+                    mult = 0.25;
             }
             threshold = KNOCKTHRESH * height * mult;
         } else {
             threshold = KNOCKTHRESH * height;
         }
-
+        
         if ((var * total_power) > threshold || (var < 1e-30)) continue;
-
+        
         stdev = sqrt(var);
         if (totalfreq < 4) totalfreq = 4;
         
@@ -1192,7 +1195,7 @@ void pitch_getit(t_analyzer *x)
         pk1->p_width = stdev;
         pk1->p_pow = height;
         pk1->p_loudness = sqrt(sqrt(height));
-        pk1->p_fp = fp1;
+//        pk1->p_fp = fp1;               //not sure if this is needed
         pk1->p_freq = totalfreq;
     
         npeak++;
@@ -1919,7 +1922,7 @@ void *analyzer_new(t_symbol *s, short argc, t_atom *argv) {
     x->BufFFT_in = (kiss_fft_cpx*)KISS_FFT_MALLOC(sizeof(kiss_fft_cpx) * MAXBUFSIZE);
 //    x->BufFFT_out = (double *)fftw_malloc(sizeof(double) * MAXBUFSIZE * 2);
     x->BufFFT_out = (kiss_fft_cpx*)KISS_FFT_MALLOC(sizeof(kiss_fft_cpx) * MAXBUFSIZE);
-//    memset(x->BufFFT_in, kiss_fft_cpx(0,0), MAXBUFSIZE * sizeof(double));
+    memset(x->BufFFT_in, '\0' , sizeof(kiss_fft_cpx) * MAXBUFSIZE);
 //    memset(x->BufFFT_out, '\0', MAXBUFSIZE * 2 * sizeof(double));
     for(int i=0;i<MAXBUFSIZE;i++){
         x->BufFFT_in[i].r = x->BufFFT_in[i].i = x->BufFFT_out[i].r = x->BufFFT_out[i].i = 0.0;
@@ -2237,4 +2240,3 @@ int main(void)
     class_register(CLASS_BOX, analyzer_class);
     return 0;
 }
-
