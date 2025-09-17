@@ -2,40 +2,16 @@
 	"patcher" : 	{
 		"fileversion" : 1,
 		"appversion" : 		{
-			"major" : 7,
-			"minor" : 3,
-			"revision" : 4,
+			"major" : 9,
+			"minor" : 0,
+			"revision" : 2,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
+		"classnamespace" : "box",
 		"rect" : [ 130.0, 109.0, 882.0, 631.0 ],
-		"bglocked" : 0,
-		"openinpresentation" : 0,
-		"default_fontsize" : 12.0,
-		"default_fontface" : 0,
-		"default_fontname" : "Arial",
-		"gridonopen" : 1,
 		"gridsize" : [ 10.0, 10.0 ],
-		"gridsnaponopen" : 1,
-		"objectsnaponopen" : 1,
-		"statusbarvisible" : 2,
-		"toolbarvisible" : 1,
-		"lefttoolbarpinned" : 0,
-		"toptoolbarpinned" : 0,
-		"righttoolbarpinned" : 0,
-		"bottomtoolbarpinned" : 0,
-		"toolbars_unpinned_last_save" : 0,
-		"tallnewobj" : 0,
-		"boxanimatetime" : 200,
-		"enablehscroll" : 1,
-		"enablevscroll" : 1,
-		"devicewidth" : 0.0,
-		"description" : "",
-		"digest" : "",
-		"tags" : "",
-		"style" : "",
-		"subpatcher_template" : "",
 		"showrootpatcherontab" : 0,
 		"showontab" : 0,
 		"boxes" : [ 			{
@@ -47,40 +23,16 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 7,
-							"minor" : 3,
-							"revision" : 4,
+							"major" : 9,
+							"minor" : 0,
+							"revision" : 2,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
+						"classnamespace" : "box",
 						"rect" : [ 0.0, 26.0, 882.0, 605.0 ],
-						"bglocked" : 0,
-						"openinpresentation" : 0,
-						"default_fontsize" : 12.0,
-						"default_fontface" : 0,
-						"default_fontname" : "Arial",
-						"gridonopen" : 1,
 						"gridsize" : [ 15.0, 15.0 ],
-						"gridsnaponopen" : 1,
-						"objectsnaponopen" : 1,
-						"statusbarvisible" : 2,
-						"toolbarvisible" : 1,
-						"lefttoolbarpinned" : 0,
-						"toptoolbarpinned" : 0,
-						"righttoolbarpinned" : 0,
-						"bottomtoolbarpinned" : 0,
-						"toolbars_unpinned_last_save" : 0,
-						"tallnewobj" : 0,
-						"boxanimatetime" : 200,
-						"enablehscroll" : 1,
-						"enablevscroll" : 1,
-						"devicewidth" : 0.0,
-						"description" : "",
-						"digest" : "",
-						"tags" : "",
-						"style" : "",
-						"subpatcher_template" : "",
 						"showontab" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
@@ -91,40 +43,16 @@
 									"patcher" : 									{
 										"fileversion" : 1,
 										"appversion" : 										{
-											"major" : 7,
-											"minor" : 3,
-											"revision" : 4,
+											"major" : 9,
+											"minor" : 0,
+											"revision" : 2,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
 ,
+										"classnamespace" : "box",
 										"rect" : [ 324.0, 79.0, 742.0, 532.0 ],
-										"bglocked" : 0,
-										"openinpresentation" : 0,
-										"default_fontsize" : 12.0,
-										"default_fontface" : 0,
-										"default_fontname" : "Arial",
-										"gridonopen" : 1,
 										"gridsize" : [ 10.0, 10.0 ],
-										"gridsnaponopen" : 1,
-										"objectsnaponopen" : 1,
-										"statusbarvisible" : 2,
-										"toolbarvisible" : 1,
-										"lefttoolbarpinned" : 0,
-										"toptoolbarpinned" : 0,
-										"righttoolbarpinned" : 0,
-										"bottomtoolbarpinned" : 0,
-										"toolbars_unpinned_last_save" : 0,
-										"tallnewobj" : 0,
-										"boxanimatetime" : 200,
-										"enablehscroll" : 1,
-										"enablevscroll" : 1,
-										"devicewidth" : 0.0,
-										"description" : "",
-										"digest" : "",
-										"tags" : "",
-										"style" : "",
-										"subpatcher_template" : "",
 										"boxes" : [ 											{
 												"box" : 												{
 													"id" : "obj-5",
@@ -135,40 +63,16 @@
 													"patcher" : 													{
 														"fileversion" : 1,
 														"appversion" : 														{
-															"major" : 7,
-															"minor" : 3,
-															"revision" : 4,
+															"major" : 9,
+															"minor" : 0,
+															"revision" : 2,
 															"architecture" : "x64",
 															"modernui" : 1
 														}
 ,
+														"classnamespace" : "box",
 														"rect" : [ 209.0, 109.0, 757.0, 441.0 ],
-														"bglocked" : 0,
-														"openinpresentation" : 0,
-														"default_fontsize" : 12.0,
-														"default_fontface" : 0,
-														"default_fontname" : "Arial",
-														"gridonopen" : 1,
 														"gridsize" : [ 10.0, 10.0 ],
-														"gridsnaponopen" : 1,
-														"objectsnaponopen" : 1,
-														"statusbarvisible" : 2,
-														"toolbarvisible" : 1,
-														"lefttoolbarpinned" : 0,
-														"toptoolbarpinned" : 0,
-														"righttoolbarpinned" : 0,
-														"bottomtoolbarpinned" : 0,
-														"toolbars_unpinned_last_save" : 0,
-														"tallnewobj" : 0,
-														"boxanimatetime" : 200,
-														"enablehscroll" : 1,
-														"enablevscroll" : 1,
-														"devicewidth" : 0.0,
-														"description" : "",
-														"digest" : "",
-														"tags" : "",
-														"style" : "",
-														"subpatcher_template" : "",
 														"boxes" : [ 															{
 																"box" : 																{
 																	"id" : "obj-1",
@@ -224,16 +128,13 @@
 																}
 
 															}
- ]
+ ],
+														"originid" : "pat-798"
 													}
 ,
 													"patching_rect" : [ 42.0, 60.0, 69.0, 22.0 ],
 													"saved_object_attributes" : 													{
-														"description" : "",
-														"digest" : "",
-														"globalpatchername" : "",
-														"style" : "",
-														"tags" : ""
+														"globalpatchername" : ""
 													}
 ,
 													"style" : "default",
@@ -246,10 +147,11 @@
 													"id" : "obj-1",
 													"interpinlet" : 1,
 													"maxclass" : "gain~",
+													"multichannelvariant" : 0,
 													"numinlets" : 2,
 													"numoutlets" : 2,
 													"orientation" : 2,
-													"outlettype" : [ "signal", "int" ],
+													"outlettype" : [ "signal", "" ],
 													"parameter_enable" : 0,
 													"patching_rect" : [ 42.0, 330.0, 22.0, 122.0 ],
 													"style" : "default"
@@ -425,16 +327,13 @@
 												}
 
 											}
- ]
+ ],
+										"originid" : "pat-796"
 									}
 ,
-									"patching_rect" : [ 293.0, 203.833328, 117.0, 22.0 ],
+									"patching_rect" : [ 293.0, 203.833327999999995, 117.0, 22.0 ],
 									"saved_object_attributes" : 									{
-										"description" : "",
-										"digest" : "",
-										"globalpatchername" : "",
-										"style" : "",
-										"tags" : ""
+										"globalpatchername" : ""
 									}
 ,
 									"style" : "default",
@@ -489,7 +388,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 109.0, 115.0, 137.0, 33.0 ],
-									"style" : "",
 									"text" : "sinusoids~"
 								}
 
@@ -501,7 +399,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 660.0, 376.946411, 54.0, 22.0 ],
+									"patching_rect" : [ 660.0, 376.946411000000012, 54.0, 22.0 ],
 									"style" : "default",
 									"text" : "0.5 1. 1."
 								}
@@ -514,7 +412,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 778.5, 376.946411, 52.0, 22.0 ],
+									"patching_rect" : [ 778.5, 376.946411000000012, 52.0, 22.0 ],
 									"style" : "default",
 									"text" : "2. 1. 1."
 								}
@@ -527,7 +425,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 720.25, 376.946411, 52.0, 22.0 ],
+									"patching_rect" : [ 720.25, 376.946411000000012, 52.0, 22.0 ],
 									"style" : "default",
 									"text" : "1. 1. 1."
 								}
@@ -540,7 +438,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 668.0, 421.946411, 208.0, 33.0 ],
+									"patching_rect" : [ 668.0, 421.946411000000012, 208.0, 33.0 ],
 									"style" : "default",
 									"text" : "Extremely low frequencies reveal the amplitude-modulation method"
 								}
@@ -567,40 +465,16 @@
 									"patcher" : 									{
 										"fileversion" : 1,
 										"appversion" : 										{
-											"major" : 7,
-											"minor" : 3,
-											"revision" : 4,
+											"major" : 9,
+											"minor" : 0,
+											"revision" : 2,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
 ,
+										"classnamespace" : "box",
 										"rect" : [ 236.0, 184.0, 450.0, 526.0 ],
-										"bglocked" : 0,
-										"openinpresentation" : 0,
-										"default_fontsize" : 12.0,
-										"default_fontface" : 0,
-										"default_fontname" : "Arial",
-										"gridonopen" : 1,
 										"gridsize" : [ 10.0, 10.0 ],
-										"gridsnaponopen" : 1,
-										"objectsnaponopen" : 1,
-										"statusbarvisible" : 2,
-										"toolbarvisible" : 1,
-										"lefttoolbarpinned" : 0,
-										"toptoolbarpinned" : 0,
-										"righttoolbarpinned" : 0,
-										"bottomtoolbarpinned" : 0,
-										"toolbars_unpinned_last_save" : 0,
-										"tallnewobj" : 0,
-										"boxanimatetime" : 200,
-										"enablehscroll" : 1,
-										"enablevscroll" : 1,
-										"devicewidth" : 0.0,
-										"description" : "",
-										"digest" : "",
-										"tags" : "",
-										"style" : "",
-										"subpatcher_template" : "",
 										"boxes" : [ 											{
 												"box" : 												{
 													"fontname" : "Arial",
@@ -611,7 +485,6 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 20.0, 468.0, 374.0, 27.0 ],
-													"style" : "",
 													"text" : "When the noisiness changes, the carrier_amp and modulation_index ramp linearly from the old values to the new over the course of the next signal vector."
 												}
 
@@ -625,7 +498,6 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 46.0, 442.0, 323.0, 17.0 ],
-													"style" : "",
 													"text" : "amplitude of each sample = carrier_amp + (noise * modulation_index)"
 												}
 
@@ -639,7 +511,6 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 46.0, 426.0, 317.0, 17.0 ],
-													"style" : "",
 													"text" : "modulation_index: sqrt( 2. * noisiness ) * amp"
 												}
 
@@ -653,7 +524,6 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 46.0, 410.0, 317.0, 17.0 ],
-													"style" : "",
 													"text" : "carrier_amp: sqrt( 1. - noisiness ) * amp"
 												}
 
@@ -668,7 +538,6 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 19.0, 363.0, 368.0, 37.0 ],
-													"style" : "",
 													"text" : "In the sinusoids~ object, the noise is implemented (as in Loris) by amplitude-modulating each sinusoid with some band-limited gaussian noise. The formula for each partial's ampltidue is:"
 												}
 
@@ -682,7 +551,6 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 19.0, 212.0, 235.0, 17.0 ],
-													"style" : "",
 													"text" : "How narrow is this narrowband noise? Kelly says:"
 												}
 
@@ -697,7 +565,6 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 46.0, 231.0, 368.0, 87.0 ],
-													"style" : "",
 													"text" : "\"What matters very little, within limits of course, is the exact bandwidth of the narrowband noise. As long as the noise bands are wide enough (in frequency) to overlap (that is, they are wider, in general, than the instantaneous frequency distance between partials), then variation (within reason) in the bandwidth of the noise modulator does not seem to greatly affect the quality of the synthesis, and when even the effects are audible, it is often the case that the syntheses all seem to be of the same \"quality\". In other words, none is preferable to all the others, in general. We have not found any heuristics for making a signal-dependent decision about the bandwidth of the modulator.\""
 												}
 
@@ -712,7 +579,6 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 46.0, 142.0, 368.0, 47.0 ],
-													"style" : "",
 													"text" : "\"If the noisiness (bandwidth in Loris-speak) is 0, then the partial is a pure sinusoid (at the time of that breakpoint anyway), if the noisiness is 1, then the pure sinusoid is completely suppressed, and the partial is purely narrowband noise, centered at the frequency of the partial.\""
 												}
 
@@ -726,7 +592,6 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 19.0, 109.0, 393.0, 17.0 ],
-													"style" : "",
 													"text" : "Here is what Kelly Fitz (a main author of Loris) said when I asked him to define this parameter:"
 												}
 
@@ -741,22 +606,18 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 19.0, 38.0, 394.0, 47.0 ],
-													"style" : "",
 													"text" : "The \"noisiness\" parameter for each partial is exactly like the \"bandwidth\" parameter in the Loris analysis/synthesis system. (http://www.cerlsoundgroup.org/Loris). The bandwidth-enhanced option to sinusoids~ was designed to support synthesis of Loris-produced bandwidth-enhanced sinusoidal models."
 												}
 
 											}
  ],
-										"lines" : [  ]
+										"lines" : [  ],
+										"originid" : "pat-800"
 									}
 ,
 									"patching_rect" : [ 501.0, 243.5, 193.0, 22.0 ],
 									"saved_object_attributes" : 									{
-										"description" : "",
-										"digest" : "",
-										"globalpatchername" : "",
-										"style" : "",
-										"tags" : ""
+										"globalpatchername" : ""
 									}
 ,
 									"style" : "default",
@@ -771,7 +632,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 445.75, 199.333328, 303.5, 33.0 ],
+									"patching_rect" : [ 445.75, 199.333327999999995, 303.5, 33.0 ],
 									"style" : "default",
 									"text" : "Specify a list of frequency, amplitude, noisiness triples (as the optional arguments or by sending a list)."
 								}
@@ -797,7 +658,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 468.0, 329.946442, 141.0, 20.0 ],
+									"patching_rect" : [ 468.0, 329.94644199999999, 141.0, 20.0 ],
 									"style" : "default",
 									"text" : "sine<->noise continuum:"
 								}
@@ -840,7 +701,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 650.0, 326.223206, 51.0, 22.0 ],
+									"patching_rect" : [ 650.0, 326.223206000000005, 51.0, 22.0 ],
 									"style" : "default",
 									"text" : "$1 1. 1."
 								}
@@ -853,7 +714,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 457.0, 141.166656, 281.0, 47.0 ],
+									"patching_rect" : [ 457.0, 141.166655999999989, 281.0, 47.0 ],
 									"style" : "default",
 									"text" : "If the first argument is the symbol \"bwe\" then the sinusoids are noise modulated using a model referred to by Kelly Fitz as \"bandwidth-enhanced.\""
 								}
@@ -951,7 +812,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 388.0, 329.946442, 64.0, 22.0 ],
+									"patching_rect" : [ 388.0, 329.94644199999999, 64.0, 22.0 ],
 									"style" : "default",
 									"triscale" : 0.9
 								}
@@ -964,7 +825,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 388.0, 357.669647, 64.0, 22.0 ],
+									"patching_rect" : [ 388.0, 357.669646999999998, 64.0, 22.0 ],
 									"style" : "default",
 									"text" : "440. 1. $1"
 								}
@@ -1041,8 +902,7 @@
 									"maxclass" : "ezdac~",
 									"numinlets" : 2,
 									"numoutlets" : 0,
-									"patching_rect" : [ 50.0, 640.0, 45.0, 45.0 ],
-									"style" : ""
+									"patching_rect" : [ 50.0, 640.0, 45.0, 45.0 ]
 								}
 
 							}
@@ -1079,7 +939,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 142.0, 225.833328, 198.0, 47.0 ],
+									"patching_rect" : [ 142.0, 225.833327999999995, 198.0, 47.0 ],
 									"style" : "default",
 									"text" : "Specify a list of frequency, amplitude pairs (as the optional arguments or by sending a list)"
 								}
@@ -1091,7 +951,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 142.0, 203.833328, 120.0, 20.0 ],
+									"patching_rect" : [ 142.0, 203.833327999999995, 120.0, 20.0 ],
 									"style" : "default",
 									"text" : "Basic sinusoids:"
 								}
@@ -1264,20 +1124,15 @@
 								}
 
 							}
- ]
+ ],
+						"originid" : "pat-794"
 					}
 ,
 					"patching_rect" : [ 98.0, 21.5, 27.0, 22.0 ],
-					"presentation_rect" : [ 86.0, 24.5, 0.0, 0.0 ],
 					"saved_object_attributes" : 					{
-						"description" : "",
-						"digest" : "",
-						"globalpatchername" : "",
-						"style" : "",
-						"tags" : ""
+						"globalpatchername" : ""
 					}
 ,
-					"style" : "",
 					"text" : "p ?"
 				}
 
@@ -1291,42 +1146,29 @@
 					"patcher" : 					{
 						"fileversion" : 1,
 						"appversion" : 						{
-							"major" : 7,
-							"minor" : 3,
-							"revision" : 4,
+							"major" : 9,
+							"minor" : 0,
+							"revision" : 2,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
+						"classnamespace" : "box",
 						"rect" : [ 130.0, 135.0, 882.0, 605.0 ],
-						"bglocked" : 0,
-						"openinpresentation" : 0,
-						"default_fontsize" : 12.0,
-						"default_fontface" : 0,
-						"default_fontname" : "Arial",
-						"gridonopen" : 1,
 						"gridsize" : [ 15.0, 15.0 ],
-						"gridsnaponopen" : 1,
-						"objectsnaponopen" : 1,
-						"statusbarvisible" : 2,
-						"toolbarvisible" : 1,
-						"lefttoolbarpinned" : 0,
-						"toptoolbarpinned" : 0,
-						"righttoolbarpinned" : 0,
-						"bottomtoolbarpinned" : 0,
-						"toolbars_unpinned_last_save" : 0,
-						"tallnewobj" : 0,
-						"boxanimatetime" : 200,
-						"enablehscroll" : 1,
-						"enablevscroll" : 1,
-						"devicewidth" : 0.0,
-						"description" : "",
-						"digest" : "",
-						"tags" : "",
-						"style" : "",
-						"subpatcher_template" : "",
 						"showontab" : 1,
 						"boxes" : [ 							{
+								"box" : 								{
+									"id" : "obj-2",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 342.0, 195.833327999999995, 244.0, 20.0 ],
+									"text" : "Maximum Model size is 1024 (list size 3072)"
+								}
+
+							}
+, 							{
 								"box" : 								{
 									"id" : "obj-3",
 									"maxclass" : "newobj",
@@ -1335,40 +1177,16 @@
 									"patcher" : 									{
 										"fileversion" : 1,
 										"appversion" : 										{
-											"major" : 7,
-											"minor" : 3,
-											"revision" : 4,
+											"major" : 9,
+											"minor" : 0,
+											"revision" : 2,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
 ,
+										"classnamespace" : "box",
 										"rect" : [ 324.0, 79.0, 742.0, 532.0 ],
-										"bglocked" : 0,
-										"openinpresentation" : 0,
-										"default_fontsize" : 12.0,
-										"default_fontface" : 0,
-										"default_fontname" : "Arial",
-										"gridonopen" : 1,
 										"gridsize" : [ 10.0, 10.0 ],
-										"gridsnaponopen" : 1,
-										"objectsnaponopen" : 1,
-										"statusbarvisible" : 2,
-										"toolbarvisible" : 1,
-										"lefttoolbarpinned" : 0,
-										"toptoolbarpinned" : 0,
-										"righttoolbarpinned" : 0,
-										"bottomtoolbarpinned" : 0,
-										"toolbars_unpinned_last_save" : 0,
-										"tallnewobj" : 0,
-										"boxanimatetime" : 200,
-										"enablehscroll" : 1,
-										"enablevscroll" : 1,
-										"devicewidth" : 0.0,
-										"description" : "",
-										"digest" : "",
-										"tags" : "",
-										"style" : "",
-										"subpatcher_template" : "",
 										"boxes" : [ 											{
 												"box" : 												{
 													"id" : "obj-5",
@@ -1379,40 +1197,16 @@
 													"patcher" : 													{
 														"fileversion" : 1,
 														"appversion" : 														{
-															"major" : 7,
-															"minor" : 3,
-															"revision" : 4,
+															"major" : 9,
+															"minor" : 0,
+															"revision" : 2,
 															"architecture" : "x64",
 															"modernui" : 1
 														}
 ,
+														"classnamespace" : "box",
 														"rect" : [ 209.0, 109.0, 757.0, 441.0 ],
-														"bglocked" : 0,
-														"openinpresentation" : 0,
-														"default_fontsize" : 12.0,
-														"default_fontface" : 0,
-														"default_fontname" : "Arial",
-														"gridonopen" : 1,
 														"gridsize" : [ 10.0, 10.0 ],
-														"gridsnaponopen" : 1,
-														"objectsnaponopen" : 1,
-														"statusbarvisible" : 2,
-														"toolbarvisible" : 1,
-														"lefttoolbarpinned" : 0,
-														"toptoolbarpinned" : 0,
-														"righttoolbarpinned" : 0,
-														"bottomtoolbarpinned" : 0,
-														"toolbars_unpinned_last_save" : 0,
-														"tallnewobj" : 0,
-														"boxanimatetime" : 200,
-														"enablehscroll" : 1,
-														"enablevscroll" : 1,
-														"devicewidth" : 0.0,
-														"description" : "",
-														"digest" : "",
-														"tags" : "",
-														"style" : "",
-														"subpatcher_template" : "",
 														"boxes" : [ 															{
 																"box" : 																{
 																	"id" : "obj-1",
@@ -1468,16 +1262,13 @@
 																}
 
 															}
- ]
+ ],
+														"originid" : "pat-806"
 													}
 ,
 													"patching_rect" : [ 42.0, 60.0, 69.0, 22.0 ],
 													"saved_object_attributes" : 													{
-														"description" : "",
-														"digest" : "",
-														"globalpatchername" : "",
-														"style" : "",
-														"tags" : ""
+														"globalpatchername" : ""
 													}
 ,
 													"style" : "default",
@@ -1490,10 +1281,11 @@
 													"id" : "obj-1",
 													"interpinlet" : 1,
 													"maxclass" : "gain~",
+													"multichannelvariant" : 0,
 													"numinlets" : 2,
 													"numoutlets" : 2,
 													"orientation" : 2,
-													"outlettype" : [ "signal", "int" ],
+													"outlettype" : [ "signal", "" ],
 													"parameter_enable" : 0,
 													"patching_rect" : [ 42.0, 330.0, 22.0, 122.0 ],
 													"style" : "default"
@@ -1669,16 +1461,13 @@
 												}
 
 											}
- ]
+ ],
+										"originid" : "pat-804"
 									}
 ,
-									"patching_rect" : [ 295.0, 124.833328, 117.0, 22.0 ],
+									"patching_rect" : [ 295.0, 124.833327999999995, 117.0, 22.0 ],
 									"saved_object_attributes" : 									{
-										"description" : "",
-										"digest" : "",
-										"globalpatchername" : "",
-										"style" : "",
-										"tags" : ""
+										"globalpatchername" : ""
 									}
 ,
 									"style" : "default",
@@ -1733,7 +1522,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 93.0, 40.0, 137.0, 33.0 ],
-									"style" : "",
 									"text" : "sinusoids~"
 								}
 
@@ -1745,7 +1533,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 626.0, 284.946411, 54.0, 22.0 ],
+									"patching_rect" : [ 626.0, 284.946411000000012, 54.0, 22.0 ],
 									"style" : "default",
 									"text" : "0.5 1. 1."
 								}
@@ -1758,7 +1546,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 744.5, 284.946411, 52.0, 22.0 ],
+									"patching_rect" : [ 744.5, 284.946411000000012, 52.0, 22.0 ],
 									"style" : "default",
 									"text" : "2. 1. 1."
 								}
@@ -1771,7 +1559,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 686.25, 284.946411, 52.0, 22.0 ],
+									"patching_rect" : [ 686.25, 284.946411000000012, 52.0, 22.0 ],
 									"style" : "default",
 									"text" : "1. 1. 1."
 								}
@@ -1811,40 +1599,16 @@
 									"patcher" : 									{
 										"fileversion" : 1,
 										"appversion" : 										{
-											"major" : 7,
-											"minor" : 3,
-											"revision" : 4,
+											"major" : 9,
+											"minor" : 0,
+											"revision" : 2,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
 ,
+										"classnamespace" : "box",
 										"rect" : [ 236.0, 184.0, 450.0, 526.0 ],
-										"bglocked" : 0,
-										"openinpresentation" : 0,
-										"default_fontsize" : 12.0,
-										"default_fontface" : 0,
-										"default_fontname" : "Arial",
-										"gridonopen" : 1,
 										"gridsize" : [ 10.0, 10.0 ],
-										"gridsnaponopen" : 1,
-										"objectsnaponopen" : 1,
-										"statusbarvisible" : 2,
-										"toolbarvisible" : 1,
-										"lefttoolbarpinned" : 0,
-										"toptoolbarpinned" : 0,
-										"righttoolbarpinned" : 0,
-										"bottomtoolbarpinned" : 0,
-										"toolbars_unpinned_last_save" : 0,
-										"tallnewobj" : 0,
-										"boxanimatetime" : 200,
-										"enablehscroll" : 1,
-										"enablevscroll" : 1,
-										"devicewidth" : 0.0,
-										"description" : "",
-										"digest" : "",
-										"tags" : "",
-										"style" : "",
-										"subpatcher_template" : "",
 										"boxes" : [ 											{
 												"box" : 												{
 													"fontname" : "Arial",
@@ -1855,7 +1619,6 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 20.0, 468.0, 374.0, 27.0 ],
-													"style" : "",
 													"text" : "When the noisiness changes, the carrier_amp and modulation_index ramp linearly from the old values to the new over the course of the next signal vector."
 												}
 
@@ -1869,7 +1632,6 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 46.0, 442.0, 323.0, 17.0 ],
-													"style" : "",
 													"text" : "amplitude of each sample = carrier_amp + (noise * modulation_index)"
 												}
 
@@ -1883,7 +1645,6 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 46.0, 426.0, 317.0, 17.0 ],
-													"style" : "",
 													"text" : "modulation_index: sqrt( 2. * noisiness ) * amp"
 												}
 
@@ -1897,7 +1658,6 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 46.0, 410.0, 317.0, 17.0 ],
-													"style" : "",
 													"text" : "carrier_amp: sqrt( 1. - noisiness ) * amp"
 												}
 
@@ -1912,7 +1672,6 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 19.0, 363.0, 368.0, 37.0 ],
-													"style" : "",
 													"text" : "In the sinusoids~ object, the noise is implemented (as in Loris) by amplitude-modulating each sinusoid with some band-limited gaussian noise. The formula for each partial's ampltidue is:"
 												}
 
@@ -1926,7 +1685,6 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 19.0, 212.0, 235.0, 17.0 ],
-													"style" : "",
 													"text" : "How narrow is this narrowband noise? Kelly says:"
 												}
 
@@ -1941,7 +1699,6 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 46.0, 231.0, 368.0, 87.0 ],
-													"style" : "",
 													"text" : "\"What matters very little, within limits of course, is the exact bandwidth of the narrowband noise. As long as the noise bands are wide enough (in frequency) to overlap (that is, they are wider, in general, than the instantaneous frequency distance between partials), then variation (within reason) in the bandwidth of the noise modulator does not seem to greatly affect the quality of the synthesis, and when even the effects are audible, it is often the case that the syntheses all seem to be of the same \"quality\". In other words, none is preferable to all the others, in general. We have not found any heuristics for making a signal-dependent decision about the bandwidth of the modulator.\""
 												}
 
@@ -1956,7 +1713,6 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 46.0, 142.0, 368.0, 47.0 ],
-													"style" : "",
 													"text" : "\"If the noisiness (bandwidth in Loris-speak) is 0, then the partial is a pure sinusoid (at the time of that breakpoint anyway), if the noisiness is 1, then the pure sinusoid is completely suppressed, and the partial is purely narrowband noise, centered at the frequency of the partial.\""
 												}
 
@@ -1970,7 +1726,6 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 19.0, 109.0, 393.0, 17.0 ],
-													"style" : "",
 													"text" : "Here is what Kelly Fitz (a main author of Loris) said when I asked him to define this parameter:"
 												}
 
@@ -1985,22 +1740,18 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 19.0, 38.0, 394.0, 47.0 ],
-													"style" : "",
 													"text" : "The \"noisiness\" parameter for each partial is exactly like the \"bandwidth\" parameter in the Loris analysis/synthesis system. (http://www.cerlsoundgroup.org/Loris). The bandwidth-enhanced option to sinusoids~ was designed to support synthesis of Loris-produced bandwidth-enhanced sinusoidal models."
 												}
 
 											}
  ],
-										"lines" : [  ]
+										"lines" : [  ],
+										"originid" : "pat-808"
 									}
 ,
-									"patching_rect" : [ 528.0, 159.333328, 193.0, 22.0 ],
+									"patching_rect" : [ 528.0, 159.333327999999995, 193.0, 22.0 ],
 									"saved_object_attributes" : 									{
-										"description" : "",
-										"digest" : "",
-										"globalpatchername" : "",
-										"style" : "",
-										"tags" : ""
+										"globalpatchername" : ""
 									}
 ,
 									"style" : "default",
@@ -2015,7 +1766,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 472.75, 119.166656, 303.5, 33.0 ],
+									"patching_rect" : [ 472.75, 119.166656000000003, 303.5, 33.0 ],
 									"style" : "default",
 									"text" : "Specify a list of frequency, amplitude, noisiness triples (as the optional arguments or by sending a list)."
 								}
@@ -2041,7 +1792,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 448.0, 249.946442, 141.0, 20.0 ],
+									"patching_rect" : [ 448.0, 249.94644199999999, 141.0, 20.0 ],
 									"style" : "default",
 									"text" : "sine<->noise continuum:"
 								}
@@ -2084,7 +1835,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 616.0, 246.223206, 51.0, 22.0 ],
+									"patching_rect" : [ 616.0, 246.223206000000005, 51.0, 22.0 ],
 									"style" : "default",
 									"text" : "$1 1. 1."
 								}
@@ -2097,7 +1848,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 484.0, 67.999985, 281.0, 47.0 ],
+									"patching_rect" : [ 484.0, 67.999984999999995, 281.0, 47.0 ],
 									"style" : "default",
 									"text" : "If the first argument is the symbol \"bwe\" then the sinusoids are noise modulated using a model referred to by Kelly Fitz as \"bandwidth-enhanced.\""
 								}
@@ -2109,7 +1860,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 534.5, 43.833328, 180.0, 20.0 ],
+									"patching_rect" : [ 534.5, 43.833328000000002, 180.0, 20.0 ],
 									"style" : "default",
 									"text" : "Bandwidth-enhanced sinusoids:"
 								}
@@ -2195,7 +1946,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 368.0, 249.946442, 64.0, 22.0 ],
+									"patching_rect" : [ 368.0, 249.94644199999999, 64.0, 22.0 ],
 									"style" : "default",
 									"triscale" : 0.9
 								}
@@ -2208,7 +1959,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 368.0, 277.669647, 64.0, 22.0 ],
+									"patching_rect" : [ 368.0, 277.669646999999998, 64.0, 22.0 ],
 									"style" : "default",
 									"text" : "440. 1. $1"
 								}
@@ -2285,8 +2036,7 @@
 									"maxclass" : "ezdac~",
 									"numinlets" : 2,
 									"numoutlets" : 0,
-									"patching_rect" : [ 52.0, 511.5, 45.0, 45.0 ],
-									"style" : ""
+									"patching_rect" : [ 52.0, 511.5, 45.0, 45.0 ]
 								}
 
 							}
@@ -2297,7 +2047,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 144.0, 241.223206, 108.0, 22.0 ],
+									"patching_rect" : [ 144.0, 241.223206000000005, 108.0, 22.0 ],
 									"style" : "default",
 									"text" : "sinusoids~ 340. 1."
 								}
@@ -2323,7 +2073,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 144.0, 146.833328, 198.0, 47.0 ],
+									"patching_rect" : [ 144.0, 146.833327999999995, 198.0, 47.0 ],
 									"style" : "default",
 									"text" : "Specify a list of frequency, amplitude pairs (as the optional arguments or by sending a list)"
 								}
@@ -2335,7 +2085,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 144.0, 124.833328, 120.0, 20.0 ],
+									"patching_rect" : [ 144.0, 124.833327999999995, 120.0, 20.0 ],
 									"style" : "default",
 									"text" : "Basic sinusoids:"
 								}
@@ -2508,31 +2258,28 @@
 								}
 
 							}
- ]
+ ],
+						"originid" : "pat-802"
 					}
 ,
 					"patching_rect" : [ 27.0, 21.5, 50.0, 22.0 ],
 					"saved_object_attributes" : 					{
-						"description" : "",
-						"digest" : "",
-						"globalpatchername" : "",
-						"style" : "",
-						"tags" : ""
+						"globalpatchername" : ""
 					}
 ,
-					"style" : "",
 					"text" : "p Basic"
 				}
 
 			}
  ],
 		"lines" : [  ],
+		"originid" : "pat-792",
 		"dependency_cache" : [ 			{
-				"name" : "sinusoids~.mxo",
+				"name" : "resdisplay.mxo",
 				"type" : "iLaX"
 			}
 , 			{
-				"name" : "resdisplay.mxo",
+				"name" : "sinusoids~.mxo",
 				"type" : "iLaX"
 			}
  ],
