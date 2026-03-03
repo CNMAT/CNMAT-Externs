@@ -20,6 +20,7 @@ git clone https://github.com/CNMAT/libomax
 git clone https://github.com/CNMAT/CNMAT-SDIF
 git clone https://github.com/CNMAT/CNMAT-OSC
 git clone https://github.com/Cycling74/max-sdk
+git clone https://github.com/Cycling74/max-sdk-base
 ```
 
 ### 2. FFTW
