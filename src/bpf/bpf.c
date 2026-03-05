@@ -191,8 +191,8 @@ void bpf_findNearestGridPoint(t_bpf *x, t_pt pt_sc, t_pt *pt_out_sc);
 void bpf_reorderPoint(t_bpf *x, t_point *p);
 void bpf_swapPoints(t_point *p1, t_point *p2);
 double bpf_computeNotePos(double y, t_rect r);
-void bpf_dsp(t_bpf *x, t_signal **sp, short *count);
-t_int *bpf_perform(t_int *w);
+void bpf_dsp64(t_bpf *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void bpf_perform64(t_bpf *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam);
 t_symbol *bpf_mangleName(t_symbol *name, int i, int fnum);
 void bpf_list(t_bpf *x, t_symbol *msg, short argc, t_atom *argv);
 void bpf_float(t_bpf *x, double f);
@@ -1047,10 +1047,10 @@ double bpf_uncomputeNotePos(double y, t_rect r){
 	*/
 }
 
-void bpf_dsp(t_bpf *x, t_signal **sp, short *count){
-	if(count[0]){
-		dsp_add(bpf_perform, 3, x, sp[0]->s_n, sp[0]->s_vec);
-	}
+void bpf_dsp64(t_bpf *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags){
+    if(count[0]){
+        object_method(dsp64, gensym("dsp_add64"), x, bpf_perform64, 0, NULL);
+    }
 }
 
 void bpf_dspstate(t_bpf *x, long n){
@@ -1061,45 +1061,41 @@ void bpf_dspstate(t_bpf *x, long n){
 	}
 }
 
-t_int *bpf_perform(t_int *w){
-	t_bpf *x = (t_bpf *)w[1];
-	int n = (int)w[2];
-	t_float *in = (t_float *)w[3];
-	int i, j;
-	t_rect r;
-	int pntl, aux_point_state;
-	//jbox_get_patching_rect((t_object *)&(x->box), &r);
-	jbox_get_rect_for_view((t_object *)x, x->pv, &r);
-	if(x->name){
-		for(i = 0; i < x->numFunctions; i++){
-			if(x->functions[i] == NULL){
-				memset(x->ptrs[(i * 3)], 0, n * sizeof(t_float));
-				memset(x->ptrs[(i * 3) + 1], 0, n * sizeof(t_float));
-				memset(x->ptrs[(i * 3) + 2], 0, n * sizeof(t_float));
-			}
-			t_symbol *name;
+void bpf_perform64(t_bpf *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long sampleframes, long flags, void *userparam){
+    double *in = ins[0];
+    long n = sampleframes;
+    int i, j;
+    int pntl, aux_point_state;
+    jbox_get_rect_for_view((t_object *)x, x->pv, &(t_rect){0,0,0,0});
+    if(x->name){
+        for(i = 0; i < x->numFunctions; i++){
+            if(x->functions[i] == NULL){
+                memset(x->ptrs[(i * 3)], 0, n * sizeof(t_float));
+                memset(x->ptrs[(i * 3) + 1], 0, n * sizeof(t_float));
+                memset(x->ptrs[(i * 3) + 2], 0, n * sizeof(t_float));
+            }
+            t_symbol *name;
             if((name = bpf_mangleName(x->name, 0, i))){
-				name->s_thing = (t_object *)(x->ptrs[(i * 3)]);
-			}
-			if(name = bpf_mangleName(x->name, 1, i)){
-				name->s_thing = (t_object *)(x->ptrs[(i * 3) + 1]);
-			}
-			if(name = bpf_mangleName(x->name, 2, i)){
-				name->s_thing = (t_object *)(x->ptrs[(i * 3) + 2]);
-			}
-		}
-		for(i = 0; i < n; i++){
-			for(j = 0; j < x->numFunctions; j++){
-				x->ptrs[(j * 3)][i] = bpf_compute(x, j, in[i], &pntl, &aux_point_state);
-				x->ptrs[(j * 3) + 1][i] = (t_float)pntl;
-				x->ptrs[(j * 3) + 2][i] = (t_float)aux_point_state;
-			}
-		}
-		for(i = 0; i < x->numFunctions; i++){
-			x->pos[i] = (t_pt){in[0], x->ptrs[i][0]};
-		}
-	}
-	return w + 4;
+                name->s_thing = (t_object *)(x->ptrs[(i * 3)]);
+            }
+            if((name = bpf_mangleName(x->name, 1, i))){
+                name->s_thing = (t_object *)(x->ptrs[(i * 3) + 1]);
+            }
+            if((name = bpf_mangleName(x->name, 2, i))){
+                name->s_thing = (t_object *)(x->ptrs[(i * 3) + 2]);
+            }
+        }
+        for(i = 0; i < n; i++){
+            for(j = 0; j < x->numFunctions; j++){
+                x->ptrs[(j * 3)][i] = bpf_compute(x, j, in[i], &pntl, &aux_point_state);
+                x->ptrs[(j * 3) + 1][i] = (t_float)pntl;
+                x->ptrs[(j * 3) + 2][i] = (t_float)aux_point_state;
+            }
+        }
+        for(i = 0; i < x->numFunctions; i++){
+            x->pos[i] = (t_pt){in[0], x->ptrs[i][0]};
+        }
+    }
 }
 
 t_symbol *bpf_mangleName(t_symbol *name, int i, int fnum){
@@ -2338,9 +2334,9 @@ int main(void){
  	c->c_flags |= CLASS_FLAG_NEWDICTIONARY; 
  	jbox_initclass(c, JBOX_FIXWIDTH | JBOX_COLOR | JBOX_FONTATTR); 
 
-	class_addmethod(c, (method)bpf_dsp, "dsp", A_CANT, 0);
-	class_addmethod(c, (method)bpf_dspstate, "dspstate", A_CANT, 0);
- 	class_addmethod(c, (method)bpf_paint, "paint", A_CANT, 0); 
+    class_addmethod(c, (method)bpf_dsp64, "dsp64", A_CANT, 0);
+    class_addmethod(c, (method)bpf_dspstate, "dspstate", A_CANT, 0);
+ 	class_addmethod(c, (method)bpf_paint, "paint", A_CANT, 0);
  	class_addmethod(c, (method)version, "version", 0); 
  	class_addmethod(c, (method)bpf_assist, "assist", A_CANT, 0); 
  	class_addmethod(c, (method)bpf_notify, "notify", A_CANT, 0); 
