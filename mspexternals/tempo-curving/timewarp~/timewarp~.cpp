@@ -241,7 +241,7 @@ typedef struct _te{
 	t_critical lock;
  	t_point **functions; 
 	t_point *selected;
-	float *last_y;  // in the perform routine, it's too expensive to compute the tempo so we'll do it manually
+	double *last_y;  // in the perform routine, it's too expensive to compute the tempo so we'll do it manually
 	float last_x;
  	int currentFunction; 
  	int numFunctions; 
@@ -274,6 +274,7 @@ typedef struct _te{
 	float major_grid_line_width, minor_grid_line_width;
 	t_symbol *name;
 	double **ptrs;
+	long ptrs_len; // number of samples allocated in each of the ptrs buffers
 	t_pt last_mouse;
 	int mousestate;
 	t_pt mousemove;
@@ -296,8 +297,9 @@ typedef struct _te{
 	long drawposition;
 	t_sysparallel_task *parallel_task;
 	long parallel;
-	t_int *w;
-} t_te; 
+	double *perform_in; // input vector for the current perform call, read by the workers
+	long perform_n; // vector size for the current perform call
+} t_te;
 
 t_class *te_class; 
 
@@ -372,8 +374,7 @@ t_osc_point _osc_point = (t_osc_point){
 	};
 
 void te_paint(t_te *x, t_object *patcherview); 
-t_int *te_perform(t_int *w);
-int te_makePlan(t_te *x, float f, int function, t_plan *plan);
+int te_makePlan(t_te *x, double f, int function, t_plan *plan);
 int te_isPlanValid(t_te *x, double time, t_plan *plan, int function);
 void te_computePhaseError(t_te *x, t_plan *plan);
 double te_betaPDF(double z, double a, double b, double beta_ab);
@@ -488,7 +489,6 @@ void te_resetFunctionColors(t_te *x);
 void te_invalidateAllFunctions(t_te *x);
 void te_invalidateAll(t_te *x);
 void te_run(t_te *x);
-void te_dsp(t_te *x, t_signal **sp, short *count);
 void te_postplan(t_plan *p, int (*print)(const char *, ...));
 void te_postpoint(t_point *p, int(print)(const char *, ...));
 t_symbol *te_mangleName(t_symbol *name, int i, int fnum);
@@ -515,7 +515,7 @@ void te_paint(t_te *x, t_object *patcherview){
  	jbox_get_rect_for_view((t_object *)x, patcherview, &rect); 
 
 	t_jrgba pointcolor, phasecolor, tempocolor, beatcolor;
-	struct dashstruct {double dash[2]; int len;} tempodash, beatdash, dash = {{4., 4.}, 2}, nodash = {NULL, 0};
+	struct dashstruct {double dash[2]; int len;} tempodash, beatdash, dash = {{4., 4.}, 2}, nodash = {{0., 0.}, 0};
 
 	t_jrgba gray = (t_jrgba){0.5, 0.5, 0.5, 0.5};
 
@@ -1274,122 +1274,54 @@ void te_updatePositionCallback(t_te *x){
 
 void te_perform64(t_te *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vectorsize, long flags, void *userparam)
 {
-	//t_te *x = (t_te *)w[1];
-	if(!(x->w)){
-		x->w = (t_int *)calloc(9, sizeof(t_int));
+	int i;
+	if(vectorsize > x->ptrs_len){
+		// should never happen since te_dsp64() sizes the buffers, but don't overrun them if it does
+		for(i = 0; i < numouts; i++){
+			memset(outs[i], 0, vectorsize * sizeof(double));
+		}
+		return;
 	}
-	x->w[1] = (t_int)x;
-	x->w[2] = (t_int)vectorsize;
-	x->w[3] = (t_int)ins[0];
-	x->w[4] = (t_int)outs[0];
-	x->w[5] = (t_int)outs[1];
-	x->w[6] = (t_int)outs[2];
-	x->w[7] = (t_int)outs[3];
-	x->w[8] = (t_int)outs[4];
-	//x->w = w;
+	x->perform_in = ins[0];
+	x->perform_n = vectorsize;
 	te_run(x);
 
-	double *out_phase_wrapped = outs[0];//(t_float *)w[4];
-	double *out_phase = outs[1];//(t_float *)w[5];
-	double *out_bps = outs[2];//(t_float *)w[6];
-	double *out_pointnum = outs[3];//(t_float *)w[7];
-	double *out_beatnum = outs[4];//(t_float *)w[8];
-
-	int n = vectorsize;//(int)w[2];
-
-	memcpy(out_phase_wrapped, x->ptrs[x->currentFunction * 5], n * sizeof(double));
-	memcpy(out_phase, x->ptrs[x->currentFunction * 5 + 1], n * sizeof(double));
-	memcpy(out_bps, x->ptrs[x->currentFunction * 5 + 2], n * sizeof(double));
-	memcpy(out_pointnum, x->ptrs[x->currentFunction * 5 + 3], n * sizeof(double));
-	memcpy(out_beatnum, x->ptrs[x->currentFunction * 5 + 4], n * sizeof(double));
-
-	//return w + 9;
+	int f = x->currentFunction;
+	for(i = 0; i < 5 && i < numouts; i++){
+		memcpy(outs[i], x->ptrs[f * 5 + i], vectorsize * sizeof(double));
+	}
 }
 
 void te_dsp64(t_te *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {
-	int j;
-	t_symbol *name1, *name2, *name3, *name4, *name5;
+	int i, j;
 	x->fs = samplerate;
-	if(count[0]){
-		for(j = 0; j < x->numFunctions; j++){
-			if(name1 = te_mangleName(x->name, 0, j)){
-				name1->s_thing = (t_object *)(x->ptrs[j * 5]);
+	if(maxvectorsize > x->ptrs_len){
+		// the audio thread isn't running our perform routine while the dsp chain is being compiled
+		for(i = 0; i < MAX_NUM_FUNCTIONS * 5; i++){
+			double *p = (double *)realloc(x->ptrs[i], maxvectorsize * sizeof(double));
+			if(!p){
+				object_error((t_object *)x, "couldn't allocate memory for a vector size of %ld", maxvectorsize);
+				return;
 			}
-			if(name2 = te_mangleName(x->name, 1, j)){
-				name2->s_thing = (t_object *)(x->ptrs[(j * 5) + 1]);
-			}
-			if(name3 = te_mangleName(x->name, 2, j)){
-				name3->s_thing = (t_object *)(x->ptrs[(j * 5) + 2]);
-			}
-			if(name4 = te_mangleName(x->name, 3, j)){
-				name4->s_thing = (t_object *)(x->ptrs[(j * 5) + 3]);
-			}
-			if(name5 = te_mangleName(x->name, 4, j)){
-				name5->s_thing = (t_object *)(x->ptrs[(j * 5) + 4]);
-			}
+			memset(p, 0, maxvectorsize * sizeof(double));
+			x->ptrs[i] = p;
 		}
-		for(j = x->numFunctions; j < MAX_NUM_FUNCTIONS; j++){
-			if(name1 = te_mangleName(x->name, 0, j)){
-				name1->s_thing = NULL;
-			}
-			if(name2 = te_mangleName(x->name, 1, j)){
-				name2->s_thing = NULL;
-			}
-			if(name3 = te_mangleName(x->name, 2, j)){
-				name3->s_thing = NULL;
-			}
-			if(name4 = te_mangleName(x->name, 3, j)){
-				name4->s_thing = NULL;
-			}
-			if(name5 = te_mangleName(x->name, 4, j)){
-				name5->s_thing = NULL;
+		x->ptrs_len = maxvectorsize;
+	}
+	if(count[0]){
+		// publish the buffers for every function (not just the ones that exist now) so that
+		// te_breakout~ picks up functions that are added while audio is running.  the workers
+		// zero the buffers of functions that don't exist.
+		for(j = 0; j < MAX_NUM_FUNCTIONS; j++){
+			for(i = 0; i < 5; i++){
+				t_symbol *name = te_mangleName(x->name, i, j);
+				if(name){
+					name->s_thing = (t_object *)(x->ptrs[(j * 5) + i]);
+				}
 			}
 		}
 		object_method(dsp64, gensym("dsp_add64"), x, te_perform64, 0, NULL);
-	}
-}
-
-void te_dsp(t_te *x, t_signal **sp, short *count){
-	int j;
-	t_symbol *name1, *name2, *name3, *name4, *name5;
-	x->fs = sp[0]->s_sr;
-	if(count[0]){
-		for(j = 0; j < x->numFunctions; j++){
-			if(name1 = te_mangleName(x->name, 0, j)){
-				name1->s_thing = (t_object *)(x->ptrs[j * 5]);
-			}
-			if(name2 = te_mangleName(x->name, 1, j)){
-				name2->s_thing = (t_object *)(x->ptrs[(j * 5) + 1]);
-			}
-			if(name3 = te_mangleName(x->name, 2, j)){
-				name3->s_thing = (t_object *)(x->ptrs[(j * 5) + 2]);
-			}
-			if(name4 = te_mangleName(x->name, 3, j)){
-				name4->s_thing = (t_object *)(x->ptrs[(j * 5) + 3]);
-			}
-			if(name5 = te_mangleName(x->name, 4, j)){
-				name5->s_thing = (t_object *)(x->ptrs[(j * 5) + 4]);
-			}
-		}
-		for(j = x->numFunctions; j < MAX_NUM_FUNCTIONS; j++){
-			if(name1 = te_mangleName(x->name, 0, j)){
-				name1->s_thing = NULL;
-			}
-			if(name2 = te_mangleName(x->name, 1, j)){
-				name2->s_thing = NULL;
-			}
-			if(name3 = te_mangleName(x->name, 2, j)){
-				name3->s_thing = NULL;
-			}
-			if(name4 = te_mangleName(x->name, 3, j)){
-				name4->s_thing = NULL;
-			}
-			if(name5 = te_mangleName(x->name, 4, j)){
-				name5->s_thing = NULL;
-			}
-		}
-		dsp_add (te_perform, 8, x, sp[0]->s_n, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec);
 	}
 }
 
@@ -1402,30 +1334,28 @@ void te_dspstate(t_te *x, long state){
 }
 
 void te_workerproc(t_sysparallel_worker *worker){
-	t_te *x = *((t_te **)(worker->data));
-	t_int *w = x->w;
-	int n = (int)w[2];
-	//t_float *in = (t_float *)w[3];
-	double *in = (double *)w[3];
+	t_te *x = (t_te *)(worker->task->data);
+	int n = (int)x->perform_n;
+	double *in = x->perform_in;
+	int id = (int)worker->id;
+	int i, k;
+	if(id < 0 || id >= MAX_NUM_FUNCTIONS){
+		return;
+	}
+	double *out_phase_wrapped = x->ptrs[(id * 5)];
+	double *out_phase = x->ptrs[(id * 5) + 1];
+	double *out_bps = x->ptrs[(id * 5) + 2];
+	double *out_pointnum = x->ptrs[(id * 5) + 3];
+	double *out_beatnum = x->ptrs[(id * 5) + 4];
 
-	int numfunctions = x->numFunctions;
-	int id = worker->id;
-	int i;
-	int muted[MAX_NUM_FUNCTIONS];
-	memcpy(muted, x->muteFunctions, MAX_NUM_FUNCTIONS * sizeof(int));
-
-	x->last_x = in[0];
-	if(x->functions[id] == NULL || muted[id]){
-		// memset(x->ptrs[(id * 5)], 0, n * sizeof(t_float));
-		// memset(x->ptrs[(id * 5) + 1], 0, n * sizeof(t_float));
-		// memset(x->ptrs[(id * 5) + 2], 0, n * sizeof(t_float));
-		// memset(x->ptrs[(id * 5) + 3], 0, n * sizeof(t_float));
-		// memset(x->ptrs[(id * 5) + 4], 0, n * sizeof(t_float));
-		memset(x->ptrs[(id * 5)], 0, n * sizeof(double));
-		memset(x->ptrs[(id * 5) + 1], 0, n * sizeof(double));
-		memset(x->ptrs[(id * 5) + 2], 0, n * sizeof(double));
-		memset(x->ptrs[(id * 5) + 3], 0, n * sizeof(double));
-		memset(x->ptrs[(id * 5) + 4], 0, n * sizeof(double));
+	if(id == 0){
+		x->last_x = in[0];
+	}
+	if(id >= x->numFunctions || x->functions[id] == NULL || x->muteFunctions[id]){
+		for(k = 0; k < 5; k++){
+			memset(x->ptrs[(id * 5) + k], 0, n * sizeof(double));
+		}
+		return;
 	}
 	t_plan plan;
 	//te_critical_enter(x->lock, __LINE__);
@@ -1438,27 +1368,27 @@ void te_workerproc(t_sysparallel_worker *worker){
 			ret = te_makePlan(x, in[i], id, &plan);
 		}
 		if(ret || plan.valid == 0){
-			x->ptrs[(id * 5)][i] = 0.;
-			x->ptrs[(id * 5) + 1][i] = 0.;
-			x->ptrs[(id * 5) + 2][i] = 0.;
-			x->ptrs[(id * 5) + 3][i] = 0.;
-			x->ptrs[(id * 5) + 4][i] = 0.;
+			out_phase_wrapped[i] = 0.;
+			out_phase[i] = 0.;
+			out_bps[i] = 0.;
+			out_pointnum[i] = 0.;
+			out_beatnum[i] = 0.;
 		}else{
-			x->ptrs[(id * 5) + 1][i] = te_computeCorrectedPhase(in[i], &plan);
-			x->ptrs[(id * 5)][i] = x->ptrs[(id * 5) + 1][i] - floor(x->ptrs[(id * 5) + 1][i]);
-			x->ptrs[(id * 5) + 2][i] = (x->ptrs[(id * 5) + 1][i] - x->last_y[id]) * x->fs;
-			//x->ptrs[(id * 5) + 2][i] = te_computeCorrectedTempo(in[i], &plan);
-			x->last_y[id] = x->ptrs[(id * 5) + 1][i];
-			x->ptrs[(id * 5) + 3][i] = plan.pointnum_left;
-			x->ptrs[(id * 5) + 4][i] = floorf(x->ptrs[(id * 5) + 1][i]);
+			out_phase[i] = te_computeCorrectedPhase(in[i], &plan);
+			out_phase_wrapped[i] = out_phase[i] - floor(out_phase[i]);
+			out_bps[i] = (out_phase[i] - x->last_y[id]) * x->fs;
+			//out_bps[i] = te_computeCorrectedTempo(in[i], &plan);
+			x->last_y[id] = out_phase[i];
+			out_pointnum[i] = plan.pointnum_left;
+			out_beatnum[i] = floor(out_phase[i]);
 		}
 
-		for(j = 1; j < DOWNSAMPLE; j++){
-			x->ptrs[(id * 5) + j][i + 1] = x->ptrs[(id * 5) + 1][i];
-			x->ptrs[(id * 5)][i + j] = x->ptrs[(id * 5)][i];
-			x->ptrs[(id * 5) + 2][i + j] = x->ptrs[(id * 5) + 2][i];
-			x->ptrs[(id * 5) + 3][i + j] = plan.pointnum_left;
-			x->ptrs[(id * 5) + 4][i + j] = x->ptrs[(id * 5) + 4][i];
+		for(j = 1; j < DOWNSAMPLE && i + j < n; j++){
+			out_phase[i + j] = out_phase[i];
+			out_phase_wrapped[i + j] = out_phase_wrapped[i];
+			out_bps[i + j] = out_bps[i];
+			out_pointnum[i + j] = out_pointnum[i];
+			out_beatnum[i + j] = out_beatnum[i];
 		}
 	}
 	//te_critical_enter(x->lock, __LINE__);
@@ -1468,171 +1398,33 @@ void te_workerproc(t_sysparallel_worker *worker){
 
 void te_run(t_te *x){
 	if(!x->parallel_task){
-		x->parallel_task = sysparallel_task_new(&x, (method)te_workerproc, x->numFunctions);
+		return;
 	}
-	x->parallel_task->priority = SYSPARALLEL_PRIORITY_HIGH;
-	sysparallel_task_data(x->parallel_task, &x);
 	if(sysparallel_task_execute(x->parallel_task)){
-		object_error((t_object *)x, "oh crap");
+		object_error((t_object *)x, "couldn't execute the parallel task");
 		return;
 	}
 }
 
-t_int *te_perform(t_int *w){
-	t_te *x = (t_te *)w[1];
-	x->w = w;
-	te_run(x);
-
-	t_float *out_phase_wrapped = (t_float *)w[4];
-	t_float *out_phase = (t_float *)w[5];
-	t_float *out_bps = (t_float *)w[6];
-	t_float *out_pointnum = (t_float *)w[7];
-	t_float *out_beatnum = (t_float *)w[8];
-
-	int n = (int)w[2];
-
-	memcpy(out_phase_wrapped, x->ptrs[x->currentFunction * 5], n * sizeof(t_float));
-	memcpy(out_phase, x->ptrs[x->currentFunction * 5 + 1], n * sizeof(t_float));
-	memcpy(out_bps, x->ptrs[x->currentFunction * 5 + 2], n * sizeof(t_float));
-	memcpy(out_pointnum, x->ptrs[x->currentFunction * 5 + 3], n * sizeof(t_float));
-	memcpy(out_beatnum, x->ptrs[x->currentFunction * 5 + 4], n * sizeof(t_float));
-
-	return w + 9;
-}
-
-
-/*
-t_int *te_perform(t_int *w){
-	t_te *x = (t_te *)w[1];
-	int n = (int)w[2];
-	t_float *in = (t_float *)w[3];
-	t_float *out_phase_wrapped = (t_float *)w[4];
-	t_float *out_phase = (t_float *)w[5];
-	t_float *out_bps = (t_float *)w[6];
-	t_float *out_pointnum = (t_float *)w[7];
-	t_float *out_beatnum = (t_float *)w[8];
-
-	int i, j;
-	t_symbol *name1, *name2, *name3, *name4, *name5;
-
-	int muted[MAX_NUM_FUNCTIONS];
-	memcpy(muted, x->muteFunctions, MAX_NUM_FUNCTIONS * sizeof(int));
-	t_plan plan;
-
-	for(j = 0; j < x->numFunctions; j++){
-		if(x->functions[j] == NULL){
-			memset(x->ptrs[(j * 5)], 0, n * sizeof(t_float));
-			memset(x->ptrs[(j * 5) + 1], 0, n * sizeof(t_float));
-			memset(x->ptrs[(j * 5) + 2], 0, n * sizeof(t_float));
-			memset(x->ptrs[(j * 5) + 3], 0, n * sizeof(t_float));
-			memset(x->ptrs[(j * 5) + 4], 0, n * sizeof(t_float));
-		}
-	}
-
-	x->last_x = in[0];
-
-	for(j = 0; j < x->numFunctions; j++){
-		if(name1 = te_mangleName(x->name, 0, j)){
-			name1->s_thing = (t_object *)(x->ptrs[j * 5]);
-		}
-		if(name2 = te_mangleName(x->name, 1, j)){
-			name2->s_thing = (t_object *)(x->ptrs[(j * 5) + 1]);
-		}
-		if(name3 = te_mangleName(x->name, 2, j)){
-			name3->s_thing = (t_object *)(x->ptrs[(j * 5) + 2]);
-		}
-		if(name4 = te_mangleName(x->name, 3, j)){
-			name4->s_thing = (t_object *)(x->ptrs[(j * 5) + 3]);
-		}
-		if(name5 = te_mangleName(x->name, 4, j)){
-			name5->s_thing = (t_object *)(x->ptrs[(j * 5) + 4]);
-		}
-
-		if(x->functions[j] == NULL){
-			memset(x->ptrs[(j * 5)], 0, n * sizeof(t_float));
-			memset(x->ptrs[(j * 5) + 1], 0, n * sizeof(t_float));
-			memset(x->ptrs[(j * 5) + 2], 0, n * sizeof(t_float));
-			memset(x->ptrs[(j * 5) + 3], 0, n * sizeof(t_float));
-			memset(x->ptrs[(j * 5) + 4], 0, n * sizeof(t_float));
-		}else{
-			if(muted[j]){
-				memset(x->ptrs[(j * 5)], 0, n * sizeof(t_float));
-				memset(x->ptrs[(j * 5) + 1], 0, n * sizeof(t_float));
-				memset(x->ptrs[(j * 5) + 2], 0, n * sizeof(t_float));
-				memset(x->ptrs[(j * 5) + 3], 0, n * sizeof(t_float));
-				memset(x->ptrs[(j * 5) + 4], 0, n * sizeof(t_float));
-				continue;
-			}
-			//t_plan *plan = &(x->plans[j]);
-			//te_critical_enter(x->lock, __LINE__);
-			plan = x->plans[j];
-			//te_critical_exit(x->lock, __LINE__);
-			for(i = 0; i < n; i++){
-				if(te_isPlanValid(x, in[i], &plan, j) == 0){
-					te_makePlan(x, in[i], j, &plan);
-				}
-
-				x->ptrs[(j * 5) + 1][i] = te_computeCorrectedPhase(in[i], &plan);
-				x->ptrs[(j * 5)][i] = x->ptrs[(j * 5) + 1][i] - floor(x->ptrs[(j * 5) + 1][i]);
-				x->ptrs[(j * 5) + 2][i] = (x->ptrs[(j * 5) + 1][i] - x->last_y[j]) * x->fs;
-				x->last_y[j] = x->ptrs[(j * 5) + 1][i];
-				x->ptrs[(j * 5) + 3][i] = plan.pointnum_left;
-				x->ptrs[(j * 5) + 4][i] = floorf(x->ptrs[(j * 5) + 1][i]);
-			}
-			//te_critical_enter(x->lock, __LINE__);
-			x->plans[j] = plan;
-			//te_critical_exit(x->lock, __LINE__);
-		}
-	}
-
-	memcpy(out_phase_wrapped, x->ptrs[x->currentFunction * 5], n * sizeof(t_float));
-	memcpy(out_phase, x->ptrs[x->currentFunction * 5 + 1], n * sizeof(t_float));
-	memcpy(out_bps, x->ptrs[x->currentFunction * 5 + 2], n * sizeof(t_float));
-	memcpy(out_pointnum, x->ptrs[x->currentFunction * 5 + 3], n * sizeof(t_float));
-	memcpy(out_beatnum, x->ptrs[x->currentFunction * 5 + 4], n * sizeof(t_float));
-
-	for(j = x->numFunctions; j < MAX_NUM_FUNCTIONS; j++){
-		if(name1 = te_mangleName(x->name, 0, j)){
-			name1->s_thing = NULL;
-		}
-		if(name2 = te_mangleName(x->name, 1, j)){
-			name2->s_thing = NULL;
-		}
-		if(name3 = te_mangleName(x->name, 2, j)){
-			name3->s_thing = NULL;
-		}
-		if(name4 = te_mangleName(x->name, 3, j)){
-			name4->s_thing = NULL;
-		}
-		if(name5 = te_mangleName(x->name, 4, j)){
-			name5->s_thing = NULL;
-		}
-	}
-
-	return w + 9;
-}
-
-*/
-
-int te_makePlan(t_te *x, float f, int function, t_plan *plan){
-	if(!plan || !(x->functions[function])){
+int te_makePlan(t_te *x, double f, int function, t_plan *plan){
+	if(!plan){
 		return 1;
 	}
-	t_rect r;
-	jbox_get_rect_for_view((t_object *)x, x->pv, &r); 
-	double f_sc = te_scale(f, x->time_min, x->time_max, 0, r.width);
+	if(function < 0 || function >= MAX_NUM_FUNCTIONS || !(x->functions[function])){
+		memset(plan, 0, sizeof(*plan));
+		return 1;
+	}
+	// compare times directly.  this used to scale everything to screen coordinates
+	// first, which is monotonic (so it doesn't change the result) but required the
+	// patcherview, which is NULL until the object has been drawn and isn't safe to
+	// query from the audio thread.
+	double f_sc = f;
 	t_point *p = x->functions[function];
-	t_point *next = NULL;
-	if(p){
-		next = p->next;
-	}else{
-		memset(plan, 0, sizeof(plan));
-		return 1;
-	}
+	t_point *next = p->next;
 
 	// we are somewhere between the minimum time (probably 0) and the first
 	// point.  so we'll make a plan with a freq of 0.
-	double scx = te_scale(p->coords.x, x->time_min, x->time_max, 0, r.width);
+	double scx = p->coords.x;
 	if(f_sc < scx){
 		plan->alpha = p->alpha;
 		plan->beta = p->beta;
@@ -1661,8 +1453,8 @@ int te_makePlan(t_te *x, float f, int function, t_plan *plan){
 
 	int counter = 1;
 	while(p && next){
-		double scx = te_scale(p->coords.x, x->time_min, x->time_max, 0, r.width);
-		double nscx = te_scale(next->coords.x, x->time_min, x->time_max, 0, r.width);
+		double scx = p->coords.x;
+		double nscx = next->coords.x;
 		if(f_sc >= scx && f_sc < nscx){
 			//printf("f_sc = %f, scx = %f, nscx = %f\n", f_sc, scx, nscx);
 			plan->alpha = p->alpha;
@@ -1694,7 +1486,7 @@ int te_makePlan(t_te *x, float f, int function, t_plan *plan){
 	}
 
 	// if we made it here, we're somewhere between the last point and time_max
-	scx = te_scale(p->coords.x, x->time_min, x->time_max, 0., r.width);
+	scx = p->coords.x;
 	if(f_sc >= scx){
 		plan->alpha = p->alpha;
 		plan->beta = p->beta;
@@ -1732,11 +1524,9 @@ int te_isPlanValid(t_te *x, double time, t_plan *plan, int function){
 		return 0;
 	}
 
-	t_rect r;
-	jbox_get_rect_for_view((t_object *)x, x->pv, &r); //jbox_get_patching_rect(&(x->box.z_box.b_ob), &r);
-	double stsc, etsc;
-	stsc = te_scale(plan->startTime, x->time_min, x->time_max, 0, r.width);
-	etsc = te_scale(plan->endTime, x->time_min, x->time_max, 0, r.width);
+	if(function < 0 || function >= MAX_NUM_FUNCTIONS){
+		return 0;
+	}
 	t_point *p = x->functions[function];
 	if(!p){
 		return 0;
@@ -2043,7 +1833,7 @@ void te_processOSC(t_te *x, char *prefix, t_hashtab *ht, int functionNum){
 		int k = 0;
 		t_point *p = head;
 		while(p){
-			if(k < argc){
+			if(k + 1 < argc){
 				*((double *)(((char *)p) + offsets[j])) = (double)atom_getfloat(argv + k + 1);
 			}else{
 				*((double *)(((char *)p) + offsets[j])) = defaults[j];
@@ -2124,8 +1914,8 @@ void te_fullPacket(t_te *x, long len, long ptr){
 					hashtab_store(ht, gensym(address), (t_object *)mm_copy);
 				}
 			}else{
-				unsigned int functionNum = strtol(mm_address + fplen, &param, 0);
-				if(functionNum < sizeof(fn)){
+				long functionNum = strtol(mm_address + fplen, &param, 10);
+				if(param != mm_address + fplen && functionNum >= 0 && functionNum < MAX_NUM_FUNCTIONS){
 					fn[functionNum] = 1;
 					t_osc_msg_s *mm_copy = osc_message_s_alloc();
 					osc_message_s_copy(&mm_copy, mm);
@@ -2134,7 +1924,7 @@ void te_fullPacket(t_te *x, long len, long ptr){
 			}
 		}
 
-		for(i = 0; i < sizeof(fn); i++){
+		for(i = 0; i < MAX_NUM_FUNCTIONS; i++){
 			if(fn[i] == 0){
 				continue;
 			}
@@ -2172,12 +1962,12 @@ void te_list(t_te *x, t_symbol *msg, short argc, t_atom *argv){
 				return;
 			}
 			long functionnum = atom_getlong(argv);
-			if(functionnum > MAX_NUM_FUNCTIONS){
-				object_error((t_object *)x, "max number of functions is currently %d", MAX_NUM_FUNCTIONS);
+			if(functionnum < 0 || functionnum >= MAX_NUM_FUNCTIONS){
+				object_error((t_object *)x, "function number must be between 0 and %d", MAX_NUM_FUNCTIONS - 1);
 				return;
 			}
 			t_atom *ptr = argv;
-			x->selected = te_allocAndInsertPoint(x, (t_pt){atom_getfloat(argv + 1), atom_getfloat(argv + 2)}, atom_getlong(argv));
+			x->selected = te_allocAndInsertPoint(x, (t_pt){atom_getfloat(argv + 1), atom_getfloat(argv + 2)}, functionnum);
 			ptr += 3;
 			x->selected->d_freq = x->selected->coords.y;
 			x->selected->a_phase = x->selected->d_phase = 0.;
@@ -2299,8 +2089,9 @@ void te_list(t_te *x, t_symbol *msg, short argc, t_atom *argv){
 					break;
 				}
 				x->selected = te_allocAndInsertPoint(x, sc, x->currentFunction);
+				p = x->selected;
 			}
-			if(p->d_phase < p->a_phase){
+			if(p && p->d_phase < p->a_phase){
 				p->d_phase += 1;
 			}
 		}
@@ -3583,6 +3374,7 @@ void te_mouseup(t_te *x, t_object *patcherview, t_pt pt, long modifiers){
 void te_addFunction(t_te *x){
 	te_critical_enter(x->lock, __LINE__);
 	if(x->numFunctions + 1 > MAX_NUM_FUNCTIONS){
+		te_critical_exit(x->lock, __LINE__);
 		error("te: maximum number of functions: %d", MAX_NUM_FUNCTIONS);
 		return;
 	}
@@ -3595,18 +3387,16 @@ void te_addFunction(t_te *x){
 }
 
 void te_setFunction(t_te *x, long f){
-	if(f > MAX_NUM_FUNCTIONS){
+	if(f >= MAX_NUM_FUNCTIONS){
 		error("te: maximum number of functions: %d", MAX_NUM_FUNCTIONS);
 		return;
-	}
-	if(f > x->numFunctions - 1){
-		while(f > x->numFunctions - 1){
-			x->numFunctions++;
-		}
 	}
 	if(f < 0){
 		error("te: function must be a positive number");
 		return;
+	}
+	if(f > x->numFunctions - 1){
+		x->numFunctions = f + 1;
 	}
 	te_clearSelected(x);
 	te_critical_enter(x->lock, __LINE__);
@@ -3629,8 +3419,8 @@ double te_clip(double f, double min, double max){
 }
 
 double te_scale(double f, double min_in, double max_in, double min_out, double max_out){
-	float m = (max_out - min_out) / (max_in - min_in);
-	float b = (min_out - (m * min_in));
+	double m = (max_out - min_out) / (max_in - min_in);
+	double b = (min_out - (m * min_in));
 	return m * f + b;
 }
 
@@ -4163,7 +3953,7 @@ void te_processArgs_r(t_te *x,
 			// all functions.
 			if(key == gensym("functions") && atom_getsym(argv) == gensym("*")){
 				// put all the functions in
-				for(i = 0; i < x->numFunctions; i++){
+				for(i = 0; i < x->numFunctions && *numfunctions < MAX_NUM_FUNCTIONS; i++){
 					functions[(*numfunctions)++] = i;
 				}
 			}else{
@@ -4172,9 +3962,16 @@ void te_processArgs_r(t_te *x,
 			}
 		}else{
 			if(k == gensym("functions")){
-				functions[(*numfunctions)++] = atom_getlong(argv);
+				long f = atom_getlong(argv);
+				if(f < 0 || f >= MAX_NUM_FUNCTIONS){
+					object_error((t_object *)x, "function number must be between 0 and %ld", (long)(MAX_NUM_FUNCTIONS - 1));
+				}else if(*numfunctions < MAX_NUM_FUNCTIONS){
+					functions[(*numfunctions)++] = f;
+				}
 			}else if(k == gensym("timerange")){
-				range[(*rangelen)++] = atom_getfloat(argv);
+				if(*rangelen < 2){
+					range[(*rangelen)++] = atom_getfloat(argv);
+				}
 			}else if(k == gensym("subdivs")){
 				subdivs[(*numsubdivs)++] = atom_getfloat(argv);
 			}else if(k == gensym("controlpoints")){
@@ -4571,9 +4368,13 @@ void te_dumpBeatsForFunction(t_te *x,
 	//int function;
 	double t;
 	//t_atom out[9];
+	if(function < 0 || function >= MAX_NUM_FUNCTIONS){
+		return;
+	}
 	te_critical_enter(x->lock, __LINE__);
 
 	if(x->functions[function] == NULL){
+		te_critical_exit(x->lock, __LINE__);
 		return;
 	}
 	t_plan plan;
@@ -4707,6 +4508,7 @@ void te_dumpSelectedOSC(t_te *x){
 	te_critical_enter(x->lock, __LINE__);
 	t_point *p = x->selected;
 	if(!p){
+		te_critical_exit(x->lock, __LINE__);
 		return;
 	}
 	*((uint32_t *)osc_point.function_data) = hton32(x->currentFunction);
@@ -4972,6 +4774,10 @@ void te_clear(t_te *x){
 }
 
 void te_clearFunction(t_te *x, int f){
+	if(f < 0 || f >= MAX_NUM_FUNCTIONS){
+		object_error((t_object *)x, "function number must be between 0 and %d", MAX_NUM_FUNCTIONS - 1);
+		return;
+	}
 	te_doClearFunction(x, f);
 	te_dumpSelectedOSC(x);
 	
@@ -4991,22 +4797,34 @@ void te_clearRange(t_te *x, t_symbol *msg, int argc, t_atom *argv){
 			return;
 		}
 	}
+	if(function < 0 || function >= MAX_NUM_FUNCTIONS){
+		object_error((t_object *)x, "function number must be between 0 and %d", MAX_NUM_FUNCTIONS - 1);
+		return;
+	}
+	if(argc < (ptr - argv) + 2){
+		object_error((t_object *)x, "clearrange requires a start and end time");
+		return;
+	}
 	te_clearRangeForFunction(x, function, atom_getfloat(ptr), atom_getfloat(ptr + 1));
 	jbox_invalidate_layer((t_object *)x, x->pv, l_function_layers[function]);
 	jbox_redraw((t_jbox *)x);
 }
 
 void te_clearRangeForFunction(t_te *x, int function, float timemin, float timemax){
+	if(function < 0 || function >= MAX_NUM_FUNCTIONS){
+		return;
+	}
 	te_critical_enter(x->lock, __LINE__);
 	t_point *p = x->functions[function];
 	while(p){
+		t_point *next = p->next;
 		if(p->coords.x >= timemin && p->coords.x <= timemax){
 			if(p == x->selected){
 				x->selected = NULL;
 			}
 			te_removePoint(x, p, function);
 		}
-		p = p->next;
+		p = next;
 	}
 	te_critical_exit(x->lock, __LINE__);
 }
@@ -5030,10 +4848,13 @@ void te_clearCurrent(t_te *x){
 }
 
 void te_doClearFunction(t_te *x, int f){
+	if(f < 0 || f >= MAX_NUM_FUNCTIONS){
+		return;
+	}
 	te_critical_enter(x->lock, __LINE__);
 	memset(x->plans + f, '\0', sizeof(t_plan));
 	t_point *p = x->functions[f];
-	t_point *next = p->next;
+	t_point *next = NULL;
 	while(p){
 		if(x->selected == p){
 			x->selected = NULL;
@@ -5070,6 +4891,10 @@ void te_hideFunction(t_te *x, t_symbol *msg, short argc, t_atom *argv){
 		error("tempo_editor: two arguments required: function number, on/off");
 		return;
 	}
+	if(function < 0 || function >= MAX_NUM_FUNCTIONS){
+		object_error((t_object *)x, "function number must be between 0 and %d", MAX_NUM_FUNCTIONS - 1);
+		return;
+	}
 	x->hideFunctions[function] = b;
 	jbox_invalidate_layer((t_object *)x, x->pv, l_function_layers[function]);
 	jbox_redraw((t_jbox *)x);
@@ -5085,6 +4910,10 @@ void te_muteFunction(t_te *x, t_symbol *msg, short argc, t_atom *argv){
 		b = atom_getlong(argv + 1);
 	}else{
 		error("tempo_editor: two arguments required: function number, on/off");
+		return;
+	}
+	if(function < 0 || function >= MAX_NUM_FUNCTIONS){
+		object_error((t_object *)x, "function number must be between 0 and %d", MAX_NUM_FUNCTIONS - 1);
 		return;
 	}
 	x->muteFunctions[function] = b;
@@ -5103,6 +4932,10 @@ void te_lockFunction(t_te *x, t_symbol *msg, short argc, t_atom *argv){
 		b = atom_getlong(argv + 1);
 	}else{
 		error("tempo_editor: two arguments required: function number, on/off");
+		return;
+	}
+	if(function < 0 || function >= MAX_NUM_FUNCTIONS){
+		object_error((t_object *)x, "function number must be between 0 and %d", MAX_NUM_FUNCTIONS - 1);
 		return;
 	}
 	x->lockFunctions[function] = b;
@@ -5584,26 +5417,38 @@ void te_assist(t_te *x, void *b, long m, long a, char *s){
 void te_free(t_te *x){ 
 	dsp_freejbox((t_pxjbox *)x);
 	jbox_free((t_jbox *)x);
-	int i;
-	for(i = 0; i < x->numFunctions; i++){
-		t_point *p = x->functions[i];
-		t_point *next;
-		while(p){
-			next = p->next;
-			free(p);
-			p = next;
-		}
-		if(x->ptrs[i * 3]){
-			free(x->ptrs[i * 3]);
-		}
-		if(x->ptrs[i * 3 + 1]){
-			free(x->ptrs[i * 3 + 1]);
-		}
-		if(x->ptrs[i * 3 + 2]){
-			free(x->ptrs[i * 3 + 2]);
+	int i, j;
+	// make sure te_breakout~ objects don't keep reading our buffers after they're freed
+	for(j = 0; j < MAX_NUM_FUNCTIONS; j++){
+		for(i = 0; i < 5; i++){
+			t_symbol *name = te_mangleName(x->name, i, j);
+			if(name && x->ptrs && name->s_thing == (t_object *)(x->ptrs[(j * 5) + i])){
+				name->s_thing = NULL;
+			}
 		}
 	}
+	if(x->parallel_task){
+		sysparallel_task_free(x->parallel_task);
+		x->parallel_task = NULL;
+	}
+	if(x->functions){
+		for(i = 0; i < MAX_NUM_FUNCTIONS; i++){
+			t_point *p = x->functions[i];
+			t_point *next;
+			while(p){
+				next = p->next;
+				free(p);
+				p = next;
+			}
+		}
+		free(x->functions);
+	}
 	if(x->ptrs){
+		for(i = 0; i < MAX_NUM_FUNCTIONS * 5; i++){
+			if(x->ptrs[i]){
+				free(x->ptrs[i]);
+			}
+		}
 		free(x->ptrs);
 	}
 	if(x->last_y){
@@ -5616,6 +5461,10 @@ void te_free(t_te *x){
 		clock_unset(x->update_position_clock);
 		object_free(x->update_position_clock);
 	}
+	if(x->proxy){
+		object_free(x->proxy);
+	}
+	critical_free(x->lock);
 } 
 
 void te_postplan(t_plan *p, int (*print)(const char *, ...)){
@@ -5670,7 +5519,6 @@ int main(void){
  	c->c_flags |= CLASS_FLAG_NEWDICTIONARY; 
  	jbox_initclass(c, JBOX_FIXWIDTH | JBOX_COLOR | JBOX_FONTATTR); 
 
-	class_addmethod(c, (method)te_dsp, "dsp", A_CANT, 0);
 	class_addmethod(c, (method)te_dsp64, "dsp64", A_CANT, 0);
 	class_addmethod(c, (method)te_dspstate, "dspstate", A_CANT, 0);
  	class_addmethod(c, (method)te_paint, "paint", A_CANT, 0); 
@@ -5954,7 +5802,7 @@ void *te_new(t_symbol *s, long argc, t_atom *argv){
 		memset(x->hideFunctions, 0, MAX_NUM_FUNCTIONS * sizeof(int));
 		memset(x->muteFunctions, 0, MAX_NUM_FUNCTIONS * sizeof(int));
 		memset(x->lockFunctions, 0, MAX_NUM_FUNCTIONS * sizeof(int));
-		x->last_y = (float *)calloc(MAX_NUM_FUNCTIONS, sizeof(float));
+		x->last_y = (double *)calloc(MAX_NUM_FUNCTIONS, sizeof(double));
 		x->plans = (t_plan *)calloc(MAX_NUM_FUNCTIONS, sizeof(t_plan));
  		x->numFunctions = 1; 
  		x->currentFunction = 0; 
@@ -5964,9 +5812,20 @@ void *te_new(t_symbol *s, long argc, t_atom *argv){
 		x->ptrs = (double **)malloc((MAX_NUM_FUNCTIONS * 5) * sizeof(double *));
 		int i;
 		t_jrgba black = (t_jrgba){0., 0., 0., 1.};
+		// te_dsp64() grows these if the vector size is larger
+		x->ptrs_len = 2048;
 		for(i = 0; i < MAX_NUM_FUNCTIONS * 5; i++){
-			//x->ptrs[i] = (t_float *)malloc(2048 * sizeof(t_float));
-			x->ptrs[i] = (double *)malloc(2048 * sizeof(double));
+			x->ptrs[i] = (double *)calloc(x->ptrs_len, sizeof(double));
+		}
+		x->perform_in = NULL;
+		x->perform_n = 0;
+		// one worker per possible function so that functions added while
+		// audio is running get computed.  workers for empty functions just
+		// zero their buffers.
+		x->parallel_task = sysparallel_task_new(x, (method)te_workerproc, MAX_NUM_FUNCTIONS);
+		if(x->parallel_task){
+			sysparallel_task_workercount(x->parallel_task, MAX_NUM_FUNCTIONS);
+			x->parallel_task->priority = SYSPARALLEL_PRIORITY_HIGH;
 		}
 
 		for(i = 0; i < MAX_NUM_FUNCTIONS; i++){

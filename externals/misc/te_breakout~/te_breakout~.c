@@ -148,6 +148,7 @@ t_int *bkout_perform(t_int *w){
 }
 
 void bkout_free(t_bkout *x){
+	dsp_free((t_pxobject *)x);
 	if(x->outlets){
 		sysmem_freeptr(x->outlets);
 	}
@@ -233,7 +234,7 @@ void *bkout_new(t_symbol *msg, short argc, t_atom *argv){
 }
 
 int main(void){
-	t_class *c = class_new("te_breakout~", (method)bkout_new, (method)dsp_free, sizeof(t_bkout), 0L, A_GIMME, 0);
+	t_class *c = class_new("te_breakout~", (method)bkout_new, (method)bkout_free, sizeof(t_bkout), 0L, A_GIMME, 0);
     
 	class_dspinit(c);
 
