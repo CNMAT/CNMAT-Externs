@@ -60,7 +60,17 @@ Configuring GSL is the same situation as FFTW:  configure for both arm64 and x86
 *Note also: it is possible that the `libgsl.a` file is now compiled into the `/gsl/.libs` folder. Currently, you may need to copy this file into the main `/gsl` folder for the Makefile script to build correctly. The default project path settings may need to be updated in the near future.*
 
 
-### 4. libo / libomax
+### 4. Boost
+
+`timewarp~` uses the header-only Boost.Math library, which needs to be in a folder called `boost` in our root folder (so that `boost/boost/math/...` exists). Nothing needs to be compiled.
+
+Either download Boost [here](https://www.boost.org/users/download/), extract it into our folder, and rename the folder to `boost`, or, if you installed Boost with Homebrew (`brew install boost`), make a symlink from our root folder:
+
+```
+ln -s "$(brew --prefix boost)/include" boost
+```
+
+### 5. libo / libomax
 
 libo requires GNU [flex](https://github.com/westes/flex) and [bison](https://www.gnu.org/software/bison/) to be installed and findable by your bash shell.
 
@@ -68,7 +78,7 @@ Build `libo` first, and then `libomax`, using the `make`.
 
 More details can be found [here](https://github.com/CNMAT/libo/blob/master/doc/libo-documentation/odot-build-setup.txt).
 
-### 5. build CNMAT-Externs
+### 6. build CNMAT-Externs
 
 Finally you are ready to build the CNMAT-Externals!
 
@@ -82,7 +92,7 @@ The built objects will be in the `/build/Release` folder.
 To create the CNMAT-Externals release package, run the release script:
 `./make-release-mac.sh`.
 
-### 6. footnote: Java Dev Kit
+### 7. footnote: Java Dev Kit
 
 If you get an error message about Java not being installed, you may need to install the Java Dev Kit. You should be able to type `which javac` and get a report about its location. This is the application we use to compile .java file into a .class file that can be used by Max.
 

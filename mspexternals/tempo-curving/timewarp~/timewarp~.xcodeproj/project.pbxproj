@@ -186,6 +186,7 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				C74SUPPORT = "$(SRCROOT)/../../../../max-sdk-base/c74support";
 				C74_SYM_LINKER_FLAGS = "@$(C74SUPPORT)/max-includes/c74_linker_flags.txt";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
@@ -217,7 +218,7 @@
 					"\"$(SRCROOT)/../../../utility-library/version\"",
 					"\"$(SRCROOT)/../../../../max-sdk-base/c74support/max-includes\"",
 					"\"$(SRCROOT)/../../../../max-sdk-base/c74support/msp-includes\"",
-					/usr/local/include,
+					"\"$(SRCROOT)/../../../../boost\"",
 				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = ../../externals;
@@ -229,6 +230,7 @@
 				);
 				LIBRARY_STYLE = Bundle;
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				OBJROOT = "$(SRCROOT)/build";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-lmx",
@@ -240,6 +242,7 @@
 				PRODUCT_NAME = "timewarp~";
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
+				SYMROOT = "$(SRCROOT)/build";
 				USER_HEADER_SEARCH_PATHS = "";
 				VALID_ARCHS = "x86_64 arm64";
 				WARNING_CFLAGS = (
